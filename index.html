@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Modern Causal Mediation Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./preface.html" rel="next">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script>
+  MathJax = {
+    tex: {
+      tags: 'ams',  // should be 'ams', 'none', or 'all'
+      macros: {
+        E: '{\\mathbb{E}}',
+        V: '{\\mathbb{V}}',
+        P: '{\\mathsf{P}}',
+        M: '{\\mathsf{M}}',
+        Pr: '{\\mathbb{P}}',
+        R: '{\\mathbb{R}}',
+        I: '{\\mathbb{I}}',
+        1: '{\\mathbb{1}}',
+        D: '{\\mathcal{D}}',
+        F: '{\\mathcal{F}}',
+        M: '{\\mathcal{M}}',
+        C: '{\\mathcal{C}}',
+        G: '{\\mathcal{G}}',
+        X: '{\\mathcal{X}}',
+        Z: '{\\mathcal{Z}}',
+        Hold: '{\\mathcal{H}}',
+        lik: '{\\mathcal{L}}',
+        logit: '{\\operatorname{logit}}',
+        expit: '{\\operatorname{expit}}',
+        argmin: '{\\operatorname*{arg\\,min}}',
+        argmax: '{\\operatorname*{arg\\,max}}',
+        indep: '{\\perp\\!\\!\\!\\perp}',
+        notindep: '{\\centernot{\\perp\\!\\!\\!\\perp}}',
+        coloneqq: '{\\mathrel{\\vcenter{:}}=}',
+        iid: '{\\,\\, \\mathbin{\\overset{\\text{iid}}{\\sim}} \\,\\,}',
+        asto: '{\\mathbin{\\underset{a.s.}{\\to}}}',
+        pto: '{\\mathbin{\\underset{p}{\\to}}}',
+        dto: '{\\mathbin{\\underset{d}{\\to}}}'
+      }
+    }
+  };
+</script>
+</head>
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome!</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modern Causal Mediation Analysis</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/nhejazi/causal_mediation_workshops/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Identification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./effects_defn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Types of path-specific causal mediation effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./how_to_choose.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">How to choose an estimand: Real-world example</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Estimation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./estimation_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimation preliminaries: Review of doubly robust estimators for the ATE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./estimation_natural_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./estimation_walkthrough.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appx_additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appx_stochastic_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+<li>
+<a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome!</a>
+  <ul class="collapse">
+<li><a href="#about" id="toc-about" class="nav-link" data-scroll-target="#about">About this workshop</a></li>
+  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Tentative schedule</a></li>
+  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">About the instructors</a></li>
+  <li><a href="#repro" id="toc-repro" class="nav-link" data-scroll-target="#repro">Reproducibility</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup instructions</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Modern Causal Mediation Analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Ivan Diaz <a href="mailto:ivan.diaz@nyulangone.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-9056-2047" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            NYU Population Health
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Nima Hejazi <a href="mailto:nhejazi@hsph.harvard.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-7127-2789" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Harvard Biostatistics
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Kara Rudolph <a href="mailto:kr2854@cumc.columbia.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-9417-7960" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Columbia Epidemiology
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header><section id="welcome" class="level1 unnumbered"><h1 class="unnumbered">Welcome!</h1>
+<p>This open source, reproducible vignette accompanies a half-day workshop on modern methods for <em>causal mediation analysis</em>.</p>
+<section id="about" class="level2"><h2 class="anchored" data-anchor-id="about">About this workshop</h2>
+<p>Causal mediation analysis can provide a mechanistic understanding of how an exposure impacts an outcome, a central goal in epidemiology and health sciences. However, rapid methodologic developments coupled with few formal courses presents challenges to implementation. Beginning with an overview of classical direct and indirect effects, this workshop will present recent advances that overcome limitations of previous methods, allowing for: (i) continuous exposures, (ii) multiple, non-independent mediators, and (iii) effects identifiable in the presence of intermediate confounders affected by exposure. Emphasis will be placed on flexible, stochastic and interventional direct and indirect effects, highlighting how these may be applied to answer substantive epidemiological questions from real-world studies. Multiply robust, nonparametric estimators of these causal effects, and free and open source <code>R</code> packages (<a href="https://github.com/nhejazi/medshift"><code>medshift</code></a> and <a href="https://github.com/nhejazi/medoutcon"><code>medoutcon</code></a>) for their application, will be introduced.</p>
+<p>To ensure translation to real-world data analysis, this workshop will incorporate hands-on <code>R</code> programming exercises to allow participants practice in implementing the statistical tools presented. It is recommended that participants have working knowledge of the basic notions of causal inference, including counterfactuals and identification (linking the causal effect to a parameter estimable from the observed data distribution). Familiarity with the <code>R</code> programming language is also recommended.</p>
+</section><section id="schedule" class="level2"><h2 class="anchored" data-anchor-id="schedule">Tentative schedule</h2>
+<ul>
+<li>08:30A-08:45A: Introductions + mediation set-up <!-- Kara, 15 min-->
+</li>
+<li>08:45A-9:15A: Controlled direct effects, natural direct/indirect effects, interventional direct/indirect effects <!-- Kara, 30--> <!-- * 10:00A-10:20A: Stochastic mediation estimands --> <!-- Nima, 15-->
+</li>
+<li>9:15A-9:25A: Choosing an estimand in real-world examples <!-- Kara, 10-->
+</li>
+<li>9:25A-10:00A: What is the EIF?! <!-- Ivan, 35-->
+</li>
+<li>10:00A-10:30A: Break + discussion</li>
+<li>10:30A-11:05A: Using the EIF for estimating the natural direct effect <!-- Ivan, 35-->
+</li>
+<li>11:05A-12:00P: Example walkthrough with <code>R</code> packages for effect estimation <!-- Nima, 55-->
+</li>
+<li>12:00A-12:30P: Wrap-up</li>
+</ul>
+<p><strong>NOTE: All times listed in Pacific Time.</strong></p>
+</section><section id="instructors" class="level2"><h2 class="anchored" data-anchor-id="instructors">About the instructors</h2>
+<section id="iván-díaz" class="level3 unnumbered"><h3 class="unnumbered anchored" data-anchor-id="iván-díaz"><a href="https://www.idiaz.xyz/">Iván Díaz</a></h3>
+<p>I am an Associate Professor of Biostatistics in the <a href="https://med.nyu.edu/faculty/ivan-l-diaz">Department of Population Health at the New York University Grossman School of Medicine</a>. My research focuses on the development of non-parametric statistical methods for causal inference from observational and randomized studies with complex datasets, using machine learning. This includes but is not limited to mediation analysis, methods for continuous exposures, longitudinal data including survival analysis, and efficiency guarantees with covariate adjustment in randomized trials. I am also interested in general semi-parametric theory, machine learning, and high-dimensional data.</p>
+</section><section id="nima-hejazi" class="level3 unnumbered"><h3 class="unnumbered anchored" data-anchor-id="nima-hejazi"><a href="https://nimahejazi.org">Nima Hejazi</a></h3>
+<p>I am an Assistant Professor of Biostatistics at the <a href="https://connects.catalyst.harvard.edu/Profiles/display/Person/207609">Harvard T.H. Chan School of Public Health</a>. My research interests blend causal inference, machine learning, non/semi-parametric inference, and computational statistics, with areas of recent emphasis having included causal mediation analysis, efficient estimation under outcome-dependent sampling designs, estimation of the causal effects of continuous treatments, and machine learning-based sieve estimation in causal inference. My methodological work is motivated principally by scientific collaborations in clinical trials and observational studies of infectious diseases, infectious disease epidemiology, and computational biology. I am also passionate about statistical computing and programming, and the design of open source software tools for reproducible statistical data science.</p>
+</section><section id="kara-rudolph" class="level3 unnumbered"><h3 class="unnumbered anchored" data-anchor-id="kara-rudolph"><a href="https://kararudolph.github.io/">Kara Rudolph</a></h3>
+<p>I am an Assistant Professor of Epidemiology in the <a href="https://www.publichealth.columbia.edu/academics/departments/epidemiology">Mailman School of Public Health at Columbia University</a>. My research interests are in developing and applying causal inference methods to understand social and contextual influences on mental health, substance use, and violence in disadvantaged, urban areas of the United States. My current work focuses on developing methods for transportability and mediation, and subsequently applying those methods to understand how aspects of the school and peer environments mediate relationships between neighborhood factors and adolescent drug use across populations. More generally, my work on generalizing/transporting findings from study samples to target populations and identifying subpopulations most likely to benefit from interventions contributes to efforts to optimally target available policy and program resources.</p>
+</section></section><section id="repro" class="level2"><h2 class="anchored" data-anchor-id="repro">Reproducibility</h2>
+<p>These workshop materials were written using the <a href="https://quarto.org/">Quarto</a>, an open-source, cross-platform technical publishing system built on <a href="https://rmarkdown.rstudio.com/">RMarkdown</a>, and the complete source is available on <a href="https://github.com/nhejazi/causal_mediation_workshops">GitHub</a>. This version of the book was built with R version 4.4.1 (2024-06-14), <a href="https://pandoc.org/">pandoc</a> version 3.1.11, and <a href="https://quarto.org/">quarto</a> version 1.4.555. See the <code>renv.lock</code> file accompanying the repository for up-to-date list of packages used.</p>
+</section><section id="setup" class="level2"><h2 class="anchored" data-anchor-id="setup">Setup instructions</h2>
+<section id="r-and-rstudio" class="level3"><h3 class="anchored" data-anchor-id="r-and-rstudio">R and RStudio</h3>
+<p><strong>R</strong> and <strong>RStudio</strong> are separate downloads and installations. R is the underlying statistical computing environment. RStudio is a graphical integrated development environment (IDE) that makes using R much easier and more interactive. You need to install R before you install RStudio.</p>
+<section id="windows" class="level4"><h4 class="anchored" data-anchor-id="windows">Windows</h4>
+<section id="if-you-already-have-r-and-rstudio-installed" class="level5"><h5 class="anchored" data-anchor-id="if-you-already-have-r-and-rstudio-installed">If you already have R and RStudio installed</h5>
+<ul>
+<li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is available, quit RStudio, and download the latest version for RStudio.</li>
+<li>To check which version of R you are using, start RStudio and the first thing that appears in the console indicates the version of R you are running. Alternatively, you can type <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code>, which will also display which version of R you are running. Go on the <a href="https://cran.r-project.org/bin/windows/base/">CRAN website</a> and check whether a more recent version is available. If so, please download and install it. You can <a href="https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f">check here</a> for more information on how to remove old versions from your system if you wish to do so.</li>
+</ul></section><section id="if-you-dont-have-r-and-rstudio-installed" class="level5"><h5 class="anchored" data-anchor-id="if-you-dont-have-r-and-rstudio-installed">If you don’t have R and RStudio installed</h5>
+<ul>
+<li>Download R from the <a href="http://cran.r-project.org/bin/windows/base/release.htm">CRAN website</a>.</li>
+<li>Run the <code>.exe</code> file that was just downloaded</li>
+<li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a>
+</li>
+<li>Under <em>Installers</em> select <strong>RStudio x.yy.zzz - Windows XP/Vista/7/8</strong> (where x, y, and z represent version numbers)</li>
+<li>Double click the file to install it</li>
+<li>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</li>
+</ul></section></section><section id="mac-osx" class="level4"><h4 class="anchored" data-anchor-id="mac-osx">Mac OSX</h4>
+<section id="if-you-already-have-r-and-rstudio-installed-1" class="level5"><h5 class="anchored" data-anchor-id="if-you-already-have-r-and-rstudio-installed-1">If you already have R and RStudio installed</h5>
+<ul>
+<li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is available, quit RStudio, and download the latest version for RStudio.</li>
+<li>To check the version of R you are using, start RStudio and the first thing that appears on the terminal indicates the version of R you are running. Alternatively, you can type <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code>, which will also display which version of R you are running. Go on the <a href="https://cran.r-project.org/bin/macosx/">CRAN website</a> and check whether a more recent version is available. If so, please download and install it.</li>
+</ul></section><section id="if-you-dont-have-r-and-rstudio-installed-1" class="level5"><h5 class="anchored" data-anchor-id="if-you-dont-have-r-and-rstudio-installed-1">If you don’t have R and RStudio installed</h5>
+<ul>
+<li>Download R from the <a href="http://cran.r-project.org/bin/macosx">CRAN website</a>.</li>
+<li>Select the <code>.pkg</code> file for the latest R version</li>
+<li>Double click on the downloaded file to install R</li>
+<li>It is also a good idea to install <a href="https://www.xquartz.org/">XQuartz</a> (needed by some packages)</li>
+<li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a>
+</li>
+<li>Under <em>Installers</em> select <strong>RStudio x.yy.zzz - Mac OS X 10.6+ (64-bit)</strong> (where x, y, and z represent version numbers)</li>
+<li>Double click the file to install RStudio</li>
+<li>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</li>
+</ul></section></section><section id="linux" class="level4"><h4 class="anchored" data-anchor-id="linux">Linux</h4>
+<ul>
+<li>Follow the instructions for your distribution from <a href="https://cloud.r-project.org/bin/linux">CRAN</a>, they provide information to get the most recent version of R for common distributions. For most distributions, you could use your package manager (e.g., for Debian/Ubuntu run <code>sudo apt-get   install r-base</code>, and for Fedora <code>sudo yum install R</code>), but we don’t recommend this approach as the versions provided by this are usually out of date. In any case, make sure you have at least R 3.3.1.</li>
+<li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a>
+</li>
+<li>Under <em>Installers</em> select the version that matches your distribution, and install it with your preferred method (e.g., with Debian/Ubuntu <code>sudo dpkg -i   rstudio-x.yy.zzz-amd64.deb</code> at the terminal).</li>
+<li>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</li>
+</ul>
+<p>These setup instructions are adapted from those written for <a href="http://www.datacarpentry.org/R-ecology-lesson/">Data Carpentry: R for Data Analysis and Visualization of Ecological Data</a>.</p>
+</section></section><section id="renv" class="level3"><h3 class="anchored" data-anchor-id="renv">Virtual Enironment setup with <code>renv</code>
+</h3>
+<p>These instructions are intended to help with setting up the included <a href="https://rstudio.github.io/renv/index.html"><code>renv</code> virtual environment</a>, which ensures all participants are using the same exact set of <code>R</code> packages (and package versions). A few important notes to keep in mind:</p>
+<ul>
+<li>When <code>R</code> is started from the top level of this repository, <code>renv</code> is activated automatically. There is no further action required on your part. If <code>renv</code> is not installed, it will be installed automatically, assuming that you have an active internet connection.</li>
+<li>While <code>renv</code> is active, the <code>R</code> session will only have access to the packages (and their dependencies) that are listed in the <code>renv.lock</code> file – that is, you should not expect to have access to any other <code>R</code> packages that may be installed elsewhere on the computing system in use.</li>
+<li>Upon an initial attempt, <code>renv</code> will prompt you to install packages listed in the <code>renv.lock</code> file, by printing a message like the following:</li>
+</ul>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># * Project '&lt;PATH/TO&gt;/causal_mediation_workshops' loaded. [renv 1.0.7]</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># * The project may be out of sync -- use `renv::status()` for more details.</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="sc">&gt;</span> renv<span class="sc">::</span><span class="fu">status</span>()</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># The following package(s) are recorded in the lockfile, but not installed:</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Use `renv::restore()` to install these packages.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>In any such case, please call <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code> to install any missing packages. Note that you do <em>not</em> need to manually install the packages via <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code>, <code>remotes::install_github()</code>, or similar.</p>
+<p>For details on how the <code>renv</code> system works, the following references may be helpful:</p>
+<ol type="1">
+<li><a href="https://rstudio.github.io/renv/articles/collaborating.html">Collaborating with <code>renv</code></a></li>
+<li><a href="https://rstudio.github.io/renv/articles/renv.html">Introduction to <code>renv</code></a></li>
+</ol>
+<p>In some rare cases, <code>R</code> packages that <code>renv</code> automatically tries to install as part of the <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code> process may fail due to missing systems-level dependencies. In such cases, a reference to the missing dependencies and system-specific instructions their installation involving, e.g., <a href="http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html">Ubuntu Linux’s <code>apt</code></a> or <a href="https://brew.sh/"><code>homebrew</code> for macOS</a>, will usually be displayed.</p>
+
+
+<!-- -->
+
+</section></section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/causal_mediation_workshops\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./preface.html" class="pagination-link" aria-label="Causal mediation analysis intro">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="an">authors:</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">  - name: Ivan Diaz</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">    affiliation: NYU Population Health</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">    orcid: 0000-0001-9056-2047</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">    email: ivan.diaz@nyulangone.org</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co">  - name: Nima Hejazi</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">    affiliation: Harvard Biostatistics</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">    orcid: 0000-0002-7127-2789</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">    email: nhejazi@hsph.harvard.edu</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co">  - name: Kara Rudolph</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">    affiliation: Columbia Epidemiology</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">    orcid: 0000-0002-9417-7960</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">    email: kr2854@cumc.columbia.edu</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">---</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="in">```{r}</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">#| label: load-renv</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co">#| echo: false</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co">#| message: false</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>renv<span class="sc">::</span><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>())</span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="fu">library</span>(here)</span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="in">```</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="fu"># Welcome! {.unnumbered}</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a></span>
+<span id="cb2-29"><a href="#cb2-29"></a>This open source, reproducible vignette accompanies a half-day workshop on</span>
+<span id="cb2-30"><a href="#cb2-30"></a>modern methods for _causal mediation analysis_.</span>
+<span id="cb2-31"><a href="#cb2-31"></a></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="fu">## About this workshop {#about}</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a></span>
+<span id="cb2-34"><a href="#cb2-34"></a>Causal mediation analysis can provide a mechanistic understanding of how an</span>
+<span id="cb2-35"><a href="#cb2-35"></a>exposure impacts an outcome, a central goal in epidemiology and health sciences.</span>
+<span id="cb2-36"><a href="#cb2-36"></a>However, rapid methodologic developments coupled with few formal courses</span>
+<span id="cb2-37"><a href="#cb2-37"></a>presents challenges to implementation. Beginning with an overview of classical</span>
+<span id="cb2-38"><a href="#cb2-38"></a>direct and indirect effects, this workshop will present recent advances that</span>
+<span id="cb2-39"><a href="#cb2-39"></a>overcome limitations of previous methods, allowing for: (i) continuous</span>
+<span id="cb2-40"><a href="#cb2-40"></a>exposures, (ii) multiple, non-independent mediators, and (iii) effects</span>
+<span id="cb2-41"><a href="#cb2-41"></a>identifiable in the presence of intermediate confounders affected by exposure.</span>
+<span id="cb2-42"><a href="#cb2-42"></a>Emphasis will be placed on flexible, stochastic and interventional direct and</span>
+<span id="cb2-43"><a href="#cb2-43"></a>indirect effects, highlighting how these may be applied to answer substantive</span>
+<span id="cb2-44"><a href="#cb2-44"></a>epidemiological questions from real-world studies. Multiply robust,</span>
+<span id="cb2-45"><a href="#cb2-45"></a>nonparametric estimators of these causal effects, and free and open source <span class="in">`R`</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a>packages (<span class="co">[</span><span class="ot">`medshift`</span><span class="co">](https://github.com/nhejazi/medshift)</span> and</span>
+<span id="cb2-47"><a href="#cb2-47"></a><span class="co">[</span><span class="ot">`medoutcon`</span><span class="co">](https://github.com/nhejazi/medoutcon)</span>) for their application, will</span>
+<span id="cb2-48"><a href="#cb2-48"></a>be introduced.</span>
+<span id="cb2-49"><a href="#cb2-49"></a></span>
+<span id="cb2-50"><a href="#cb2-50"></a>To ensure translation to real-world data analysis, this workshop will</span>
+<span id="cb2-51"><a href="#cb2-51"></a>incorporate hands-on <span class="in">`R`</span> programming exercises to allow participants practice in</span>
+<span id="cb2-52"><a href="#cb2-52"></a>implementing the statistical tools presented. It is recommended that</span>
+<span id="cb2-53"><a href="#cb2-53"></a>participants have working knowledge of the basic notions of causal inference,</span>
+<span id="cb2-54"><a href="#cb2-54"></a>including counterfactuals and identification (linking the causal effect to a</span>
+<span id="cb2-55"><a href="#cb2-55"></a>parameter estimable from the observed data distribution). Familiarity with the</span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="in">`R`</span> programming language is also recommended.</span>
+<span id="cb2-57"><a href="#cb2-57"></a></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="fu">## Tentative schedule {#schedule}</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a></span>
+<span id="cb2-60"><a href="#cb2-60"></a><span class="ss">* </span>08:30A-08:45A: Introductions + mediation set-up</span>
+<span id="cb2-61"><a href="#cb2-61"></a>  <span class="co">&lt;!-- Kara, 15 min--&gt;</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a><span class="ss">* </span>08:45A-9:15A: Controlled direct effects, natural direct/indirect effects,</span>
+<span id="cb2-63"><a href="#cb2-63"></a>  interventional direct/indirect effects</span>
+<span id="cb2-64"><a href="#cb2-64"></a>  <span class="co">&lt;!-- Kara, 30--&gt;</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a><span class="co">&lt;!-- * 10:00A-10:20A: Stochastic mediation estimands --&gt;</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a>  <span class="co">&lt;!-- Nima, 15--&gt;</span></span>
+<span id="cb2-67"><a href="#cb2-67"></a><span class="ss">* </span>9:15A-9:25A: Choosing an estimand in real-world examples</span>
+<span id="cb2-68"><a href="#cb2-68"></a>  <span class="co">&lt;!-- Kara, 10--&gt;</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a><span class="ss">* </span>9:25A-10:00A: What is the EIF?!</span>
+<span id="cb2-70"><a href="#cb2-70"></a>  <span class="co">&lt;!-- Ivan, 35--&gt;</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a><span class="ss">* </span>10:00A-10:30A: Break + discussion</span>
+<span id="cb2-72"><a href="#cb2-72"></a><span class="ss">* </span>10:30A-11:05A: Using the EIF for estimating the natural direct effect</span>
+<span id="cb2-73"><a href="#cb2-73"></a>  <span class="co">&lt;!-- Ivan, 35--&gt;</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a><span class="ss">* </span>11:05A-12:00P: Example walkthrough with <span class="in">`R`</span> packages for effect estimation</span>
+<span id="cb2-75"><a href="#cb2-75"></a>  <span class="co">&lt;!-- Nima, 55--&gt;</span></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="ss">* </span>12:00A-12:30P: Wrap-up</span>
+<span id="cb2-77"><a href="#cb2-77"></a></span>
+<span id="cb2-78"><a href="#cb2-78"></a>__NOTE: All times listed in Pacific Time.__</span>
+<span id="cb2-79"><a href="#cb2-79"></a></span>
+<span id="cb2-80"><a href="#cb2-80"></a><span class="fu">## About the instructors {#instructors}</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a></span>
+<span id="cb2-82"><a href="#cb2-82"></a><span class="fu">### [Iván Díaz](https://www.idiaz.xyz/) {.unnumbered}</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a></span>
+<span id="cb2-84"><a href="#cb2-84"></a>I am an Associate Professor of Biostatistics in the [Department of Population</span>
+<span id="cb2-85"><a href="#cb2-85"></a>Health at the New York University Grossman School of</span>
+<span id="cb2-86"><a href="#cb2-86"></a>Medicine](https://med.nyu.edu/faculty/ivan-l-diaz). My research focuses on the</span>
+<span id="cb2-87"><a href="#cb2-87"></a>development of non-parametric statistical methods for causal inference from</span>
+<span id="cb2-88"><a href="#cb2-88"></a>observational and randomized studies with complex datasets, using machine</span>
+<span id="cb2-89"><a href="#cb2-89"></a>learning. This includes but is not limited to mediation analysis, methods for</span>
+<span id="cb2-90"><a href="#cb2-90"></a>continuous exposures, longitudinal data including survival analysis, and</span>
+<span id="cb2-91"><a href="#cb2-91"></a>efficiency guarantees with covariate adjustment in randomized trials. I am also</span>
+<span id="cb2-92"><a href="#cb2-92"></a>interested in general semi-parametric theory, machine learning, and</span>
+<span id="cb2-93"><a href="#cb2-93"></a>high-dimensional data.</span>
+<span id="cb2-94"><a href="#cb2-94"></a></span>
+<span id="cb2-95"><a href="#cb2-95"></a></span>
+<span id="cb2-96"><a href="#cb2-96"></a><span class="fu">### [Nima Hejazi](https://nimahejazi.org) {.unnumbered}</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a></span>
+<span id="cb2-98"><a href="#cb2-98"></a>I am an Assistant Professor of Biostatistics at the [Harvard T.H. Chan School of</span>
+<span id="cb2-99"><a href="#cb2-99"></a>Public</span>
+<span id="cb2-100"><a href="#cb2-100"></a>Health](https://connects.catalyst.harvard.edu/Profiles/display/Person/207609).</span>
+<span id="cb2-101"><a href="#cb2-101"></a>My research interests blend causal inference, machine learning,</span>
+<span id="cb2-102"><a href="#cb2-102"></a>non/semi-parametric inference, and computational statistics, with areas of</span>
+<span id="cb2-103"><a href="#cb2-103"></a>recent emphasis having included causal mediation analysis, efficient estimation</span>
+<span id="cb2-104"><a href="#cb2-104"></a>under outcome-dependent sampling designs, estimation of the causal effects of</span>
+<span id="cb2-105"><a href="#cb2-105"></a>continuous treatments, and machine learning-based sieve estimation in causal</span>
+<span id="cb2-106"><a href="#cb2-106"></a>inference. My methodological work is motivated principally by scientific</span>
+<span id="cb2-107"><a href="#cb2-107"></a>collaborations in clinical trials and observational studies of infectious</span>
+<span id="cb2-108"><a href="#cb2-108"></a>diseases, infectious disease epidemiology, and computational biology. I am also</span>
+<span id="cb2-109"><a href="#cb2-109"></a>passionate about statistical computing and programming, and the design of open</span>
+<span id="cb2-110"><a href="#cb2-110"></a>source software tools for reproducible statistical data science.</span>
+<span id="cb2-111"><a href="#cb2-111"></a></span>
+<span id="cb2-112"><a href="#cb2-112"></a></span>
+<span id="cb2-113"><a href="#cb2-113"></a><span class="fu">### [Kara Rudolph](https://kararudolph.github.io/) {.unnumbered}</span></span>
+<span id="cb2-114"><a href="#cb2-114"></a></span>
+<span id="cb2-115"><a href="#cb2-115"></a>I am an Assistant Professor of Epidemiology in the [Mailman School of Public</span>
+<span id="cb2-116"><a href="#cb2-116"></a>Health at Columbia</span>
+<span id="cb2-117"><a href="#cb2-117"></a>University](https://www.publichealth.columbia.edu/academics/departments/epidemiology).</span>
+<span id="cb2-118"><a href="#cb2-118"></a>My research interests are in developing and applying causal inference methods to</span>
+<span id="cb2-119"><a href="#cb2-119"></a>understand social and contextual influences on mental health, substance use, and</span>
+<span id="cb2-120"><a href="#cb2-120"></a>violence in disadvantaged, urban areas of the United States. My current work</span>
+<span id="cb2-121"><a href="#cb2-121"></a>focuses on developing methods for transportability and mediation, and</span>
+<span id="cb2-122"><a href="#cb2-122"></a>subsequently applying those methods to understand how aspects of the school and</span>
+<span id="cb2-123"><a href="#cb2-123"></a>peer environments mediate relationships between neighborhood factors and</span>
+<span id="cb2-124"><a href="#cb2-124"></a>adolescent drug use across populations. More generally, my work on</span>
+<span id="cb2-125"><a href="#cb2-125"></a>generalizing/transporting findings from study samples to target populations and</span>
+<span id="cb2-126"><a href="#cb2-126"></a>identifying subpopulations most likely to benefit from interventions contributes</span>
+<span id="cb2-127"><a href="#cb2-127"></a>to efforts to optimally target available policy and program resources.</span>
+<span id="cb2-128"><a href="#cb2-128"></a></span>
+<span id="cb2-129"><a href="#cb2-129"></a><span class="fu">## Reproducibility {#repro}</span></span>
+<span id="cb2-130"><a href="#cb2-130"></a></span>
+<span id="cb2-131"><a href="#cb2-131"></a>These workshop materials were written using the <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org/)</span>,</span>
+<span id="cb2-132"><a href="#cb2-132"></a>an open-source, cross-platform technical publishing system built on</span>
+<span id="cb2-133"><a href="#cb2-133"></a><span class="co">[</span><span class="ot">RMarkdown</span><span class="co">](https://rmarkdown.rstudio.com/)</span>,</span>
+<span id="cb2-134"><a href="#cb2-134"></a>and the complete source is available on</span>
+<span id="cb2-135"><a href="#cb2-135"></a><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/nhejazi/causal_mediation_workshops)</span>. This version of</span>
+<span id="cb2-136"><a href="#cb2-136"></a>the book was built with <span class="in">`r R.version.string`</span>, <span class="co">[</span><span class="ot">pandoc</span><span class="co">](https://pandoc.org/)</span></span>
+<span id="cb2-137"><a href="#cb2-137"></a>version <span class="in">`r rmarkdown::pandoc_version()`</span>, and <span class="co">[</span><span class="ot">quarto</span><span class="co">](https://quarto.org/)</span></span>
+<span id="cb2-138"><a href="#cb2-138"></a>version <span class="in">`r quarto::quarto_version()`</span>. See the <span class="in">`renv.lock`</span> file accompanying the</span>
+<span id="cb2-139"><a href="#cb2-139"></a>repository for up-to-date list of packages used.</span>
+<span id="cb2-140"><a href="#cb2-140"></a></span>
+<span id="cb2-141"><a href="#cb2-141"></a><span class="fu">## Setup instructions {#setup}</span></span>
+<span id="cb2-142"><a href="#cb2-142"></a></span>
+<span id="cb2-143"><a href="#cb2-143"></a><span class="fu">### R and RStudio</span></span>
+<span id="cb2-144"><a href="#cb2-144"></a></span>
+<span id="cb2-145"><a href="#cb2-145"></a>**R** and **RStudio** are separate downloads and installations. R is the</span>
+<span id="cb2-146"><a href="#cb2-146"></a>underlying statistical computing environment. RStudio is a graphical integrated</span>
+<span id="cb2-147"><a href="#cb2-147"></a>development environment (IDE) that makes using R much easier and more</span>
+<span id="cb2-148"><a href="#cb2-148"></a>interactive. You need to install R before you install RStudio.</span>
+<span id="cb2-149"><a href="#cb2-149"></a></span>
+<span id="cb2-150"><a href="#cb2-150"></a><span class="fu">#### Windows</span></span>
+<span id="cb2-151"><a href="#cb2-151"></a></span>
+<span id="cb2-152"><a href="#cb2-152"></a><span class="fu">##### If you already have R and RStudio installed</span></span>
+<span id="cb2-153"><a href="#cb2-153"></a></span>
+<span id="cb2-154"><a href="#cb2-154"></a><span class="ss">* </span>Open RStudio, and click on "Help" &gt; "Check for updates". If a new version is</span>
+<span id="cb2-155"><a href="#cb2-155"></a>  available, quit RStudio, and download the latest version for RStudio.</span>
+<span id="cb2-156"><a href="#cb2-156"></a><span class="ss">* </span>To check which version of R you are using, start RStudio and the first thing</span>
+<span id="cb2-157"><a href="#cb2-157"></a>  that appears in the console indicates the version of R you are</span>
+<span id="cb2-158"><a href="#cb2-158"></a>  running. Alternatively, you can type <span class="in">`sessionInfo()`</span>, which will also display</span>
+<span id="cb2-159"><a href="#cb2-159"></a>  which version of R you are running. Go on the [CRAN</span>
+<span id="cb2-160"><a href="#cb2-160"></a>  website](https://cran.r-project.org/bin/windows/base/) and check whether a</span>
+<span id="cb2-161"><a href="#cb2-161"></a>  more recent version is available. If so, please download and install it. You</span>
+<span id="cb2-162"><a href="#cb2-162"></a>  can <span class="co">[</span><span class="ot">check here</span><span class="co">](https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f)</span></span>
+<span id="cb2-163"><a href="#cb2-163"></a>  for more information on how to remove old versions from your system if you</span>
+<span id="cb2-164"><a href="#cb2-164"></a>  wish to do so.</span>
+<span id="cb2-165"><a href="#cb2-165"></a></span>
+<span id="cb2-166"><a href="#cb2-166"></a><span class="fu">##### If you don't have R and RStudio installed</span></span>
+<span id="cb2-167"><a href="#cb2-167"></a></span>
+<span id="cb2-168"><a href="#cb2-168"></a><span class="ss">* </span>Download R from</span>
+<span id="cb2-169"><a href="#cb2-169"></a>  the <span class="co">[</span><span class="ot">CRAN website</span><span class="co">](http://cran.r-project.org/bin/windows/base/release.htm)</span>.</span>
+<span id="cb2-170"><a href="#cb2-170"></a><span class="ss">* </span>Run the <span class="in">`.exe`</span> file that was just downloaded</span>
+<span id="cb2-171"><a href="#cb2-171"></a><span class="ss">* </span>Go to the [RStudio download</span>
+<span id="cb2-172"><a href="#cb2-172"></a>  page](https://www.rstudio.com/products/rstudio/download/#download)</span>
+<span id="cb2-173"><a href="#cb2-173"></a><span class="ss">* </span>Under *Installers* select **RStudio x.yy.zzz - Windows</span>
+<span id="cb2-174"><a href="#cb2-174"></a>  XP/Vista/7/8** (where x, y, and z represent version numbers)</span>
+<span id="cb2-175"><a href="#cb2-175"></a><span class="ss">* </span>Double click the file to install it</span>
+<span id="cb2-176"><a href="#cb2-176"></a><span class="ss">* </span>Once it's installed, open RStudio to make sure it works and you don't get any</span>
+<span id="cb2-177"><a href="#cb2-177"></a>  error messages.</span>
+<span id="cb2-178"><a href="#cb2-178"></a></span>
+<span id="cb2-179"><a href="#cb2-179"></a><span class="fu">#### Mac OSX</span></span>
+<span id="cb2-180"><a href="#cb2-180"></a></span>
+<span id="cb2-181"><a href="#cb2-181"></a><span class="fu">##### If you already have R and RStudio installed</span></span>
+<span id="cb2-182"><a href="#cb2-182"></a></span>
+<span id="cb2-183"><a href="#cb2-183"></a><span class="ss">* </span>Open RStudio, and click on "Help" &gt; "Check for updates". If a new version is</span>
+<span id="cb2-184"><a href="#cb2-184"></a>  available, quit RStudio, and download the latest version for RStudio.</span>
+<span id="cb2-185"><a href="#cb2-185"></a><span class="ss">* </span>To check the version of R you are using, start RStudio and the first thing</span>
+<span id="cb2-186"><a href="#cb2-186"></a>  that appears on the terminal indicates the version of R you are running.</span>
+<span id="cb2-187"><a href="#cb2-187"></a>  Alternatively, you can type <span class="in">`sessionInfo()`</span>, which will also display which</span>
+<span id="cb2-188"><a href="#cb2-188"></a>  version of R you are running. Go on the [CRAN</span>
+<span id="cb2-189"><a href="#cb2-189"></a>  website](https://cran.r-project.org/bin/macosx/) and check whether a more</span>
+<span id="cb2-190"><a href="#cb2-190"></a>  recent version is available. If so, please download and install it.</span>
+<span id="cb2-191"><a href="#cb2-191"></a></span>
+<span id="cb2-192"><a href="#cb2-192"></a><span class="fu">##### If you don't have R and RStudio installed</span></span>
+<span id="cb2-193"><a href="#cb2-193"></a></span>
+<span id="cb2-194"><a href="#cb2-194"></a><span class="ss">* </span>Download R from the <span class="co">[</span><span class="ot">CRAN website</span><span class="co">](http://cran.r-project.org/bin/macosx)</span>.</span>
+<span id="cb2-195"><a href="#cb2-195"></a><span class="ss">* </span>Select the <span class="in">`.pkg`</span> file for the latest R version</span>
+<span id="cb2-196"><a href="#cb2-196"></a><span class="ss">* </span>Double click on the downloaded file to install R</span>
+<span id="cb2-197"><a href="#cb2-197"></a><span class="ss">* </span>It is also a good idea to install <span class="co">[</span><span class="ot">XQuartz</span><span class="co">](https://www.xquartz.org/)</span> (needed</span>
+<span id="cb2-198"><a href="#cb2-198"></a>  by some packages)</span>
+<span id="cb2-199"><a href="#cb2-199"></a><span class="ss">* </span>Go to the [RStudio download</span>
+<span id="cb2-200"><a href="#cb2-200"></a>  page](https://www.rstudio.com/products/rstudio/download/#download)</span>
+<span id="cb2-201"><a href="#cb2-201"></a><span class="ss">* </span>Under *Installers* select **RStudio x.yy.zzz - Mac OS X 10.6+ (64-bit)**</span>
+<span id="cb2-202"><a href="#cb2-202"></a>  (where x, y, and z represent version numbers)</span>
+<span id="cb2-203"><a href="#cb2-203"></a><span class="ss">* </span>Double click the file to install RStudio</span>
+<span id="cb2-204"><a href="#cb2-204"></a><span class="ss">* </span>Once it's installed, open RStudio to make sure it works and you don't get any</span>
+<span id="cb2-205"><a href="#cb2-205"></a>  error messages.</span>
+<span id="cb2-206"><a href="#cb2-206"></a></span>
+<span id="cb2-207"><a href="#cb2-207"></a><span class="fu">#### Linux</span></span>
+<span id="cb2-208"><a href="#cb2-208"></a></span>
+<span id="cb2-209"><a href="#cb2-209"></a><span class="ss">* </span>Follow the instructions for your distribution from</span>
+<span id="cb2-210"><a href="#cb2-210"></a>  <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cloud.r-project.org/bin/linux)</span>, they provide information to get</span>
+<span id="cb2-211"><a href="#cb2-211"></a>  the most recent version of R for common distributions. For most distributions,</span>
+<span id="cb2-212"><a href="#cb2-212"></a>  you could use your package manager (e.g., for Debian/Ubuntu run `sudo apt-get</span>
+<span id="cb2-213"><a href="#cb2-213"></a>  install r-base<span class="in">`, and for Fedora `</span>sudo yum install R`), but we don't recommend</span>
+<span id="cb2-214"><a href="#cb2-214"></a>  this approach as the versions provided by this are usually out of date. In any</span>
+<span id="cb2-215"><a href="#cb2-215"></a>  case, make sure you have at least R 3.3.1.</span>
+<span id="cb2-216"><a href="#cb2-216"></a><span class="ss">* </span>Go to the [RStudio download</span>
+<span id="cb2-217"><a href="#cb2-217"></a>  page](https://www.rstudio.com/products/rstudio/download/#download)</span>
+<span id="cb2-218"><a href="#cb2-218"></a><span class="ss">* </span>Under *Installers* select the version that matches your distribution, and</span>
+<span id="cb2-219"><a href="#cb2-219"></a>  install it with your preferred method (e.g., with Debian/Ubuntu `sudo dpkg -i</span>
+<span id="cb2-220"><a href="#cb2-220"></a>  rstudio-x.yy.zzz-amd64.deb` at the terminal).</span>
+<span id="cb2-221"><a href="#cb2-221"></a><span class="ss">* </span>Once it's installed, open RStudio to make sure it works and you don't get any</span>
+<span id="cb2-222"><a href="#cb2-222"></a>  error messages.</span>
+<span id="cb2-223"><a href="#cb2-223"></a></span>
+<span id="cb2-224"><a href="#cb2-224"></a>These setup instructions are adapted from those written for [Data Carpentry: R</span>
+<span id="cb2-225"><a href="#cb2-225"></a>for Data Analysis and Visualization of Ecological</span>
+<span id="cb2-226"><a href="#cb2-226"></a>Data](http://www.datacarpentry.org/R-ecology-lesson/).</span>
+<span id="cb2-227"><a href="#cb2-227"></a></span>
+<span id="cb2-228"><a href="#cb2-228"></a><span class="fu">### Virtual Enironment setup with `renv` {#renv}</span></span>
+<span id="cb2-229"><a href="#cb2-229"></a></span>
+<span id="cb2-230"><a href="#cb2-230"></a>These instructions are intended to help with setting up the included [<span class="in">`renv`</span></span>
+<span id="cb2-231"><a href="#cb2-231"></a>virtual environment](https://rstudio.github.io/renv/index.html), which ensures</span>
+<span id="cb2-232"><a href="#cb2-232"></a>all participants are using the same exact set of <span class="in">`R`</span> packages (and package</span>
+<span id="cb2-233"><a href="#cb2-233"></a>versions). A few important notes to keep in mind:</span>
+<span id="cb2-234"><a href="#cb2-234"></a></span>
+<span id="cb2-235"><a href="#cb2-235"></a><span class="ss">* </span>When <span class="in">`R`</span> is started from the top level of this repository, <span class="in">`renv`</span> is</span>
+<span id="cb2-236"><a href="#cb2-236"></a>  activated automatically. There is no further action required on your part. If</span>
+<span id="cb2-237"><a href="#cb2-237"></a>  <span class="in">`renv`</span> is not installed, it will be installed automatically, assuming that you</span>
+<span id="cb2-238"><a href="#cb2-238"></a>  have an active internet connection.</span>
+<span id="cb2-239"><a href="#cb2-239"></a><span class="ss">* </span>While <span class="in">`renv`</span> is active, the <span class="in">`R`</span> session will only have access to the packages</span>
+<span id="cb2-240"><a href="#cb2-240"></a>  (and their dependencies) that are listed in the <span class="in">`renv.lock`</span> file -- that is,</span>
+<span id="cb2-241"><a href="#cb2-241"></a>  you should not expect to have access to any other <span class="in">`R`</span> packages that may be</span>
+<span id="cb2-242"><a href="#cb2-242"></a>  installed elsewhere on the computing system in use.</span>
+<span id="cb2-243"><a href="#cb2-243"></a><span class="ss">* </span>Upon an initial attempt, <span class="in">`renv`</span> will prompt you to install packages listed in</span>
+<span id="cb2-244"><a href="#cb2-244"></a>  the <span class="in">`renv.lock`</span> file, by printing a message like the following:</span>
+<span id="cb2-245"><a href="#cb2-245"></a></span>
+<span id="cb2-248"><a href="#cb2-248"></a><span class="in">```{r}</span></span>
+<span id="cb2-249"><a href="#cb2-249"></a><span class="co">#| label: renv-restore</span></span>
+<span id="cb2-250"><a href="#cb2-250"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-251"><a href="#cb2-251"></a><span class="co"># * Project '&lt;PATH/TO&gt;/causal_mediation_workshops' loaded. [renv 1.0.7]</span></span>
+<span id="cb2-252"><a href="#cb2-252"></a><span class="co"># * The project may be out of sync -- use `renv::status()` for more details.</span></span>
+<span id="cb2-253"><a href="#cb2-253"></a><span class="sc">&gt;</span> renv<span class="sc">::</span><span class="fu">status</span>()</span>
+<span id="cb2-254"><a href="#cb2-254"></a><span class="co"># The following package(s) are recorded in the lockfile, but not installed:</span></span>
+<span id="cb2-255"><a href="#cb2-255"></a><span class="co"># Use `renv::restore()` to install these packages.</span></span>
+<span id="cb2-256"><a href="#cb2-256"></a><span class="in">```</span></span>
+<span id="cb2-257"><a href="#cb2-257"></a>In any such case, please call <span class="in">`renv::restore()`</span> to install any missing packages.</span>
+<span id="cb2-258"><a href="#cb2-258"></a>Note that you do _not_ need to manually install the packages via</span>
+<span id="cb2-259"><a href="#cb2-259"></a><span class="in">`install.packages()`</span>, <span class="in">`remotes::install_github()`</span>, or similar.</span>
+<span id="cb2-260"><a href="#cb2-260"></a></span>
+<span id="cb2-261"><a href="#cb2-261"></a>For details on how the <span class="in">`renv`</span> system works, the following references may be</span>
+<span id="cb2-262"><a href="#cb2-262"></a>helpful:</span>
+<span id="cb2-263"><a href="#cb2-263"></a></span>
+<span id="cb2-264"><a href="#cb2-264"></a><span class="ss">1. </span>[Collaborating with</span>
+<span id="cb2-265"><a href="#cb2-265"></a>    <span class="in">`renv`</span>](https://rstudio.github.io/renv/articles/collaborating.html)</span>
+<span id="cb2-266"><a href="#cb2-266"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Introduction to `renv`</span><span class="co">](https://rstudio.github.io/renv/articles/renv.html)</span></span>
+<span id="cb2-267"><a href="#cb2-267"></a></span>
+<span id="cb2-268"><a href="#cb2-268"></a>In some rare cases, <span class="in">`R`</span> packages that <span class="in">`renv`</span> automatically tries to install as</span>
+<span id="cb2-269"><a href="#cb2-269"></a>part of the <span class="in">`renv::restore()`</span> process may fail due to missing systems-level</span>
+<span id="cb2-270"><a href="#cb2-270"></a>dependencies. In such cases, a reference to the missing dependencies and</span>
+<span id="cb2-271"><a href="#cb2-271"></a>system-specific instructions their installation involving, e.g., [Ubuntu</span>
+<span id="cb2-272"><a href="#cb2-272"></a>Linux's <span class="in">`apt`</span>](http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html) or</span>
+<span id="cb2-273"><a href="#cb2-273"></a><span class="co">[</span><span class="ot">`homebrew` for macOS</span><span class="co">](https://brew.sh/)</span>, will usually be displayed.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
