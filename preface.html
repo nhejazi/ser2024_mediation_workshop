@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","id":1,"options":{"warning":"true","message":"true","fig-height":5,"read-only":"false","out-height":"","results":"markup","autorun":"false","editor-max-height":"","dpi":72,"comment":"","output":"true","editor-quick-suggestions":"false","label":"unnamed-chunk-1","context":"interactive","fig-width":7,"fig-cap":"","editor-font-scale":"1","out-width":"700px","classes":""}},{"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","id":2,"options":{"warning":"true","message":"true","fig-height":5,"read-only":"false","out-height":"","results":"markup","autorun":"false","editor-max-height":"","dpi":72,"comment":"","output":"true","editor-quick-suggestions":"false","label":"unnamed-chunk-2","context":"interactive","fig-width":7,"fig-cap":"","editor-font-scale":"1","out-width":"700px","classes":""}}];
+globalThis.qwebrCellDetails = [{"options":{"label":"unnamed-chunk-1","context":"interactive","fig-width":7,"warning":"true","output":"true","dpi":72,"autorun":"false","results":"markup","editor-max-height":"","fig-cap":"","editor-font-scale":"1","message":"true","read-only":"false","comment":"","classes":"","fig-height":5,"out-width":"700px","editor-quick-suggestions":"false","out-height":""},"id":1,"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)"},{"options":{"label":"unnamed-chunk-2","context":"interactive","fig-width":7,"warning":"true","output":"true","dpi":72,"autorun":"false","results":"markup","editor-max-height":"","fig-cap":"","editor-font-scale":"1","message":"true","read-only":"false","comment":"","classes":"","fig-height":5,"out-width":"700px","editor-quick-suggestions":"false","out-height":""},"id":2,"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]"}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1253,7 +1253,7 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Welcome!</span></a>
+ <span class="menu-text">Welcome to SER 2024!</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -1309,7 +1309,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./estimation_walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1323,7 +1323,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Appendix</span></a>
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -2337,8 +2337,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Welcome!">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome!</span>
+      <a href="./index.html" class="pagination-link" aria-label="Welcome to SER 2024!">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome to SER 2024!</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
