@@ -1,0 +1,20 @@
+# global ignore
+*.pdf
+*.html
+.Rproj.user
+.Rhistory
+*.rds
+*.RData
+.DS_Store
+
+# (sub)directories
+/.quarto/
+/_freeze/
+/_notes/
+/site_libs/
+/*_files/
+*/*_files/
+
+# un-ignore
+!mathjax.html
+!/_extensions/**

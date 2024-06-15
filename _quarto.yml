@@ -1,0 +1,93 @@
+project:
+  type: book
+  output-dir: _notes
+  render:
+    - "*.qmd"
+
+execute:
+  freeze: auto
+  #echo: false
+  warning: false
+  message: false
+
+book:
+  title: "Modern Causal Mediation Analysis"
+  page-footer:
+    left: |
+    right: |
+  site-url: https://codex.nimahejazi.org/causal_mediation_workshops/
+  repo-url: https://github.com/nhejazi/causal_mediation_workshops/
+  repo-branch: master
+  repo-actions: [edit, issue]
+  reader-mode: true
+  sidebar:
+    style: "docked"
+  chapters:
+    - index.qmd
+    - part: "Identification"
+      chapters:
+        - preface.qmd
+        - effects_defn.qmd
+        - how_to_choose.qmd
+    - part: "Estimation"
+      chapters:
+        - estimation_prelims.qmd
+        - estimation_natural_interv.qmd
+        - estimation_walkthrough.qmd
+        - longitudinal.qmd
+    - part: "Appendix"
+      chapters:
+        - appx_additional_readings.qmd
+        - appx_stochastic_effects.qmd
+
+format:
+  html:
+    theme: [sandstone, style.scss]
+    callout-appearance: simple
+    # TeX-related options
+    include-in-header:
+      - file: headers/mathjax.html
+    # ToC options
+    toc: true
+    toc-depth: 2
+    toc-title: Contents
+    # citation/reference location
+    reference-location: margin
+    citation-location: margin
+    # figure options
+    fig-width: 8
+    fig-asp: 0.618
+    # code block options
+    code-link: true
+    code-fold: true
+    code-tools: true
+    code-line-numbers: true
+    #code-block-bg: dark
+    highlight-style: ayu-mirage
+
+bibliography: refs.bib
+editor: visual
+engine: knitr
+
+# Set default options for every webpage that may or may not include webR.
+webr:
+  # Display status of webR initialization
+  show-startup-message: true
+  # Check to see if COOP&COEP headers are set for speed.
+  #show-header-message: false
+  # Pre-install dependencies
+  packages: ['ggplot2', 'dplyr', 'data.table', 'mgcv']
+  autoload-packages: true
+  # Base URL used for specifying where R WebAssembly binaries should be located
+  #base-url: ''
+  # Customize where the working directory is
+  #home-dir: '/home/rstudio'
+  # Specify communication channel
+  #channel-type: 'post-message'
+  # URL from where to load JavaScript worker scripts when loading webR with
+  # the ServiceWorker communication channel.
+  #service-worker-url: ''
+
+# Attach webR to every page
+filters:
+  - webr

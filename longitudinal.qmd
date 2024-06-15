@@ -1,0 +1,512 @@
+# Mediation with time-varying treatments, mediators, and covariates
+
+```{r}
+#| label: load-renv
+#| echo: false
+#| message: false
+renv::load(here::here())
+library(here)
+```
+
+We'll now turn to thinking about how to define and estimate effects
+for cases where treatment, mediators, and covariates are time-varying.
+
+Before we delve into the specific, here are a couple of papers on this
+topic that are interesting/useful:
+
+- [Mediation analysis with time varying exposures and
+  mediators](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12194)
+  by Tyler J. VanderWeele and Eric J. Tchetgen Tchetgen
+- [Longitudinal Mediation Analysis with Time-varying Mediators and
+  Exposures, with Application to Survival
+  Outcomes](https://www.degruyter.com/document/doi/10.1515/jci-2016-0006/html)
+  by  Wenjing Zheng and Mark J. van der Laan
+- [Efficient and flexible causal mediation with time-varying
+  mediators, treatments, and
+  confounders](https://www.degruyter.com/document/doi/10.1515/jci-2022-0077/html) by Iván Díaz,
+  Nicholas Williams, and Kara E. Rudolph
+- [Identification and estimation of mediational effects of
+  longitudinal modified treatment
+  policies](https://arxiv.org/abs/2403.09928) by Brian Gilbert,
+  Katherine L. Hoffman, Nicholas Williams, Kara E. Rudolph, Edward
+  J. Schenck, Iván Díaz.
+
+In this chapter, we will be using the [`lcm` `R`
+package](https://github.com/nt-williams/lcm), which supports binary
+time-varying treatments and categorical mediators, and the [`lcmmtp`
+`R` package](https://github.com/nt-williams/lcmmtp) package, which
+supports continuous, multivariate, and binary time-varying treatments
+and categorical mediators.
+
+## Illustrative example
+
+As an illustrative example, we will use a dataset from an
+observational study looking at the effect of invasive mechanical
+ventilation (IMV) on the survival of COVID-19 patients, considering
+acute kidney injury (AKI) as a mediating factor.
+
+Briefly, IMV is a treatment for acute respiratory distress syndrome
+(ARDS). While IMV is a potentially life-saving therapy in patients
+with ARDS, its usage has been associated with several iatrogenic
+risks. Of interest to our illustrative study is acute kidney injury (AKI),
+a critical condition that complicates ICU stays and is associated with
+increased mortality. The causal model underlying this problem is as
+follows:
+
+The data on a single observational unit can be represented by the
+vector $O=(L_1,
+A_1, Z_1, M_1, L_2, \ldots, A_\tau, Z_\tau, M_\tau, Y)$, with the data
+pooled across all participants denoted $O_1, \ldots, O_n$, for a of
+$n$ i.i.d. observations of $O$. The associated DAG is
+
+```{tikz}
+#| fig-cap: Directed acyclic graph for time-varying treatments, mediators, and confounders
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[3]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {#3};
+}
+\pgfarrowsdeclare{arcs}{arcs}{...}
+{
+  \pgfsetdash{}{0pt} % do not dash
+  \pgfsetroundjoin   % fix join
+  \pgfsetroundcap    % fix cap
+  \pgfpathmoveto{\pgfpoint{-5pt}{5pt}}
+  \pgfpatharc{180}{270}{5pt}
+  \pgfpatharc{90}{180}{5pt}
+  \pgfusepathqstroke
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowB}[3]%
+{ \begin{pgfonlayer}{background}
+    \draw[|-arcs,line width=0.4mm,shorten <= 0.3cm,shorten >= 0.3cm,#3] (#1) -- +(#2);
+  \end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+    \Vertex{-1, 0}{W}{$L_1$}
+    \Vertex{1, 0}{A1}{$A_1$}
+    \Vertex{2, 0}{M1}{$M_1$}
+    \Vertex{3, 0}{Z1}{$L_2$}
+    \Vertex{2, -1}{L1}{$Z_1$}
+
+    \ArrowB{W}{A1}{black}
+
+    \Arrow{A1}{M1}{black}
+    \Arrow{A1}{L1}{black}
+    \Arrow{M1}{Z1}{black}
+    \Arrow{L1}{M1}{black}
+    \Arrow{L1}{Z1}{black}
+    \ArrowL{A1}{Z1}{black}
+
+    \Vertex{5, 0}{A2}{$A_2$}
+    \Vertex{6, 0}{M2}{$M_2$}
+    \Vertex{7, 0}{Z2}{$L_3$}
+    \Vertex{6, -1}{L2}{$Z_2$}
+    \node (dots) at (8, 0) {$\cdots$};
+    \Arrow{A2}{M2}{black}
+    \Arrow{A2}{L2}{black}
+    \Arrow{M2}{Z2}{black}
+    \Arrow{L2}{M2}{black}
+    \Arrow{L2}{Z2}{black}
+    \ArrowL{A2}{Z2}{black}
+
+    \ArrowB{Z1}{A2}{black}
+
+    \Vertex{9, 0}{At}{$A_\tau$}
+    \Vertex{10, 0}{Mt}{$M_\tau$}
+    \Vertex{11, 0}{Zt}{$Y$}
+    \Vertex{10, -1}{Lt}{$Z_\tau$}
+    \Arrow{At}{Mt}{black}
+    \Arrow{At}{Lt}{black}
+    \Arrow{Mt}{Zt}{black}
+    \Arrow{Lt}{Mt}{black}
+    \Arrow{Lt}{Zt}{black}
+    \ArrowL{At}{Zt}{black}
+\end{tikzpicture}
+```
+
+Where we are using the following notation:
+
+- $W$: baseline variables such as comorbidities, demographics, etc.
+- $L_t$ and $Z_t$: time-varying covariates such as lab results,
+  vitals, treatments, etc.
+- $A_t$: type of oxygen support at time $t$ (0: no oxygen support, 1:
+  oxygen support excluding IMV, 2: IMV)
+- $M_t$: indicator of AKI at time $t$
+- $Y$: mortality at end of study
+- We will use $H_t$ as a shorthand to denote all the data measured up
+  until right before $A_t$ occurs
+
+## Defining causal effects in this example
+
+How can we define (total) causal effects in this example?
+
+- Main challenge: cannot consider static treatmemt regimes (e.g., do
+  not intubate)
+- Such regimes would not be supported in the data (doctors would always intubate a person whose blood oxygen is too low)
+- We use *modified treatment policies* to address this
+- Main idea: consider a slight modification to the treatment a patient
+  actually received
+- For example, can consider the effect of a small delay in receiving
+  IMV
+- Specifically, we will consider a delay of one day in receiving IMV
+- In notation, the treatment regime would be as follows:
+
+\begin{equation}
+  d_t(a_t,h_t) =
+  \begin{cases}
+    1 &\text{ if } a_t=2 \text{ and } a_s \leq 1 \text{ for all } s < t,\\
+    a_t & \text{ otherwise.}
+  \end{cases}
+\end{equation}
+- We could then define the total effect as $E[Y(d) - Y]$, where $Y(d)$
+  is the counterfactual mortality if the above rule had been
+  implemented every day, i.e., the intervention is $d=(d_1,d_2,\ldots,
+  d_\tau)$.
+- This is a contrast of the mortality rate under a treatment rule that would
+  delay intubation by one day vs the mortality rate that was actually observed.
+
+## How do we define mediation causal effects with time-varying data?
+
+The above causal effect could be decomposed into natural direct and
+indirect effects as follows
+
+\begin{align*}
+E[Y(d) - Y] & = E[Y(d, M(d)) - Y(A, M)]\\
+&=\underbrace{\E[Y(\color{red}{d},\color{blue}{M(d)}) -
+    Y(\color{red}{d},\color{blue}{M})]}_{\text{natural indirect effect}} +
+    \underbrace{\E[Y(\color{blue}{d},\color{red}{M}) -
+    Y(\color{blue}{A},\color{red}{M})]}_{\text{natural direct effect}}
+\end{align*}
+
+- However, as before, these natural mediation effects are not identified.
+
+- The reason is that time-varying mediators exacerbate the issue of intermediate
+confounding. To see why, let us look at the DAG again:
+
+```{tikz}
+#| fig-cap: Directed acyclic graph with intermediate confounding
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[3]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {#3};
+}
+\pgfarrowsdeclare{arcs}{arcs}{...}
+{
+  \pgfsetdash{}{0pt} % do not dash
+  \pgfsetroundjoin   % fix join
+  \pgfsetroundcap    % fix cap
+  \pgfpathmoveto{\pgfpoint{-5pt}{5pt}}
+  \pgfpatharc{180}{270}{5pt}
+  \pgfpatharc{90}{180}{5pt}
+  \pgfusepathqstroke
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowB}[3]%
+{ \begin{pgfonlayer}{background}
+    \draw[|-arcs,line width=0.4mm,shorten <= 0.3cm,shorten >= 0.3cm,#3] (#1) -- +(#2);
+  \end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+    \Vertex{-1, 0}{W}{$L_1$}
+    \Vertex{1, 0}{A1}{$A_1$}
+    \Vertex{2, 0}{M1}{$M_1$}
+    \Vertex{3, 0}{Z1}{$L_2$}
+    \Vertex{2, -1}{L1}{$Z_1$}
+
+    \ArrowB{W}{A1}{black}
+
+    \Arrow{A1}{M1}{black}
+    \Arrow{A1}{L1}{black}
+    \Arrow{M1}{Z1}{black}
+    \Arrow{L1}{M1}{black}
+    \Arrow{L1}{Z1}{black}
+    \ArrowL{A1}{Z1}{black}
+
+    \Vertex{5, 0}{A2}{\textcolor{teal}{$A_2$}}
+    \Vertex{6, 0}{M2}{\textcolor{orange}{$M_2$}}
+    \Vertex{7, 0}{Z2}{\textcolor{orange}{$L_3$}}
+    \Vertex{6, -1}{L2}{\textcolor{orange}{$Z_2$}}
+    \node (dots) at (8, 0) {$\cdots$};
+    \Arrow{A2}{M2}{black}
+    \Arrow{A2}{L2}{black}
+    \Arrow{M2}{Z2}{black}
+    \Arrow{L2}{M2}{black}
+    \Arrow{L2}{Z2}{black}
+    \ArrowL{A2}{Z2}{black}
+
+    \ArrowB{Z1}{A2}{black}
+
+    \Vertex{9, 0}{At}{\textcolor{orange}{$A_\tau$}}
+    \Vertex{10, 0}{Mt}{\textcolor{violet}{$M_\tau$}}
+    \Vertex{11, 0}{Zt}{\textcolor{violet}{$Y$}}
+    \Vertex{10, -1}{Lt}{\textcolor{orange}{$Z_\tau$}}
+    \Arrow{At}{Mt}{black}
+    \Arrow{At}{Lt}{black}
+    \Arrow{Mt}{Zt}{black}
+    \Arrow{Lt}{Mt}{black}
+    \Arrow{Lt}{Zt}{black}
+    \ArrowL{At}{Zt}{black}
+\end{tikzpicture}
+```
+Note that all the variables in orange are confounders of the
+  mediator $M_\tau$ and the outcome, and are
+  also affected by treatment at time $t=2$.
+
+One possible solution to the above issues involves considering
+randomized versions of the above effects. Specifically:
+
+- Define $G(d)$ to be a random draw from the distribution of $M(d)$
+  conditional on baseline variables $W$.
+- We can then obtain the decomposition
+  $$
+    \E[Y(d, G(d)) - Y(A, G(A))]=\underbrace{\E[Y(\color{red}{d},\color{blue}{G(d)}) -
+    Y(\color{red}{d},\color{blue}{G(A)})]}_{\text{randomized interventional indirect effect}} +
+    \underbrace{\E[Y(\color{blue}{d},\color{red}{G(A)}) -
+      Y(\color{blue}{A},\color{red}{G(A)})]}_{\text{randomized interventional
+        direct effect}}
+  $$
+- As an example, consider the counterfactual $Y(d, G(d))$.
+- $M(d)$ is the observed AKI status of patients under a delay in intubation. If
+  $W$ is age, and we are deciding how to intervene on a patient who is 45 years
+  old, we take all the AKI statuses of 45 year olds and draw one of these AKI
+  values at random. Call this random draw $G(d)$
+- For a 45 year old patient, $Y(d, G(d))$ is the counterfactual mortality of
+  a patient if intubation had been delayed, and their AKI status would have
+  been assigned to a random draw from the AKI status of 45 year patients.
+
+## Identification assumptions and formula
+
+The above effects are identified under the following assumptions:
+
+- All the common causes of $A_t$ and $(Z_s, M_s, A_{s+1}, L_{s+1})$ are
+  measured for $s\geq t$
+- All the common causes of $M_t$ and $(Z_{s+1}, A_{s+1}, L_{s+1})$ are measured
+  for $s\geq t$
+- The intervention $d$ is supported in the data, meaning that for every patient
+  with covariates $h_t$ who had treatment status $a_t$, it is possible to find
+  a patient with covariates $h_t$ who had treatment status $d(a_t, h_t)$
+  - In our example, this translates roughly as: for every patient with
+    covariate history $h_t$ who was intubated at time $t$, it is possible to
+    find a patient covariate history $h_t$ who was intubated at time $t+1$.
+- There is a positive probability of the mediator $M_t$ for all feasible
+  covariate histories.
+
+The identification formula is complex, but we will explain it in the case of
+two time points. That is, assume the data are $O=(W, A_1, Z_1, M_1, L_1, A_2,
+Z_2, M_2, Y)$.
+
+Identification can be based on the following procedure. First, for each value
+$m_1$ and $m_2$ of the mediator, compute outcome regressions as follows:
+
+1. Regress $Y$ on $W, A_1, Z_1, M_1, L_1, A_2, Z_2, M_2$. Use this
+   regression to predict the outcome had the mediator been set to
+   $M_2=m_2$. Let $\tilde Y_2(m_2)$ denote this prediction.
+2. Regress $\tilde Y_2(m_2)$ on $W, A_1, Z_1, M_1, L_1, A_2$. Use this
+   regression to predict the outcome had the treatment $A_2$ been set to
+   $d(A_2, H_2)$. Let $\tilde Y_2^d(m_2)$ denote this prediction.
+3. Regress $\tilde Y_2(m_2, d_2)$ on $W, A_1, Z_1, M_1$. Use this
+   regression to predict the outcome had the mediator been set to
+   $M_1=m_1$. Let $\tilde Y_1(m_1, m_2)$ denote this prediction.
+4. Regress $\tilde Y_1(m_1, m_2)$ on $W, A_1$. Use this
+   regression to predict the outcome had the treatment $A_1$ been set to
+   $d(A_1, H_1)$. Let $\tilde Y_1^d(m_1, m_2)$ denote this prediction.
+
+Then, for each value $m_1$ and $m_2$ of the mediator, compute the mediator
+distribution as follows:
+
+1. Regress the binary variable $I(M_2=m_2)$ on $W, A_1, Z_1, M_1, L_1, A_2$.
+   Use this model to predict the probability of $M_2=m_2$ under an intervention
+   that sets $A_2$ to $d(A_2, H_2)$. Let this predicted probability be denoted
+   with $P(m_2)$.
+2. Regress the binary variable $I(M_1=m_1)P(m_2)$ on $W, A_1$. Use this model
+   to predict under an intervention that sets $A_1$ to $d(A_1, H_1)$. Let this
+   prediction be denoted with $P(m_1, m_2)$.
+
+At the end of these two sequential regression procedures, we have
+values $\tilde Y_1^d(m_1, m_2)$ and $P(m_1, m_2)$ for each value of
+the mediator $(m_1, m_2)$. Then, under identification assumptions, we
+have:
+
+$$
+  \E[Y(d, G(d)) = \sum_{m_1, m_2}\tilde Y_1^d(m_1, m_2)P(m_1, m_2) \ .
+$$
+
+## Estimators and `R` package
+
+As before, we can develop inverse probability weighted estimators, as well as
+substitution estimators based on the g-computation formula and doubly robust
+(DR) estimators.
+
+All of these estimators get significantly more complex. For instance, an
+g-computation estimator may be developed by running the regressions indicated
+in the above sequential regression procedures.
+
+Fortunately, the doubly robust estimators are coded in a package that
+can be used off-the-shelf without having to code any complicated
+sequential regression strategies on your own. Let us look at an
+example from the `lcmmtp` R package. First, let's take a look at a
+simulated dataset available in the package:
+
+```{r}
+#| label: longit-data
+library(lcmmtp)
+data <- as.data.frame(apply(lcmmtp_foo, 2, as.numeric))
+head(data)
+dim(lcmmtp_foo)
+```
+
+Now, let us perform an analysis where we assume our intent is to estimate
+$\E[Y(1), G(0)]$:
+
+```{r}
+#| label: longit-analysis1
+library(mlr3extralearners)
+vars <- lcmmtp:::lcmmtp_variables$new(
+    L = list(c("L_1"), c("L_2")),
+    A = c("A_1", "A_2"),
+    Z = list(c("Z_1"), c("Z_2")),
+    M = c("M_1", "M_2"),
+    Y = "Y",
+    cens = c("c1", "c2")
+)
+lrnrs <- c("mean", "earth", "glm")
+d_ap <- function(data, trt) rep(1, length(data[[trt]]))
+d_as <- function(data, trt) rep(0, length(data[[trt]]))
+
+EY10 <- lcmmtp(
+  data, vars, d_ap, d_as,
+  control = .lcmmtp_control(folds = 2,
+                            learners_trt = lrnrs,
+                            learners_mediator = lrnrs,
+                            learners_QL = lrnrs,
+                            learners_QZ = lrnrs,
+                            learners_QM = lrnrs)
+)
+```
+
+Now, assume that we want to estimate the direct effect by contrasting
+$\E[Y(1), G(0)] - \E[Y(0), G(0)]$:
+
+```{r}
+#| label: longit-analysis2
+EY00 <- lcmmtp(
+  lcmmtp_foo, vars, d_as, d_as,
+  control = .lcmmtp_control(folds = 2,
+                            learners_trt = lrnrs,
+                            learners_mediator = lrnrs,
+                            learners_QL = lrnrs,
+                            learners_QZ = lrnrs,
+                            learners_QM = lrnrs)
+)
+```
+
+And we can contrast the two using a convenient function from the `lmtp`
+R package:
+
+```{r}
+#| label: contrast
+library(lmtp)
+class(EY00) <- class(EY10) <- 'lmtp'
+EY00$estimator <- EY10$estimator <- 'SDR'
+names(EY00)[3] <- names(EY10)[3] <- 'eif'
+lmtp_contrast(EY10, ref = EY00)
+```
+
+## Pros and cons of this methodology
+
+#### Pros {.unnumbered}
+
+- Allows the non-parametric definition, identification, and estimation of
+  mediational causal effects for general longitudinal data structures
+- Allows for the use of machine learning to alleviate model
+  misspecification bias, and is equipped with formulas for the
+  computation of correct standard errors and confidence intervals
+- Easy-to-use software
+
+#### Cons {.unnumbered}
+
+- Some limitations remain: mediators $M$ need to be discrete random variables
+- As before, interventional effects do not satisfy the mediational sharp null
+  criteria, meaning that they may be different from zero when no individual in
+  the population experiences mediational effects
+  - This is probably not a big worry in practice, but it is something
+    we are keeping in mind as we develop novel estimators

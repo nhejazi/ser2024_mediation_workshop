@@ -1,0 +1,66 @@
+Package: mcmaWorkshops
+Type: Website
+Title: Modern Causal Mediation Analysis Workshops
+Version: 0.3.1
+Authors@R: c(
+    person("Nima", "Hejazi", email = "nh@nimahejazi.org",
+           role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-7127-2789")),
+    person("Iván", "Díaz", email = "ild2005@med.cornell.edu",
+           role = "aut",
+           comment = c(ORCID = "0000-0001-9056-2047")),
+    person("Kara", "Rudolph", email = "kr2854@cumc.columbia.edu",
+           role = "aut",
+           comment = c(ORCID = "0000-0002-9417-7960"))
+  )
+Maintainer: Nima Hejazi <nh@nimahejazi.org>
+Depends:
+  R (>= 4.2.0),
+  tidyverse,
+  data.table
+Imports:
+  downlit,
+  rmarkdown,
+  quarto,
+  mvtnorm,
+  magick,
+  pdftools,
+  svglite,
+  qpdf,
+  repr,
+  xml2,
+  bbotk,
+  checkmate,
+  sessioninfo,
+  skimr,
+  origami,
+  sl3,
+  medshift,
+  medoutcon,
+  lmtp
+Suggests:
+  nnls,
+  Rsolnp,
+  nloptr,
+  gam,
+  earth,
+  glmnet,
+  speedglm,
+  ranger,
+  hal9001,
+  SuperLearner
+Remotes:
+  github::tlverse/sl3@devel,
+  github::nhejazi/medshift,
+  github::nhejazi/medoutcon,
+  github::nt-williams/mlr3superlearner@Screener,
+  github::nt-williams/lcmmtp,
+  github::xoopR/param6,
+  github::xoopR/set6,
+  github::ropensci/aorsf
+URL:
+  https://github.com/nhejazi/causal_mediation_workshop,
+  https://codex.nimahejazi.org/causal_mediation_workshop
+BugReports: https://github.com/nhejazi/causal_mediation_workshops/issues
+Encoding: UTF-8
+RoxygenNote: 7.1.1
