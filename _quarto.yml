@@ -35,7 +35,7 @@ book:
         - estimation_natural_interv.qmd
         - estimation_walkthrough.qmd
         - longitudinal.qmd
-    - part: "Appendix"
+    - part: "Appendices"
       chapters:
         - appx_additional_readings.qmd
         - appx_stochastic_effects.qmd

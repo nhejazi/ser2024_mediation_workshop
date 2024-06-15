@@ -1,4 +1,4 @@
-# `R` packages for estimation of the causal (in)direct effects
+# Some `R` packages for estimation of the causal (in)direct effects
 
 ```{r}
 #| label: load-renv

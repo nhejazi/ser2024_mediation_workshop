@@ -22,7 +22,7 @@ renv::load(here::here())
 library(here)
 ```
 
-# Welcome! {.unnumbered}
+# Welcome to SER 2024! {.unnumbered}
 
 This open source, reproducible vignette accompanies a half-day workshop on
 *modern causal mediation analysis*, presented at the SER 2024 annual meeting.
@@ -128,7 +128,7 @@ generalizing/transporting findings from study samples to target populations and
 identifying subpopulations most likely to benefit from interventions contributes
 to efforts to optimally target available policy and program resources.
 
-## Reproducibility {#repro}
+## Reproducibility note {#repro}
 
 These workshop materials were written using the [Quarto](https://quarto.org/),
 an open-source, cross-platform technical publishing system built on
@@ -137,8 +137,9 @@ and the complete source is available on
 [GitHub](https://github.com/nhejazi/causal_mediation_workshops). This version of
 the book was built with `r R.version.string`, [pandoc](https://pandoc.org/)
 version `r rmarkdown::pandoc_version()`, and [quarto](https://quarto.org/)
-version `r quarto::quarto_version()`. See the `renv.lock` file accompanying the
-repository for up-to-date list of packages used.
+version `r quarto::quarto_version()`. See the [`renv.lock`
+file](https://github.com/nhejazi/ser2024_mediation_workshop/blob/master/renv.lock)
+in the source repository for an up-to-date list of the packages used.
 
 ## Setup instructions {#setup}
 
@@ -227,7 +228,7 @@ These setup instructions are adapted from those written for [Data Carpentry: R
 for Data Analysis and Visualization of Ecological
 Data](http://www.datacarpentry.org/R-ecology-lesson/).
 
-### Virtual Enironment setup with `renv` {#renv}
+### Virtual environment with `renv` {#renv}
 
 These instructions are intended to help with setting up the included [`renv`
 virtual environment](https://rstudio.github.io/renv/index.html), which ensures
@@ -236,30 +237,33 @@ versions). A few important notes to keep in mind:
 
 * When `R` is started from the top level of this repository, `renv` is
   activated automatically. There is no further action required on your part. If
-  `renv` is not installed, it will be installed automatically, assuming that you
-  have an active internet connection.
+  `renv` is not installed, it will be installed automatically (as long as you
+  have an active internet connection).
 * While `renv` is active, the `R` session will only have access to the packages
   (and their dependencies) that are listed in the `renv.lock` file -- that is,
   you should not expect to have access to any other `R` packages that may be
-  installed elsewhere on the computing system in use.
+  installed elsewhere (e.g., a global package cache) on the computing system
+  being used.
 * Upon an initial attempt, `renv` will prompt you to install packages listed in
   the `renv.lock` file, by printing a message like the following:
 
 ```{r}
-#| label: renv-restore
+#| label: renv-setup-test
 #| eval: false
-# * Project '<PATH/TO>/causal_mediation_workshops' loaded. [renv 1.0.7]
-# * The project may be out of sync -- use `renv::status()` for more details.
-> renv::status()
-# The following package(s) are recorded in the lockfile, but not installed:
-# Use `renv::restore()` to install these packages.
+# - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]
+# - One or more packages recorded in the lockfile are not installed.
+# - Use `renv::status()` for more details.
 ```
-In any such case, please call `renv::restore()` to install any missing packages.
-Note that you do _not_ need to manually install the packages via
-`install.packages()`, `remotes::install_github()`, or similar.
+In any such case, please call `renv::status()` to review the list of packages
+missing and to view `renv`'s recommendations for fixing the issue; usually,
+`renv::restore()` will be the next step necessary to install any missing
+packages. Note that you **do *not* need to manually install** the packages via
+`install.packages()`, `remotes::install_github()`, or similar, as `renv` will
+attempt do this for you.
 
-For details on how the `renv` system works, the following references may be
-helpful:
+While unnecessary for the purposes of this workshop, if you'd like to learn
+more about hte details of how the `renv` virtual environment system works, the
+following references may be helpful:
 
 1. [Collaborating with
     `renv`](https://rstudio.github.io/renv/articles/collaborating.html)
