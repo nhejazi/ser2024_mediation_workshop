@@ -25,7 +25,11 @@ library(here)
 # Welcome! {.unnumbered}
 
 This open source, reproducible vignette accompanies a half-day workshop on
-modern methods for _causal mediation analysis_.
+*modern causal mediation analysis*, presented at the SER 2024 annual meeting.
+<!--
+A version of this workshop was first taught at SER in 2021, and it has been
+taught annually thereafter.
+-->
 
 ## About this workshop {#about}
 
@@ -96,16 +100,16 @@ high-dimensional data.
 I am an Assistant Professor of Biostatistics at the [Harvard T.H. Chan School of
 Public
 Health](https://connects.catalyst.harvard.edu/Profiles/display/Person/207609).
-My research interests blend causal inference, machine learning,
-non/semi-parametric inference, and computational statistics, with areas of
-recent emphasis having included causal mediation analysis, efficient estimation
-under outcome-dependent sampling designs, estimation of the causal effects of
-continuous treatments, and machine learning-based sieve estimation in causal
-inference. My methodological work is motivated principally by scientific
-collaborations in clinical trials and observational studies of infectious
-diseases, infectious disease epidemiology, and computational biology. I am also
-passionate about statistical computing and programming, and the design of open
-source software tools for reproducible statistical data science.
+My research interests blend causal inference, machine learning, non- and
+semi-parametric inference, and computational statistics, with areas of recent
+emphasis having included causal mediation analysis, estimation under
+outcome-dependent sampling, causal inference with continuous-valued or ordinal
+treatments, and sieve methods for machine learning-based estimation in causal
+inference. My methodological work is motivated by scientific problems arising
+in clinical trials and observational studies of infectious diseases and
+infectious disease epidemiology. I am also passionate about statistical
+computing and programming, and the design of open source software tools for
+reproducible statistical data science.
 
 
 ### [Kara Rudolph](https://kararudolph.github.io/) {.unnumbered}

@@ -1,12 +1,15 @@
-# Modern Causal Mediation Analysis
+# SER 2024 Modern Causal Mediation Analysis
 
-These are materials for a half- or full-day workshop on causal mediation
-analysis for epidemiological and applied biostatistical scientists. Materials in
-this repository have been taught as part of a string of workshops offered at the
-annual meeting of the Society for Epidemiologic Research by Iván Díaz, Nima
-Hejazi, and Kara Rudolph.
+This is the GitHub repository for the workshop **Modern Causal Mediation
+Analysis**, co-taught by [Iván Díaz](https://www.idiaz.xyz/), [Nima
+Hejazi](https://nimahejazi.org), and [Kara
+Rudolph](https://kararudolph.github.io/) at the [SER 2023 annual
+meeting](https://epiresearch.org/annual-meeting/2024-meeting/2024-workshops/).
+The workshop materials are built using [Quarto](https://quarto.org) and make
+use of the [WebR](https://docs.r-wasm.org/webr/latest/) framework for
+interactive execution of `R` code in the browser.
 
-## Abstract for SER
+## Course Description
 
 Causal mediation analysis can provide a mechanistic understanding of how an
 exposure impacts an outcome, a central goal in epidemiology and health and
@@ -29,5 +32,3 @@ participants have working knowledge of the basic notions of causal inference,
 including counterfactuals and identification (linking the causal effect to
 a parameter estimable from the observed data distribution). Familiarity with the
 `R` programming language is also recommended.
-
-(_1497/1500 characters, excluding title_)
