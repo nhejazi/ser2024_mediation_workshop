@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Modern Causal Mediation Analysis - 1&nbsp; Causal mediation analysis intro</title>
+<title>Modern Causal Mediation Analysis - 1&nbsp; What is causal mediation analysis?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -334,7 +334,7 @@ body.reveal.quarto-dark div.qwebr-console-area {
 // Document level settings ----
 
 // Determine if we need to install R packages
-globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'data.table', 'mgcv'];
+globalThis.qwebrInstallRPackagesList = ['data.table', 'ggplot2', 'dplyr', 'mgcv'];
 
 // Specify possible locations to search for the repository
 globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"options":{"label":"unnamed-chunk-1","context":"interactive","fig-width":7,"warning":"true","output":"true","dpi":72,"autorun":"false","results":"markup","editor-max-height":"","fig-cap":"","editor-font-scale":"1","message":"true","read-only":"false","comment":"","classes":"","fig-height":5,"out-width":"700px","editor-quick-suggestions":"false","out-height":""},"id":1,"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)"},{"options":{"label":"unnamed-chunk-2","context":"interactive","fig-width":7,"warning":"true","output":"true","dpi":72,"autorun":"false","results":"markup","editor-max-height":"","fig-cap":"","editor-font-scale":"1","message":"true","read-only":"false","comment":"","classes":"","fig-height":5,"out-width":"700px","editor-quick-suggestions":"false","out-height":""},"id":2,"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]"}];
+globalThis.qwebrCellDetails = [{"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","id":1,"options":{"fig-width":7,"autorun":"false","dpi":72,"read-only":"false","fig-height":5,"warning":"true","context":"interactive","editor-font-scale":"1","results":"markup","message":"true","out-width":"700px","editor-max-height":"","output":"true","label":"unnamed-chunk-1","out-height":"","classes":"","editor-quick-suggestions":"false","comment":"","fig-cap":""}},{"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","id":2,"options":{"fig-width":7,"autorun":"false","dpi":72,"read-only":"false","fig-height":5,"warning":"true","context":"interactive","editor-font-scale":"1","results":"markup","message":"true","out-width":"700px","editor-max-height":"","output":"true","label":"unnamed-chunk-2","out-height":"","classes":"","editor-quick-suggestions":"false","comment":"","fig-cap":""}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1214,14 +1214,14 @@ window.Quarto = {
 };
 </script>
 </head>
-<body class="nav-sidebar docked slimcontent">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html">Identification</a></li><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html">Identification</a></li><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -1230,7 +1230,7 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Modern Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
@@ -1268,7 +1268,7 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./preface.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1581,8 +1581,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   };
   
 }
-</script><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html">Identification</a></li><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></a></li></ol></nav><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="mediation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</script><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html">Identification</a></li><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="mediation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -2347,7 +2347,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu"># Causal mediation analysis intro {#mediation}</span></span>
+<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu"># What is causal mediation analysis? {#mediation}</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="in">```{r}</span></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="co">#| label: load-renv</span></span>

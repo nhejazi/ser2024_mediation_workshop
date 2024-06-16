@@ -178,7 +178,7 @@ window.Quarto = {
 };
 </script>
 </head>
-<body class="nav-sidebar docked slimcontent">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
@@ -194,7 +194,7 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Modern Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
@@ -232,7 +232,7 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./preface.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Causal mediation analysis intro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -626,7 +626,7 @@ Y_{A,M_{A}}\)</span></p></li>
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="do">## E[Y(Adelta) - Y(Adelta, M)]</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="fu">mean</span>(indirect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1091267</code></pre>
+<pre><code>[1] 0.1087909</code></pre>
 </div>
 </div>
 </li>
@@ -642,7 +642,7 @@ Y_{A,M_{A}}\)</span></p></li>
 <span id="cb13-2"><a href="#cb13-2"></a>       (pred_y1_a0 <span class="sc">-</span> y) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> pscore_delta)</span>
 <span id="cb13-3"><a href="#cb13-3"></a><span class="fu">mean</span>(direct)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1092373</code></pre>
+<pre><code>[1] 0.1092754</code></pre>
 </div>
 </div>
 </li>
