@@ -94,24 +94,21 @@ efficiency guarantees with covariate adjustment in randomized trials. I am also
 interested in general semi-parametric theory, machine learning, and
 high-dimensional data.
 
-
 ### [Nima Hejazi](https://nimahejazi.org) {.unnumbered}
 
 I'm an Assistant Professor of Biostatistics at the [Harvard T.H. Chan School of
 Public Health](https://www.hsph.harvard.edu/profile/nima-s-hejazi/).
-My research explores how advances in causal inference, statistical machine
-learning, and computational statistics can empower discovery in the biomedical
-and health sciences. I focus on developing model-agnostic or assumption-lean
-statistical inference techniques, emphasizing a science-first, translational
-perspective to methodological research. Areas of recent emphasis have included
-causal mediation analysis, inference under outcome-dependent sampling, causal
-inference for continuous exposures, and sieve methods in causal machine
-learning. My methodological work is usually motivated by scientific problems
-from clinical trials and observational studies of infectious diseases, though
-I've also explored topics ranging from environmental health to healthcare
-equity. I'm also passionate about open source software, reproducible and
-transparent data science, and high-performance computing.
-
+My research program explores how advances in causal inference, statistical
+machine learning, and computational statistics can empower discovery in the
+biomedical and health sciences. The focus is on developing model-agnostic (or
+assumption-lean) approaches to statistical inference, emphasizing
+a science-first, translational perspective to methods research. Areas of recent
+emphasis have included causal mediation analysis, inference under
+outcome-dependent sampling, and sieve methods in causal machine learning. My
+work is usually motivated by scientific problems in clinical trials and
+observational studies of infectious diseases, though I've also explored topics
+ranging from environmental health to healthcare equity. I'm also passionate
+about open source software and reproducible, transparent data science.
 
 ### [Kara Rudolph](https://kararudolph.github.io/) {.unnumbered}
 
