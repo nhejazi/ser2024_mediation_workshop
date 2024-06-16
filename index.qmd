@@ -247,7 +247,9 @@ versions). A few important notes to keep in mind:
 * Upon an initial attempt, `renv` will prompt you to install packages listed in
   the `renv.lock` file, by printing a message like the following:
 
-```{{r}}
+```{r}
+#| label: renv-status-example
+#| eval: false
 # - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]
 # - One or more packages recorded in the lockfile are not installed.
 # - Use `renv::status()` for more details.
