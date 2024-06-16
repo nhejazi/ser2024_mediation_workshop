@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Modern Causal Mediation Analysis - 5&nbsp; Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</title>
+<title>Modern Causal Mediation Analysis - 5&nbsp; Construction of G-computation and weighted estimators: The case of the NDE</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"id":1,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-1","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"mean_y <- function(m, a, w) abs(w) + a * m\nmean_m <- function(a, w) plogis(w^2 - a)\npscore <- function(w) plogis(1 - abs(w))"},{"id":2,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-2","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"w_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *\n  mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *\n    (1 - mean_m(0, w_big)))\nprint(round(trueval), 4)"},{"id":3,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-3","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"gcomp <- function(y, m, a, w) {\n  lm_y <- lm(y ~ m + a + w)\n  pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))\n  pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))\n  pseudo <- pred_y1 - pred_y0\n  lm_pseudo <- lm(pseudo ~ a + w)\n  pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))\n  estimate <- mean(pred_pseudo)\n  return(estimate)\n}"},{"id":4,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-4","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"estimate <- lapply(seq_len(1000), function(iter) {\n  n <- 1000\n  w <- runif(n, -1, 1)\n  a <- rbinom(n, 1, pscore(w))\n  m <- rbinom(n, 1, mean_m(a, w))\n  y <- rnorm(n, mean_y(m, a, w))\n  est <- gcomp(y, m, a, w)\n  return(est)\n})\nestimate <- do.call(c, estimate)\n\nhist(estimate)\nabline(v = trueval, col = \"red\", lwd = 4)"},{"id":5,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-5","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":"8","fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"cis <- cbind(\n  estimate - qnorm(0.975) * sd(estimate),\n  estimate + qnorm(0.975) * sd(estimate)\n)\n\nord <- order(rowSums(cis))\nlower <- cis[ord, 1]\nupper <- cis[ord, 2]\ncurve(trueval + 0 * x,\n  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = \"n\",\n  xlab = \"\", ylab = \"Confidence interval\", cex.axis = 1.2, cex.lab = 1.2\n)\nfor (i in 1:1000) {\n  clr <- rgb(0.5, 0, 0.75, 0.5)\n  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)\n  points(rep(i, 2), c(lower[i], upper[i]), type = \"l\", lty = 1, col = clr)\n}\ntext(450, 0.10, \"n=1000 repetitions = 1000 \", cex = 1.2)\ntext(450, 0.01, paste0(\n  \"Coverage probability = \",\n  mean(lower < trueval & trueval < upper), \"%\"\n), cex = 1.2)"},{"id":6,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-6","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"mean_y <- function(m, a, w) abs(w) + a * m\nmean_m <- function(a, w)plogis(w^2 - a)\npscore <- function(w) plogis(1 - abs(w))\n\nw_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)\n                + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *\n                  (1 - mean_m(0, w_big)))\n\nn <- 1000\nw <- runif(n, -1, 1)\na <- rbinom(n, 1, pscore(w))\nm <- rbinom(n, 1, mean_m(a, w))\ny <- rnorm(n, mean_y(m, a, w))"},{"id":7,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-7","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"library(mgcv)\n## fit model for E(Y | A, W)\nb_fit <- gam(y ~ m:a + s(w, by = a))\n## fit model for P(A = 1 | M, W)\ne_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)\n## fit model for P(A = 1 | W)\ng_fit <- gam(a ~ w, family = binomial)"},{"id":8,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-8","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"## Compute P(A = 1 | W)\ng1_pred <- predict(g_fit, type = 'response')\n## Compute P(A = 0 | W)\ng0_pred <- 1 - g1_pred\n## Compute P(A = 1 | M, W)\ne1_pred <- predict(e_fit, type = 'response')\n## Compute P(A = 0 | M, W)\ne0_pred <- 1 - e1_pred\n## Compute E(Y | A = 1, M, W)\nb1_pred <- predict(b_fit, newdata = data.frame(a = 1, m, w))\n## Compute E(Y | A = 0, M, W)\nb0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w))\n## Compute E(Y | A, M, W)\nb_pred  <- predict(b_fit)"},{"id":9,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-9","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"## Compute Q(M, W)\npseudo <- b1_pred - b0_pred\n## Fit model for E[Q(M, W) | A, W]\nq_fit <- gam(pseudo ~ a + w + s(w, by = a))\n## Compute E[Q(M, W) | A = 0, W]\nq_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))"},{"id":10,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-10","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred"},{"id":11,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-11","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +\n  q_pred"},{"id":12,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-12","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"## One-step estimator\nmean(eif)"},{"id":13,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-13","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"one_step <- function(y, m, a, w) {\n  b_fit <- gam(y ~ m:a + s(w, by = a))\n  e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)\n  g_fit <- gam(a ~ w, family = binomial)\n  g1_pred <- predict(g_fit, type = 'response')\n  g0_pred <- 1 - g1_pred\n  e1_pred <- predict(e_fit, type = 'response')\n  e0_pred <- 1 - e1_pred\n  b1_pred <- predict(\n    b_fit, newdata = data.frame(a = 1, m, w), type = 'response'\n  )\n  b0_pred <- predict(\n    b_fit, newdata = data.frame(a = 0, m, w), type = 'response'\n  )\n  b_pred  <- predict(b_fit, type = 'response')\n  pseudo <- b1_pred - b0_pred\n  q_fit <- gam(pseudo ~ a + w + s(w, by = a))\n  q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))\n  ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred\n  eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred *\n    (pseudo - q_pred) + q_pred\n  return(mean(eif))\n}"},{"id":14,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-14","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"w_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)\n  + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))\nprint(trueval)"},{"id":15,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-15","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":7,"fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"estimate <- lapply(seq_len(1000), function(iter) {\n  n <- 1000\n  w <- runif(n, -1, 1)\n  a <- rbinom(n, 1, pscore(w))\n  m <- rbinom(n, 1, mean_m(a, w))\n  y <- rnorm(n, mean_y(m, a, w))\n  estimate <- one_step(y, m, a, w)\n  return(estimate)\n})\nestimate <- do.call(c, estimate)\n\nhist(estimate)\nabline(v = trueval, col = \"red\", lwd = 4)"},{"id":16,"options":{"read-only":"false","fig-height":5,"output":"true","results":"markup","editor-quick-suggestions":"false","label":"unnamed-chunk-16","out-width":"700px","editor-font-scale":"1","dpi":72,"context":"interactive","out-height":"","classes":"","editor-max-height":"","fig-width":"8","fig-cap":"","comment":"","message":"true","warning":"true","autorun":"false"},"code":"cis <- cbind(\n  estimate - qnorm(0.975) * sd(estimate),\n  estimate + qnorm(0.975) * sd(estimate)\n)\n\nord <- order(rowSums(cis))\nlower <- cis[ord, 1]\nupper <- cis[ord, 2]\ncurve(trueval + 0 * x,\n  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = \"n\",\n  xlab = \"\", ylab = \"Confidence interval\", cex.axis = 1.2, cex.lab = 1.2\n)\nfor (i in 1:1000) {\n  clr <- rgb(0.5, 0, 0.75, 0.5)\n  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)\n  points(rep(i, 2), c(lower[i], upper[i]), type = \"l\", lty = 1, col = clr)\n}\ntext(450, 0.10, \"n=1000 repetitions = 1000 \", cex = 1.2)\ntext(450, 0.01, paste0(\n  \"Coverage probability = \",\n  mean(lower < trueval & trueval < upper), \"%\"\n), cex = 1.2)"}];
+globalThis.qwebrCellDetails = [{"code":"mean_y <- function(m, a, w) abs(w) + a * m\nmean_m <- function(a, w) plogis(w^2 - a)\npscore <- function(w) plogis(1 - abs(w))","id":1,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-1","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"w_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *\n  mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *\n    (1 - mean_m(0, w_big)))\nprint(round(trueval), 4)","id":2,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-2","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"gcomp <- function(y, m, a, w) {\n  lm_y <- lm(y ~ m + a + w)\n  pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))\n  pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))\n  pseudo <- pred_y1 - pred_y0\n  lm_pseudo <- lm(pseudo ~ a + w)\n  pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))\n  estimate <- mean(pred_pseudo)\n  return(estimate)\n}","id":3,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-3","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"estimate <- lapply(seq_len(1000), function(iter) {\n  n <- 1000\n  w <- runif(n, -1, 1)\n  a <- rbinom(n, 1, pscore(w))\n  m <- rbinom(n, 1, mean_m(a, w))\n  y <- rnorm(n, mean_y(m, a, w))\n  est <- gcomp(y, m, a, w)\n  return(est)\n})\nestimate <- do.call(c, estimate)\n\nhist(estimate)\nabline(v = trueval, col = \"red\", lwd = 4)","id":4,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-4","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"cis <- cbind(\n  estimate - qnorm(0.975) * sd(estimate),\n  estimate + qnorm(0.975) * sd(estimate)\n)\n\nord <- order(rowSums(cis))\nlower <- cis[ord, 1]\nupper <- cis[ord, 2]\ncurve(trueval + 0 * x,\n  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = \"n\",\n  xlab = \"\", ylab = \"Confidence interval\", cex.axis = 1.2, cex.lab = 1.2\n)\nfor (i in 1:1000) {\n  clr <- rgb(0.5, 0, 0.75, 0.5)\n  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)\n  points(rep(i, 2), c(lower[i], upper[i]), type = \"l\", lty = 1, col = clr)\n}\ntext(450, 0.10, \"n=1000 repetitions = 1000 \", cex = 1.2)\ntext(450, 0.01, paste0(\n  \"Coverage probability = \",\n  mean(lower < trueval & trueval < upper), \"%\"\n), cex = 1.2)","id":5,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":"8","autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-5","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"mean_y <- function(m, a, w) abs(w) + a * m\nmean_m <- function(a, w)plogis(w^2 - a)\npscore <- function(w) plogis(1 - abs(w))\n\nw_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)\n                + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *\n                  (1 - mean_m(0, w_big)))\n\nn <- 1000\nw <- runif(n, -1, 1)\na <- rbinom(n, 1, pscore(w))\nm <- rbinom(n, 1, mean_m(a, w))\ny <- rnorm(n, mean_y(m, a, w))","id":6,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-6","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"library(mgcv)\n## fit model for E(Y | A, W)\nb_fit <- gam(y ~ m:a + s(w, by = a))\n## fit model for P(A = 1 | M, W)\ne_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)\n## fit model for P(A = 1 | W)\ng_fit <- gam(a ~ w, family = binomial)","id":7,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-7","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"## Compute P(A = 1 | W)\ng1_pred <- predict(g_fit, type = 'response')\n## Compute P(A = 0 | W)\ng0_pred <- 1 - g1_pred\n## Compute P(A = 1 | M, W)\ne1_pred <- predict(e_fit, type = 'response')\n## Compute P(A = 0 | M, W)\ne0_pred <- 1 - e1_pred\n## Compute E(Y | A = 1, M, W)\nb1_pred <- predict(b_fit, newdata = data.frame(a = 1, m, w))\n## Compute E(Y | A = 0, M, W)\nb0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w))\n## Compute E(Y | A, M, W)\nb_pred  <- predict(b_fit)","id":8,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-8","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"## Compute Q(M, W)\npseudo <- b1_pred - b0_pred\n## Fit model for E[Q(M, W) | A, W]\nq_fit <- gam(pseudo ~ a + w + s(w, by = a))\n## Compute E[Q(M, W) | A = 0, W]\nq_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))","id":9,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-9","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred","id":10,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-10","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +\n  q_pred","id":11,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-11","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"## One-step estimator\nmean(eif)","id":12,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-12","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"one_step <- function(y, m, a, w) {\n  b_fit <- gam(y ~ m:a + s(w, by = a))\n  e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)\n  g_fit <- gam(a ~ w, family = binomial)\n  g1_pred <- predict(g_fit, type = 'response')\n  g0_pred <- 1 - g1_pred\n  e1_pred <- predict(e_fit, type = 'response')\n  e0_pred <- 1 - e1_pred\n  b1_pred <- predict(\n    b_fit, newdata = data.frame(a = 1, m, w), type = 'response'\n  )\n  b0_pred <- predict(\n    b_fit, newdata = data.frame(a = 0, m, w), type = 'response'\n  )\n  b_pred  <- predict(b_fit, type = 'response')\n  pseudo <- b1_pred - b0_pred\n  q_fit <- gam(pseudo ~ a + w + s(w, by = a))\n  q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))\n  ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred\n  eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred *\n    (pseudo - q_pred) + q_pred\n  return(mean(eif))\n}","id":13,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-13","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"w_big <- runif(1e6, -1, 1)\ntrueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)\n  + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))\nprint(trueval)","id":14,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-14","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"estimate <- lapply(seq_len(1000), function(iter) {\n  n <- 1000\n  w <- runif(n, -1, 1)\n  a <- rbinom(n, 1, pscore(w))\n  m <- rbinom(n, 1, mean_m(a, w))\n  y <- rnorm(n, mean_y(m, a, w))\n  estimate <- one_step(y, m, a, w)\n  return(estimate)\n})\nestimate <- do.call(c, estimate)\n\nhist(estimate)\nabline(v = trueval, col = \"red\", lwd = 4)","id":15,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":7,"autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-15","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}},{"code":"cis <- cbind(\n  estimate - qnorm(0.975) * sd(estimate),\n  estimate + qnorm(0.975) * sd(estimate)\n)\n\nord <- order(rowSums(cis))\nlower <- cis[ord, 1]\nupper <- cis[ord, 2]\ncurve(trueval + 0 * x,\n  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = \"n\",\n  xlab = \"\", ylab = \"Confidence interval\", cex.axis = 1.2, cex.lab = 1.2\n)\nfor (i in 1:1000) {\n  clr <- rgb(0.5, 0, 0.75, 0.5)\n  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)\n  points(rep(i, 2), c(lower[i], upper[i]), type = \"l\", lty = 1, col = clr)\n}\ntext(450, 0.10, \"n=1000 repetitions = 1000 \", cex = 1.2)\ntext(450, 0.01, paste0(\n  \"Coverage probability = \",\n  mean(lower < trueval & trueval < upper), \"%\"\n), cex = 1.2)","id":16,"options":{"fig-cap":"","editor-max-height":"","warning":"true","out-width":"700px","results":"markup","output":"true","fig-width":"8","autorun":"false","classes":"","read-only":"false","label":"unnamed-chunk-16","comment":"","dpi":72,"editor-quick-suggestions":"false","message":"true","context":"interactive","out-height":"","fig-height":5,"editor-font-scale":"1"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1221,7 +1221,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./estimation_natural_interv.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./estimation_natural_interv.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -1303,7 +1303,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./estimation_natural_interv.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1351,26 +1351,11 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-<li><a href="#recap-of-definition-and-identification-of-the-natural-direct-effect" id="toc-recap-of-definition-and-identification-of-the-natural-direct-effect" class="nav-link active" data-scroll-target="#recap-of-definition-and-identification-of-the-natural-direct-effect"><span class="header-section-number">5.1</span> Recap of definition and identification of the natural direct effect</a></li>
+<li><a href="#recap-definition-and-identification-of-the-nde" id="toc-recap-definition-and-identification-of-the-nde" class="nav-link active" data-scroll-target="#recap-definition-and-identification-of-the-nde"><span class="header-section-number">5.1</span> Recap: Definition and identification of the NDE</a></li>
   <li><a href="#from-causal-to-statistical-quantities" id="toc-from-causal-to-statistical-quantities" class="nav-link" data-scroll-target="#from-causal-to-statistical-quantities"><span class="header-section-number">5.2</span> From causal to statistical quantities</a></li>
   <li><a href="#computing-identification-formulas-if-you-know-the-true-distribution" id="toc-computing-identification-formulas-if-you-know-the-true-distribution" class="nav-link" data-scroll-target="#computing-identification-formulas-if-you-know-the-true-distribution"><span class="header-section-number">5.3</span> Computing identification formulas if you know the true distribution</a></li>
-  <li><a href="#plug-in-a.k.a-g-computation-estimator" id="toc-plug-in-a.k.a-g-computation-estimator" class="nav-link" data-scroll-target="#plug-in-a.k.a-g-computation-estimator"><span class="header-section-number">5.4</span> Plug-in (a.k.a g-computation) estimator</a></li>
-  <li><a href="#first-weighted-estimator-akin-to-inverse-probability-weighted" id="toc-first-weighted-estimator-akin-to-inverse-probability-weighted" class="nav-link" data-scroll-target="#first-weighted-estimator-akin-to-inverse-probability-weighted"><span class="header-section-number">5.5</span> First weighted estimator (akin to inverse probability weighted)</a></li>
-  <li><a href="#second-weighted-estimator" id="toc-second-weighted-estimator" class="nav-link" data-scroll-target="#second-weighted-estimator"><span class="header-section-number">5.6</span> Second weighted estimator</a></li>
-  <li><a href="#how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice" id="toc-how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice" class="nav-link" data-scroll-target="#how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice"><span class="header-section-number">5.7</span> How can g-estimation and weighted estimation be implemented in practice?</a></li>
-  <li><a href="#pros-and-cons-of-g-computation-and-weighting-parametric-models" id="toc-pros-and-cons-of-g-computation-and-weighting-parametric-models" class="nav-link" data-scroll-target="#pros-and-cons-of-g-computation-and-weighting-parametric-models"><span class="header-section-number">5.8</span> Pros and cons of G-computation and weighting parametric models</a></li>
-  <li><a href="#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect" id="toc-an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect" class="nav-link" data-scroll-target="#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><span class="header-section-number">5.9</span> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
-  <li><a href="#pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression" id="toc-pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression" class="nav-link" data-scroll-target="#pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression"><span class="header-section-number">5.10</span> Pros and cons of G-computation or weighting with data-adaptive regression</a></li>
-  <li><a href="#solution-to-these-problems-robust-semiparametric-efficient-estimation" id="toc-solution-to-these-problems-robust-semiparametric-efficient-estimation" class="nav-link" data-scroll-target="#solution-to-these-problems-robust-semiparametric-efficient-estimation"><span class="header-section-number">5.11</span> Solution to these problems: robust semiparametric efficient estimation</a></li>
-  <li>
-<a href="#construction-of-a-semiparametric-efficient-estimator-for-the-nde-a.k.a.-the-one-step-estimator" id="toc-construction-of-a-semiparametric-efficient-estimator-for-the-nde-a.k.a.-the-one-step-estimator" class="nav-link" data-scroll-target="#construction-of-a-semiparametric-efficient-estimator-for-the-nde-a.k.a.-the-one-step-estimator"><span class="header-section-number">6</span> Construction of a semiparametric efficient estimator for the NDE (a.k.a. the one-step estimator)</a>
-  <ul class="collapse">
-<li><a href="#how-to-compute-the-one-step-estimator-akin-to-augmented-ipw" id="toc-how-to-compute-the-one-step-estimator-akin-to-augmented-ipw" class="nav-link" data-scroll-target="#how-to-compute-the-one-step-estimator-akin-to-augmented-ipw"><span class="header-section-number">6.1</span> How to compute the one-step estimator (akin to Augmented IPW)</a></li>
-  <li><a href="#performance-of-the-one-step-estimator-in-a-small-simulation-study" id="toc-performance-of-the-one-step-estimator-in-a-small-simulation-study" class="nav-link" data-scroll-target="#performance-of-the-one-step-estimator-in-a-small-simulation-study"><span class="header-section-number">6.2</span> Performance of the one-step estimator in a small simulation study</a></li>
-  <li><a href="#a-note-about-targeted-minimum-loss-based-estimation-tmle" id="toc-a-note-about-targeted-minimum-loss-based-estimation-tmle" class="nav-link" data-scroll-target="#a-note-about-targeted-minimum-loss-based-estimation-tmle"><span class="header-section-number">6.3</span> A note about targeted minimum loss-based estimation (TMLE)</a></li>
-  <li><a href="#a-note-about-cross-fitting" id="toc-a-note-about-cross-fitting" class="nav-link" data-scroll-target="#a-note-about-cross-fitting"><span class="header-section-number">6.4</span> A note about cross-fitting</a></li>
-  </ul>
-</li>
+  <li><a href="#plug-in-and-re-weighting-estimators" id="toc-plug-in-and-re-weighting-estimators" class="nav-link" data-scroll-target="#plug-in-and-re-weighting-estimators"><span class="header-section-number">5.4</span> Plug-in and re-weighting estimators</a></li>
+  <li><a href="#semi-parametric-efficient-estimators-for-the-nde" id="toc-semi-parametric-efficient-estimators-for-the-nde" class="nav-link" data-scroll-target="#semi-parametric-efficient-estimators-for-the-nde"><span class="header-section-number">5.5</span> Semi-parametric efficient estimators (for the NDE)</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/estimation_natural_interv.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
@@ -1597,9 +1582,9 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   };
   
 }
-</script><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./estimation_natural_interv.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></a></li></ol></nav><div class="quarto-title">
+</script><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./estimation_natural_interv.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span>
+<span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
@@ -1614,8 +1599,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   
 
 
-</header><section id="recap-of-definition-and-identification-of-the-natural-direct-effect" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="recap-of-definition-and-identification-of-the-natural-direct-effect">
-<span class="header-section-number">5.1</span> Recap of definition and identification of the natural direct effect</h2>
+</header><section id="recap-definition-and-identification-of-the-nde" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="recap-definition-and-identification-of-the-nde">
+<span class="header-section-number">5.1</span> Recap: Definition and identification of the NDE</h2>
 <p>Recall:</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource tex number-lines code-with-copy"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">\dimendef\prevdepth</span>=0</span>
@@ -1761,8 +1746,10 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </li>
 </ul>
 </li>
-</ul></section><section id="plug-in-a.k.a-g-computation-estimator" class="level2" data-number="5.4"><h2 data-number="5.4" class="anchored" data-anchor-id="plug-in-a.k.a-g-computation-estimator">
-<span class="header-section-number">5.4</span> Plug-in (a.k.a g-computation) estimator</h2>
+</ul></section><section id="plug-in-and-re-weighting-estimators" class="level2" data-number="5.4"><h2 data-number="5.4" class="anchored" data-anchor-id="plug-in-and-re-weighting-estimators">
+<span class="header-section-number">5.4</span> Plug-in and re-weighting estimators</h2>
+<section id="plug-in-aka-g-computation-estimator" class="level3" data-number="5.4.1"><h3 data-number="5.4.1" class="anchored" data-anchor-id="plug-in-aka-g-computation-estimator">
+<span class="header-section-number">5.4.1</span> Plug-in (aka g-computation) estimator</h3>
 <p>The above is how you would compute the <em>true value</em> <strong>if you know</strong> the true distribution <span class="math inline">\(\P\)</span></p>
 <ul>
 <li>This is exactly what we did in our R examples before</li>
@@ -1784,8 +1771,10 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </ul>
 </li>
 <li>This is known as the G-computation estimator.</li>
-</ul></section><section id="first-weighted-estimator-akin-to-inverse-probability-weighted" class="level2" data-number="5.5"><h2 data-number="5.5" class="anchored" data-anchor-id="first-weighted-estimator-akin-to-inverse-probability-weighted">
-<span class="header-section-number">5.5</span> First weighted estimator (akin to inverse probability weighted)</h2>
+</ul></section><section id="reweighting-aka-ipw-estimators" class="level3" data-number="5.4.2"><h3 data-number="5.4.2" class="anchored" data-anchor-id="reweighting-aka-ipw-estimators">
+<span class="header-section-number">5.4.2</span> Reweighting (aka IPW) estimators</h3>
+<section id="first-weighted-estimator-like-inverse-probability-weighted" class="level4" data-number="5.4.2.1"><h4 data-number="5.4.2.1" class="anchored" data-anchor-id="first-weighted-estimator-like-inverse-probability-weighted">
+<span class="header-section-number">5.4.2.1</span> First weighted estimator (like inverse probability weighted)</h4>
 <ul>
 <li>An alternative expression of the parameter functional (for the NDE) is given by <span class="math display">\[
   \E \bigg[\color{RoyalBlue}{\bigg\{ \frac{\I(A=1)}{\P(A=1\mid W)}
@@ -1801,8 +1790,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   \color{Goldenrod}{Y_i} \bigg]
 \]</span>
 </li>
-</ul></section><section id="second-weighted-estimator" class="level2" data-number="5.6"><h2 data-number="5.6" class="anchored" data-anchor-id="second-weighted-estimator">
-<span class="header-section-number">5.6</span> Second weighted estimator</h2>
+</ul></section><section id="second-weighted-estimator" class="level4" data-number="5.4.2.2"><h4 data-number="5.4.2.2" class="anchored" data-anchor-id="second-weighted-estimator">
+<span class="header-section-number">5.4.2.2</span> Second weighted estimator</h4>
 <ul>
 <li><p>The parameter functional for the NDE can also be expressed as a combination of regression and weighting: <span class="math display">\[
   \E\bigg[\color{RoyalBlue}{\frac{\I(A=0)}{\P(A=0\mid W)}}
@@ -1815,8 +1804,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   \color{Goldenrod}{\hat{\E}(Y \mid A=1, M_i, W_i) -
   \hat{\E}(Y \mid A=0, M_i, W_i)}\bigg]
 \]</span></p></li>
-</ul></section><section id="how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice" class="level2" data-number="5.7"><h2 data-number="5.7" class="anchored" data-anchor-id="how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice">
-<span class="header-section-number">5.7</span> How can g-estimation and weighted estimation be implemented in practice?</h2>
+</ul></section></section><section id="implementation-of-g-computation-and-ipw-estimators-in-practice" class="level3" data-number="5.4.3"><h3 data-number="5.4.3" class="anchored" data-anchor-id="implementation-of-g-computation-and-ipw-estimators-in-practice">
+<span class="header-section-number">5.4.3</span> Implementation of g-computation and IPW estimators in practice?</h3>
 <ul>
 <li>There are two possible ways to do G-computation or weighted estimation:
 <ul>
@@ -1824,8 +1813,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <li>Using flexible data-adaptive regression (aka machine learning)</li>
 </ul>
 </li>
-</ul></section><section id="pros-and-cons-of-g-computation-and-weighting-parametric-models" class="level2" data-number="5.8"><h2 data-number="5.8" class="anchored" data-anchor-id="pros-and-cons-of-g-computation-and-weighting-parametric-models">
-<span class="header-section-number">5.8</span> Pros and cons of G-computation and weighting parametric models</h2>
+</ul></section><section id="pros-and-cons-of-g-computation-and-ipw-with-parametric-modeling" class="level3" data-number="5.4.4"><h3 data-number="5.4.4" class="anchored" data-anchor-id="pros-and-cons-of-g-computation-and-ipw-with-parametric-modeling">
+<span class="header-section-number">5.4.4</span> Pros and cons of g-computation and IPW with parametric modeling</h3>
 <ul>
 <li>Pros:
 <ul>
@@ -1841,18 +1830,18 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <li>This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a., machine learning)</li>
 </ul>
 </li>
-</ul></section><section id="an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect" class="level2" data-number="5.9"><h2 data-number="5.9" class="anchored" data-anchor-id="an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect">
-<span class="header-section-number">5.9</span> An example of the bias of a g-computation estimator of the natural direct effect</h2>
+</ul></section><section id="example-bias-of-a-parametric-g-computation-estimator-of-the-nde" class="level3" data-number="5.4.5"><h3 data-number="5.4.5" class="anchored" data-anchor-id="example-bias-of-a-parametric-g-computation-estimator-of-the-nde">
+<span class="header-section-number">5.4.5</span> Example: Bias of a parametric g-computation estimator of the NDE</h3>
 <ul>
 <li>
-<p>The following <code>R</code> chunk provides simulation code to exemplify the bias of a G-computation parametric estimator in a simple situation</p>
+<p>The following <code>R</code> chunk provides simulation code to exemplify the bias of a parametric g-computation estimator in a simple situation</p>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </li>
 <li>
-<p>Let’s perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on</p>
+<p>Let’s perform a simulation where we draw 1000 datasets from the above distribution, and compute a parametric g-computation estimator based on</p>
 <div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div id="qwebr-insertion-location-4"></div>
@@ -1863,8 +1852,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </li>
-</ul></section><section id="pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression" class="level2" data-number="5.10"><h2 data-number="5.10" class="anchored" data-anchor-id="pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression">
-<span class="header-section-number">5.10</span> Pros and cons of G-computation or weighting with data-adaptive regression</h2>
+</ul></section><section id="pros-and-cons-of-g-computation-or-ipw-with-data-adaptive-regression" class="level3" data-number="5.4.6"><h3 data-number="5.4.6" class="anchored" data-anchor-id="pros-and-cons-of-g-computation-or-ipw-with-data-adaptive-regression">
+<span class="header-section-number">5.4.6</span> Pros and cons of g-computation or IPW with data-adaptive regression</h3>
 <ul>
 <li>Pros:
 <ul>
@@ -1879,8 +1868,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <li>For example, the bootstrap is not guaranteed to work, and it is known to fail in some cases.</li>
 </ul>
 </li>
-</ul></section><section id="solution-to-these-problems-robust-semiparametric-efficient-estimation" class="level2" data-number="5.11"><h2 data-number="5.11" class="anchored" data-anchor-id="solution-to-these-problems-robust-semiparametric-efficient-estimation">
-<span class="header-section-number">5.11</span> Solution to these problems: robust semiparametric efficient estimation</h2>
+</ul></section><section id="solution-robust-semi-parametric-efficient-estimation" class="level3" data-number="5.4.7"><h3 data-number="5.4.7" class="anchored" data-anchor-id="solution-robust-semi-parametric-efficient-estimation">
+<span class="header-section-number">5.4.7</span> Solution: Robust semi-parametric efficient estimation</h3>
 <ul>
 <li>Intuitively, it combines the three above estimators to obtain an estimator with improved robustness properties</li>
 <li>It offers a way to use data-adaptive regression to
@@ -1918,8 +1907,10 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
  probabilities greater than one. A solution to this (not discussed in
  this workshop but implemented in some of the R packages) is targeted
  minimum loss-based estimation.
---></section><section id="construction-of-a-semiparametric-efficient-estimator-for-the-nde-a.k.a.-the-one-step-estimator" class="level1 page-columns page-full" data-number="6"><h1 data-number="6">
-<span class="header-section-number">6</span> Construction of a semiparametric efficient estimator for the NDE (a.k.a. the one-step estimator)</h1>
+--></section></section><section id="semi-parametric-efficient-estimators-for-the-nde" class="level2 page-columns page-full" data-number="5.5"><h2 data-number="5.5" class="anchored" data-anchor-id="semi-parametric-efficient-estimators-for-the-nde">
+<span class="header-section-number">5.5</span> Semi-parametric efficient estimators (for the NDE)</h2>
+<section id="constructing-a-semi-parametric-efficient-estimator-aka-the-one-step" class="level3" data-number="5.5.1"><h3 data-number="5.5.1" class="anchored" data-anchor-id="constructing-a-semi-parametric-efficient-estimator-aka-the-one-step">
+<span class="header-section-number">5.5.1</span> Constructing a semi-parametric efficient estimator (aka the one-step)</h3>
 <!--
 - For illustration, we will first present how to construct an estimator of the
   NDE that uses the EIF "by hand"
@@ -1978,8 +1969,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
       \color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) \mid W, A=0] \big\}} \\
     &amp;+ \color{Goldenrod}{\E[Q(M,W) \mid W, A=0]}
 \end{align*}\]</span></p>
-<section id="how-to-compute-the-one-step-estimator-akin-to-augmented-ipw" class="level2 page-columns page-full" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="how-to-compute-the-one-step-estimator-akin-to-augmented-ipw">
-<span class="header-section-number">6.1</span> How to compute the one-step estimator (akin to Augmented IPW)</h2>
+</section><section id="how-to-compute-the-one-step-estimator-like-augmented-ipw" class="level3 page-columns page-full" data-number="5.5.2"><h3 data-number="5.5.2" class="anchored" data-anchor-id="how-to-compute-the-one-step-estimator-like-augmented-ipw">
+<span class="header-section-number">5.5.2</span> How to compute the one-step estimator (like Augmented IPW)</h3>
 <p>First we will generate some data:</p>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2027,8 +2018,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </li>
 </ol><div class="no-row-height column-margin column-container"><div id="ref-vdl2007super" class="csl-entry" role="listitem">
 van der Laan, Mark J, Eric C Polley, and Alan E Hubbard. 2007. <span>“<span>Super Learner</span>.”</span> <em>Statistical Applications in Genetics and Molecular Biology</em> 6 (1).
-</div></div></section><section id="performance-of-the-one-step-estimator-in-a-small-simulation-study" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="performance-of-the-one-step-estimator-in-a-small-simulation-study">
-<span class="header-section-number">6.2</span> Performance of the one-step estimator in a small simulation study</h2>
+</div></div></section><section id="performance-of-the-one-step-estimator-in-a-small-simulation-study" class="level3" data-number="5.5.3"><h3 data-number="5.5.3" class="anchored" data-anchor-id="performance-of-the-one-step-estimator-in-a-small-simulation-study">
+<span class="header-section-number">5.5.3</span> Performance of the one-step estimator in a small simulation study</h3>
 <p>First, we create a wrapper around the estimator</p>
 <div id="qwebr-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2048,8 +2039,8 @@ van der Laan, Mark J, Eric C Polley, and Alan E Hubbard. 2007. <span>“<span>Su
 </ul>
 <div id="qwebr-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section><section id="a-note-about-targeted-minimum-loss-based-estimation-tmle" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="a-note-about-targeted-minimum-loss-based-estimation-tmle">
-<span class="header-section-number">6.3</span> A note about targeted minimum loss-based estimation (TMLE)</h2>
+</section><section id="on-targeted-minimum-loss-based-estimation-tmle" class="level3" data-number="5.5.4"><h3 data-number="5.5.4" class="anchored" data-anchor-id="on-targeted-minimum-loss-based-estimation-tmle">
+<span class="header-section-number">5.5.4</span> On targeted minimum loss-based estimation (TMLE)</h3>
 <ul>
 <li>The above estimator is great because it allows us to use data-adaptive regression to avoid bias, while allowing the computation of correct standard errors</li>
 <li>This estimator has a problem, though:
@@ -2060,8 +2051,8 @@ van der Laan, Mark J, Eric C Polley, and Alan E Hubbard. 2007. <span>“<span>Su
 <li>To solve this, you can compute a TMLE instead (implemented in the R packages, coming up)</li>
 </ul>
 </li>
-</ul></section><section id="a-note-about-cross-fitting" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="a-note-about-cross-fitting">
-<span class="header-section-number">6.4</span> A note about cross-fitting</h2>
+</ul></section><section id="on-about-cross-fitting" class="level3" data-number="5.5.5"><h3 data-number="5.5.5" class="anchored" data-anchor-id="on-about-cross-fitting">
+<span class="header-section-number">5.5.5</span> On about cross-fitting</h3>
 <ul>
 <li>When using data-adaptive regression estimators, it is recommended to use cross-fitted estimators</li>
 <li>Cross-fitting is similar to cross-validation:
@@ -2550,7 +2541,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu"># Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></span>
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu"># Construction of G-computation and weighted estimators: The case of the NDE</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-5"><a href="#cb2-5"></a><span class="in">```{r}</span></span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="co">#| label: load-renv</span></span>
@@ -2560,7 +2551,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb2-10"><a href="#cb2-10"></a><span class="fu">library</span>(here)</span>
 <span id="cb2-11"><a href="#cb2-11"></a><span class="in">```</span></span>
 <span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="fu">## Recap of definition and identification of the natural direct effect</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="fu">## Recap: Definition and identification of the NDE</span></span>
 <span id="cb2-14"><a href="#cb2-14"></a></span>
 <span id="cb2-15"><a href="#cb2-15"></a>Recall:</span>
 <span id="cb2-16"><a href="#cb2-16"></a></span>
@@ -2709,486 +2700,491 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb2-161"><a href="#cb2-161"></a><span class="ss">  - </span>Computing the probability $\P(W=w)$ for all values $w$</span>
 <span id="cb2-162"><a href="#cb2-162"></a><span class="ss">  - </span>Computing the mean over all values $w$</span>
 <span id="cb2-163"><a href="#cb2-163"></a></span>
-<span id="cb2-164"><a href="#cb2-164"></a></span>
-<span id="cb2-165"><a href="#cb2-165"></a><span class="fu">## Plug-in (a.k.a g-computation) estimator</span></span>
-<span id="cb2-166"><a href="#cb2-166"></a></span>
-<span id="cb2-167"><a href="#cb2-167"></a>The above is how you would compute the _true value_ __if you know__ the true</span>
-<span id="cb2-168"><a href="#cb2-168"></a>distribution $\P$</span>
-<span id="cb2-169"><a href="#cb2-169"></a></span>
-<span id="cb2-170"><a href="#cb2-170"></a><span class="ss">- </span>This is exactly what we did in our R examples before</span>
-<span id="cb2-171"><a href="#cb2-171"></a><span class="ss">- </span>But we can use the same logic for estimation:</span>
-<span id="cb2-172"><a href="#cb2-172"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\E(Y\mid A=1,M=m,W=w)$</span>
-<span id="cb2-173"><a href="#cb2-173"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\E(Y\mid A=0,M=m,W=w)$</span>
-<span id="cb2-174"><a href="#cb2-174"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\P(M=m\mid A=0,W=w)$</span>
-<span id="cb2-175"><a href="#cb2-175"></a><span class="ss">  - </span>Estimate $\P(W=w)$ with the empirical distribution</span>
-<span id="cb2-176"><a href="#cb2-176"></a><span class="ss">  - </span>Evaluate</span>
-<span id="cb2-177"><a href="#cb2-177"></a>    $$</span>
-<span id="cb2-178"><a href="#cb2-178"></a>      \psi(\hat\P) = \hat{\E}[\color{RoyalBlue}{</span>
-<span id="cb2-179"><a href="#cb2-179"></a>        \hat{\E}<span class="sc">\{</span>\color{Goldenrod}{\hat\E(Y \mid A=1, M, W) -</span>
-<span id="cb2-180"><a href="#cb2-180"></a>        \hat{\E}(Y \mid A=0, M, W)}\mid A=0,W<span class="sc">\}</span>}]</span>
-<span id="cb2-181"><a href="#cb2-181"></a>    $$</span>
-<span id="cb2-182"><a href="#cb2-182"></a><span class="ss">- </span>This is known as the G-computation estimator.</span>
-<span id="cb2-183"><a href="#cb2-183"></a></span>
-<span id="cb2-184"><a href="#cb2-184"></a><span class="fu">## First weighted estimator (akin to inverse probability weighted)</span></span>
-<span id="cb2-185"><a href="#cb2-185"></a></span>
-<span id="cb2-186"><a href="#cb2-186"></a><span class="ss">- </span>An alternative expression of the parameter functional (for the NDE) is given</span>
-<span id="cb2-187"><a href="#cb2-187"></a>  by</span>
-<span id="cb2-188"><a href="#cb2-188"></a>  $$</span>
-<span id="cb2-189"><a href="#cb2-189"></a>    \E \bigg[\color{RoyalBlue}{\bigg<span class="sc">\{</span> \frac{\I(A=1)}{\P(A=1\mid W)}</span>
-<span id="cb2-190"><a href="#cb2-190"></a>    \frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -</span>
-<span id="cb2-191"><a href="#cb2-191"></a>    \frac{\I(A=0)}{\P(A=0\mid W)}\bigg<span class="sc">\}</span>} \times \color{Goldenrod}{Y}\bigg]</span>
-<span id="cb2-192"><a href="#cb2-192"></a>  $$</span>
-<span id="cb2-193"><a href="#cb2-193"></a><span class="ss">- </span>Thus, you can also construct a weighted estimator as</span>
-<span id="cb2-194"><a href="#cb2-194"></a>  $$</span>
-<span id="cb2-195"><a href="#cb2-195"></a>    \frac{1}{n} \sum_{i=1}^n \bigg[\color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
-<span id="cb2-196"><a href="#cb2-196"></a>    \frac{\I(A_i=1)}{\hat{\P}(A_i=1\mid W_i)}</span>
-<span id="cb2-197"><a href="#cb2-197"></a>    \frac{\hat{\P}(M_i\mid A_i=0,W_i)}{\hat{\P}(M_i\mid A_i=1, W_i)} -</span>
-<span id="cb2-198"><a href="#cb2-198"></a>    \frac{\I(A_i=0)}{\hat{\P}(A_i=0\mid W_i)}\bigg<span class="sc">\}</span>} \times</span>
-<span id="cb2-199"><a href="#cb2-199"></a>    \color{Goldenrod}{Y_i} \bigg]</span>
-<span id="cb2-200"><a href="#cb2-200"></a>  $$</span>
-<span id="cb2-201"><a href="#cb2-201"></a></span>
-<span id="cb2-202"><a href="#cb2-202"></a><span class="fu">## Second weighted estimator</span></span>
-<span id="cb2-203"><a href="#cb2-203"></a></span>
-<span id="cb2-204"><a href="#cb2-204"></a><span class="ss">- </span>The parameter functional for the NDE can also be expressed as a combination of</span>
-<span id="cb2-205"><a href="#cb2-205"></a>  regression and weighting:</span>
-<span id="cb2-206"><a href="#cb2-206"></a>  $$</span>
-<span id="cb2-207"><a href="#cb2-207"></a>    \E\bigg[\color{RoyalBlue}{\frac{\I(A=0)}{\P(A=0\mid W)}}</span>
-<span id="cb2-208"><a href="#cb2-208"></a>    \times \color{Goldenrod}{\E(Y \mid A=1, M, W) -</span>
-<span id="cb2-209"><a href="#cb2-209"></a>    \E(Y \mid A=0, M, W)}\bigg]</span>
-<span id="cb2-210"><a href="#cb2-210"></a>  $$</span>
-<span id="cb2-211"><a href="#cb2-211"></a></span>
-<span id="cb2-212"><a href="#cb2-212"></a><span class="ss">- </span>Thus, you can also construct a weighted estimator as</span>
+<span id="cb2-164"><a href="#cb2-164"></a><span class="fu">## Plug-in and re-weighting estimators</span></span>
+<span id="cb2-165"><a href="#cb2-165"></a></span>
+<span id="cb2-166"><a href="#cb2-166"></a><span class="fu">### Plug-in (aka g-computation) estimator</span></span>
+<span id="cb2-167"><a href="#cb2-167"></a></span>
+<span id="cb2-168"><a href="#cb2-168"></a>The above is how you would compute the _true value_ __if you know__ the true</span>
+<span id="cb2-169"><a href="#cb2-169"></a>distribution $\P$</span>
+<span id="cb2-170"><a href="#cb2-170"></a></span>
+<span id="cb2-171"><a href="#cb2-171"></a><span class="ss">- </span>This is exactly what we did in our R examples before</span>
+<span id="cb2-172"><a href="#cb2-172"></a><span class="ss">- </span>But we can use the same logic for estimation:</span>
+<span id="cb2-173"><a href="#cb2-173"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\E(Y\mid A=1,M=m,W=w)$</span>
+<span id="cb2-174"><a href="#cb2-174"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\E(Y\mid A=0,M=m,W=w)$</span>
+<span id="cb2-175"><a href="#cb2-175"></a><span class="ss">  - </span>Fit a regression to estimate, say $\hat\P(M=m\mid A=0,W=w)$</span>
+<span id="cb2-176"><a href="#cb2-176"></a><span class="ss">  - </span>Estimate $\P(W=w)$ with the empirical distribution</span>
+<span id="cb2-177"><a href="#cb2-177"></a><span class="ss">  - </span>Evaluate</span>
+<span id="cb2-178"><a href="#cb2-178"></a>    $$</span>
+<span id="cb2-179"><a href="#cb2-179"></a>      \psi(\hat\P) = \hat{\E}[\color{RoyalBlue}{</span>
+<span id="cb2-180"><a href="#cb2-180"></a>        \hat{\E}<span class="sc">\{</span>\color{Goldenrod}{\hat\E(Y \mid A=1, M, W) -</span>
+<span id="cb2-181"><a href="#cb2-181"></a>        \hat{\E}(Y \mid A=0, M, W)}\mid A=0,W<span class="sc">\}</span>}]</span>
+<span id="cb2-182"><a href="#cb2-182"></a>    $$</span>
+<span id="cb2-183"><a href="#cb2-183"></a><span class="ss">- </span>This is known as the G-computation estimator.</span>
+<span id="cb2-184"><a href="#cb2-184"></a></span>
+<span id="cb2-185"><a href="#cb2-185"></a><span class="fu">### Reweighting (aka IPW) estimators</span></span>
+<span id="cb2-186"><a href="#cb2-186"></a></span>
+<span id="cb2-187"><a href="#cb2-187"></a><span class="fu">#### First weighted estimator (like inverse probability weighted)</span></span>
+<span id="cb2-188"><a href="#cb2-188"></a></span>
+<span id="cb2-189"><a href="#cb2-189"></a><span class="ss">- </span>An alternative expression of the parameter functional (for the NDE) is given</span>
+<span id="cb2-190"><a href="#cb2-190"></a>  by</span>
+<span id="cb2-191"><a href="#cb2-191"></a>  $$</span>
+<span id="cb2-192"><a href="#cb2-192"></a>    \E \bigg[\color{RoyalBlue}{\bigg<span class="sc">\{</span> \frac{\I(A=1)}{\P(A=1\mid W)}</span>
+<span id="cb2-193"><a href="#cb2-193"></a>    \frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -</span>
+<span id="cb2-194"><a href="#cb2-194"></a>    \frac{\I(A=0)}{\P(A=0\mid W)}\bigg<span class="sc">\}</span>} \times \color{Goldenrod}{Y}\bigg]</span>
+<span id="cb2-195"><a href="#cb2-195"></a>  $$</span>
+<span id="cb2-196"><a href="#cb2-196"></a><span class="ss">- </span>Thus, you can also construct a weighted estimator as</span>
+<span id="cb2-197"><a href="#cb2-197"></a>  $$</span>
+<span id="cb2-198"><a href="#cb2-198"></a>    \frac{1}{n} \sum_{i=1}^n \bigg[\color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
+<span id="cb2-199"><a href="#cb2-199"></a>    \frac{\I(A_i=1)}{\hat{\P}(A_i=1\mid W_i)}</span>
+<span id="cb2-200"><a href="#cb2-200"></a>    \frac{\hat{\P}(M_i\mid A_i=0,W_i)}{\hat{\P}(M_i\mid A_i=1, W_i)} -</span>
+<span id="cb2-201"><a href="#cb2-201"></a>    \frac{\I(A_i=0)}{\hat{\P}(A_i=0\mid W_i)}\bigg<span class="sc">\}</span>} \times</span>
+<span id="cb2-202"><a href="#cb2-202"></a>    \color{Goldenrod}{Y_i} \bigg]</span>
+<span id="cb2-203"><a href="#cb2-203"></a>  $$</span>
+<span id="cb2-204"><a href="#cb2-204"></a></span>
+<span id="cb2-205"><a href="#cb2-205"></a><span class="fu">#### Second weighted estimator</span></span>
+<span id="cb2-206"><a href="#cb2-206"></a></span>
+<span id="cb2-207"><a href="#cb2-207"></a><span class="ss">- </span>The parameter functional for the NDE can also be expressed as a combination of</span>
+<span id="cb2-208"><a href="#cb2-208"></a>  regression and weighting:</span>
+<span id="cb2-209"><a href="#cb2-209"></a>  $$</span>
+<span id="cb2-210"><a href="#cb2-210"></a>    \E\bigg[\color{RoyalBlue}{\frac{\I(A=0)}{\P(A=0\mid W)}}</span>
+<span id="cb2-211"><a href="#cb2-211"></a>    \times \color{Goldenrod}{\E(Y \mid A=1, M, W) -</span>
+<span id="cb2-212"><a href="#cb2-212"></a>    \E(Y \mid A=0, M, W)}\bigg]</span>
 <span id="cb2-213"><a href="#cb2-213"></a>  $$</span>
-<span id="cb2-214"><a href="#cb2-214"></a>    \frac{1}{n} \sum_{i=1}^n \bigg[\color{RoyalBlue}{</span>
-<span id="cb2-215"><a href="#cb2-215"></a>    \frac{\I(A_i=0)}{\hat{\P}(A_i=0\mid W_i)}} \times</span>
-<span id="cb2-216"><a href="#cb2-216"></a>    \color{Goldenrod}{\hat{\E}(Y \mid A=1, M_i, W_i) -</span>
-<span id="cb2-217"><a href="#cb2-217"></a>    \hat{\E}(Y \mid A=0, M_i, W_i)}\bigg]</span>
-<span id="cb2-218"><a href="#cb2-218"></a>  $$</span>
-<span id="cb2-219"><a href="#cb2-219"></a></span>
-<span id="cb2-220"><a href="#cb2-220"></a><span class="fu">## How can g-estimation and weighted estimation be implemented in practice?</span></span>
-<span id="cb2-221"><a href="#cb2-221"></a></span>
-<span id="cb2-222"><a href="#cb2-222"></a><span class="ss">- </span>There are two possible ways to do G-computation or weighted estimation:</span>
-<span id="cb2-223"><a href="#cb2-223"></a><span class="ss">  - </span>Using parametric models for the above regressions</span>
-<span id="cb2-224"><a href="#cb2-224"></a><span class="ss">  - </span>Using flexible data-adaptive regression (aka machine learning)</span>
-<span id="cb2-225"><a href="#cb2-225"></a></span>
-<span id="cb2-226"><a href="#cb2-226"></a><span class="fu">## Pros and cons of G-computation and weighting parametric models</span></span>
-<span id="cb2-227"><a href="#cb2-227"></a></span>
-<span id="cb2-228"><a href="#cb2-228"></a><span class="ss">- </span>Pros:</span>
-<span id="cb2-229"><a href="#cb2-229"></a><span class="ss">  - </span>Easy to understand</span>
-<span id="cb2-230"><a href="#cb2-230"></a><span class="ss">  - </span>Ease of implementation (standard regression software)</span>
-<span id="cb2-231"><a href="#cb2-231"></a><span class="ss">  - </span>Can use the Delta method or the bootstrap for computation of standard errors</span>
-<span id="cb2-232"><a href="#cb2-232"></a></span>
-<span id="cb2-233"><a href="#cb2-233"></a><span class="ss">- </span>Cons:</span>
-<span id="cb2-234"><a href="#cb2-234"></a><span class="ss">  - </span>Unless $W$ and $M$ contain very few categorical variables, it is very easy</span>
-<span id="cb2-235"><a href="#cb2-235"></a>    to misspecify the models</span>
-<span id="cb2-236"><a href="#cb2-236"></a><span class="ss">  - </span>This can introduce sizable bias in the estimators</span>
-<span id="cb2-237"><a href="#cb2-237"></a><span class="ss">  - </span>This modelling assumptions have become less necessary in the presence of</span>
-<span id="cb2-238"><a href="#cb2-238"></a>    data-adaptive regression tools (a.k.a., machine learning)</span>
-<span id="cb2-239"><a href="#cb2-239"></a></span>
-<span id="cb2-240"><a href="#cb2-240"></a><span class="fu">## An example of the bias of a g-computation estimator of the natural direct effect</span></span>
-<span id="cb2-241"><a href="#cb2-241"></a></span>
-<span id="cb2-242"><a href="#cb2-242"></a><span class="ss">- </span>The following <span class="in">`R`</span> chunk provides simulation code to exemplify the bias of a</span>
-<span id="cb2-243"><a href="#cb2-243"></a>  G-computation parametric estimator in a simple situation</span>
+<span id="cb2-214"><a href="#cb2-214"></a></span>
+<span id="cb2-215"><a href="#cb2-215"></a><span class="ss">- </span>Thus, you can also construct a weighted estimator as</span>
+<span id="cb2-216"><a href="#cb2-216"></a>  $$</span>
+<span id="cb2-217"><a href="#cb2-217"></a>    \frac{1}{n} \sum_{i=1}^n \bigg[\color{RoyalBlue}{</span>
+<span id="cb2-218"><a href="#cb2-218"></a>    \frac{\I(A_i=0)}{\hat{\P}(A_i=0\mid W_i)}} \times</span>
+<span id="cb2-219"><a href="#cb2-219"></a>    \color{Goldenrod}{\hat{\E}(Y \mid A=1, M_i, W_i) -</span>
+<span id="cb2-220"><a href="#cb2-220"></a>    \hat{\E}(Y \mid A=0, M_i, W_i)}\bigg]</span>
+<span id="cb2-221"><a href="#cb2-221"></a>  $$</span>
+<span id="cb2-222"><a href="#cb2-222"></a></span>
+<span id="cb2-223"><a href="#cb2-223"></a><span class="fu">### Implementation of g-computation and IPW estimators in practice?</span></span>
+<span id="cb2-224"><a href="#cb2-224"></a></span>
+<span id="cb2-225"><a href="#cb2-225"></a><span class="ss">- </span>There are two possible ways to do G-computation or weighted estimation:</span>
+<span id="cb2-226"><a href="#cb2-226"></a><span class="ss">  - </span>Using parametric models for the above regressions</span>
+<span id="cb2-227"><a href="#cb2-227"></a><span class="ss">  - </span>Using flexible data-adaptive regression (aka machine learning)</span>
+<span id="cb2-228"><a href="#cb2-228"></a></span>
+<span id="cb2-229"><a href="#cb2-229"></a><span class="fu">### Pros and cons of g-computation and IPW with parametric modeling</span></span>
+<span id="cb2-230"><a href="#cb2-230"></a></span>
+<span id="cb2-231"><a href="#cb2-231"></a><span class="ss">- </span>Pros:</span>
+<span id="cb2-232"><a href="#cb2-232"></a><span class="ss">  - </span>Easy to understand</span>
+<span id="cb2-233"><a href="#cb2-233"></a><span class="ss">  - </span>Ease of implementation (standard regression software)</span>
+<span id="cb2-234"><a href="#cb2-234"></a><span class="ss">  - </span>Can use the Delta method or the bootstrap for computation of standard errors</span>
+<span id="cb2-235"><a href="#cb2-235"></a></span>
+<span id="cb2-236"><a href="#cb2-236"></a><span class="ss">- </span>Cons:</span>
+<span id="cb2-237"><a href="#cb2-237"></a><span class="ss">  - </span>Unless $W$ and $M$ contain very few categorical variables, it is very easy</span>
+<span id="cb2-238"><a href="#cb2-238"></a>    to misspecify the models</span>
+<span id="cb2-239"><a href="#cb2-239"></a><span class="ss">  - </span>This can introduce sizable bias in the estimators</span>
+<span id="cb2-240"><a href="#cb2-240"></a><span class="ss">  - </span>This modelling assumptions have become less necessary in the presence of</span>
+<span id="cb2-241"><a href="#cb2-241"></a>    data-adaptive regression tools (a.k.a., machine learning)</span>
+<span id="cb2-242"><a href="#cb2-242"></a></span>
+<span id="cb2-243"><a href="#cb2-243"></a><span class="fu">### Example: Bias of a parametric g-computation estimator of the NDE</span></span>
 <span id="cb2-244"><a href="#cb2-244"></a></span>
-<span id="cb2-245"><a href="#cb2-245"></a>  <span class="in">```{webr-r}</span></span>
-<span id="cb2-246"><a href="#cb2-246"></a><span class="in">  mean_y &lt;- function(m, a, w) abs(w) + a * m</span></span>
-<span id="cb2-247"><a href="#cb2-247"></a><span class="in">  mean_m &lt;- function(a, w) plogis(w^2 - a)</span></span>
-<span id="cb2-248"><a href="#cb2-248"></a><span class="in">  pscore &lt;- function(w) plogis(1 - abs(w))</span></span>
-<span id="cb2-249"><a href="#cb2-249"></a><span class="in">  ```</span></span>
-<span id="cb2-250"><a href="#cb2-250"></a></span>
-<span id="cb2-251"><a href="#cb2-251"></a>  <span class="in">```{webr-r}</span></span>
-<span id="cb2-252"><a href="#cb2-252"></a><span class="in">  w_big &lt;- runif(1e6, -1, 1)</span></span>
-<span id="cb2-253"><a href="#cb2-253"></a><span class="in">  trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *</span></span>
-<span id="cb2-254"><a href="#cb2-254"></a><span class="in">    mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *</span></span>
-<span id="cb2-255"><a href="#cb2-255"></a><span class="in">      (1 - mean_m(0, w_big)))</span></span>
-<span id="cb2-256"><a href="#cb2-256"></a><span class="in">  print(round(trueval), 4)</span></span>
-<span id="cb2-257"><a href="#cb2-257"></a><span class="in">  ```</span></span>
-<span id="cb2-258"><a href="#cb2-258"></a></span>
-<span id="cb2-259"><a href="#cb2-259"></a><span class="ss">- </span>Let's perform a simulation where we draw 1000 datasets from the above</span>
-<span id="cb2-260"><a href="#cb2-260"></a>  distribution, and compute a g-computation estimator based on</span>
+<span id="cb2-245"><a href="#cb2-245"></a><span class="ss">- </span>The following <span class="in">`R`</span> chunk provides simulation code to exemplify the bias of a</span>
+<span id="cb2-246"><a href="#cb2-246"></a>  parametric g-computation estimator in a simple situation</span>
+<span id="cb2-247"><a href="#cb2-247"></a></span>
+<span id="cb2-248"><a href="#cb2-248"></a>  <span class="in">```{webr-r}</span></span>
+<span id="cb2-249"><a href="#cb2-249"></a><span class="in">  mean_y &lt;- function(m, a, w) abs(w) + a * m</span></span>
+<span id="cb2-250"><a href="#cb2-250"></a><span class="in">  mean_m &lt;- function(a, w) plogis(w^2 - a)</span></span>
+<span id="cb2-251"><a href="#cb2-251"></a><span class="in">  pscore &lt;- function(w) plogis(1 - abs(w))</span></span>
+<span id="cb2-252"><a href="#cb2-252"></a><span class="in">  ```</span></span>
+<span id="cb2-253"><a href="#cb2-253"></a></span>
+<span id="cb2-254"><a href="#cb2-254"></a>  <span class="in">```{webr-r}</span></span>
+<span id="cb2-255"><a href="#cb2-255"></a><span class="in">  w_big &lt;- runif(1e6, -1, 1)</span></span>
+<span id="cb2-256"><a href="#cb2-256"></a><span class="in">  trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *</span></span>
+<span id="cb2-257"><a href="#cb2-257"></a><span class="in">    mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *</span></span>
+<span id="cb2-258"><a href="#cb2-258"></a><span class="in">      (1 - mean_m(0, w_big)))</span></span>
+<span id="cb2-259"><a href="#cb2-259"></a><span class="in">  print(round(trueval), 4)</span></span>
+<span id="cb2-260"><a href="#cb2-260"></a><span class="in">  ```</span></span>
 <span id="cb2-261"><a href="#cb2-261"></a></span>
-<span id="cb2-262"><a href="#cb2-262"></a>  <span class="in">```{webr-r}</span></span>
-<span id="cb2-263"><a href="#cb2-263"></a><span class="in">  gcomp &lt;- function(y, m, a, w) {</span></span>
-<span id="cb2-264"><a href="#cb2-264"></a><span class="in">    lm_y &lt;- lm(y ~ m + a + w)</span></span>
-<span id="cb2-265"><a href="#cb2-265"></a><span class="in">    pred_y1 &lt;- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))</span></span>
-<span id="cb2-266"><a href="#cb2-266"></a><span class="in">    pred_y0 &lt;- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))</span></span>
-<span id="cb2-267"><a href="#cb2-267"></a><span class="in">    pseudo &lt;- pred_y1 - pred_y0</span></span>
-<span id="cb2-268"><a href="#cb2-268"></a><span class="in">    lm_pseudo &lt;- lm(pseudo ~ a + w)</span></span>
-<span id="cb2-269"><a href="#cb2-269"></a><span class="in">    pred_pseudo &lt;- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))</span></span>
-<span id="cb2-270"><a href="#cb2-270"></a><span class="in">    estimate &lt;- mean(pred_pseudo)</span></span>
-<span id="cb2-271"><a href="#cb2-271"></a><span class="in">    return(estimate)</span></span>
-<span id="cb2-272"><a href="#cb2-272"></a><span class="in">  }</span></span>
-<span id="cb2-273"><a href="#cb2-273"></a><span class="in">  ```</span></span>
-<span id="cb2-274"><a href="#cb2-274"></a></span>
-<span id="cb2-275"><a href="#cb2-275"></a>  <span class="in">```{webr-r}</span></span>
-<span id="cb2-276"><a href="#cb2-276"></a><span class="in">  estimate &lt;- lapply(seq_len(1000), function(iter) {</span></span>
-<span id="cb2-277"><a href="#cb2-277"></a><span class="in">    n &lt;- 1000</span></span>
-<span id="cb2-278"><a href="#cb2-278"></a><span class="in">    w &lt;- runif(n, -1, 1)</span></span>
-<span id="cb2-279"><a href="#cb2-279"></a><span class="in">    a &lt;- rbinom(n, 1, pscore(w))</span></span>
-<span id="cb2-280"><a href="#cb2-280"></a><span class="in">    m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
-<span id="cb2-281"><a href="#cb2-281"></a><span class="in">    y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
-<span id="cb2-282"><a href="#cb2-282"></a><span class="in">    est &lt;- gcomp(y, m, a, w)</span></span>
-<span id="cb2-283"><a href="#cb2-283"></a><span class="in">    return(est)</span></span>
-<span id="cb2-284"><a href="#cb2-284"></a><span class="in">  })</span></span>
-<span id="cb2-285"><a href="#cb2-285"></a><span class="in">  estimate &lt;- do.call(c, estimate)</span></span>
-<span id="cb2-286"><a href="#cb2-286"></a></span>
-<span id="cb2-287"><a href="#cb2-287"></a><span class="in">  hist(estimate)</span></span>
-<span id="cb2-288"><a href="#cb2-288"></a><span class="in">  abline(v = trueval, col = "red", lwd = 4)</span></span>
-<span id="cb2-289"><a href="#cb2-289"></a><span class="in">  ```</span></span>
-<span id="cb2-290"><a href="#cb2-290"></a></span>
-<span id="cb2-291"><a href="#cb2-291"></a><span class="ss">- </span>The bias also affects the confidence intervals:</span>
-<span id="cb2-292"><a href="#cb2-292"></a></span>
-<span id="cb2-293"><a href="#cb2-293"></a>  <span class="in">```{webr-r}</span></span>
-<span id="cb2-294"><a href="#cb2-294"></a><span class="in">  #| fig-width: 8</span></span>
-<span id="cb2-295"><a href="#cb2-295"></a><span class="in">  cis &lt;- cbind(</span></span>
-<span id="cb2-296"><a href="#cb2-296"></a><span class="in">    estimate - qnorm(0.975) * sd(estimate),</span></span>
-<span id="cb2-297"><a href="#cb2-297"></a><span class="in">    estimate + qnorm(0.975) * sd(estimate)</span></span>
-<span id="cb2-298"><a href="#cb2-298"></a><span class="in">  )</span></span>
-<span id="cb2-299"><a href="#cb2-299"></a></span>
-<span id="cb2-300"><a href="#cb2-300"></a><span class="in">  ord &lt;- order(rowSums(cis))</span></span>
-<span id="cb2-301"><a href="#cb2-301"></a><span class="in">  lower &lt;- cis[ord, 1]</span></span>
-<span id="cb2-302"><a href="#cb2-302"></a><span class="in">  upper &lt;- cis[ord, 2]</span></span>
-<span id="cb2-303"><a href="#cb2-303"></a><span class="in">  curve(trueval + 0 * x,</span></span>
-<span id="cb2-304"><a href="#cb2-304"></a><span class="in">    ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",</span></span>
-<span id="cb2-305"><a href="#cb2-305"></a><span class="in">    xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2</span></span>
-<span id="cb2-306"><a href="#cb2-306"></a><span class="in">  )</span></span>
-<span id="cb2-307"><a href="#cb2-307"></a><span class="in">  for (i in 1:1000) {</span></span>
-<span id="cb2-308"><a href="#cb2-308"></a><span class="in">    clr &lt;- rgb(0.5, 0, 0.75, 0.5)</span></span>
-<span id="cb2-309"><a href="#cb2-309"></a><span class="in">    if (upper[i] &lt; trueval || lower[i] &gt; trueval) clr &lt;- rgb(1, 0, 0, 1)</span></span>
-<span id="cb2-310"><a href="#cb2-310"></a><span class="in">    points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)</span></span>
-<span id="cb2-311"><a href="#cb2-311"></a><span class="in">  }</span></span>
-<span id="cb2-312"><a href="#cb2-312"></a><span class="in">  text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)</span></span>
-<span id="cb2-313"><a href="#cb2-313"></a><span class="in">  text(450, 0.01, paste0(</span></span>
-<span id="cb2-314"><a href="#cb2-314"></a><span class="in">    "Coverage probability = ",</span></span>
-<span id="cb2-315"><a href="#cb2-315"></a><span class="in">    mean(lower &lt; trueval &amp; trueval &lt; upper), "%"</span></span>
-<span id="cb2-316"><a href="#cb2-316"></a><span class="in">  ), cex = 1.2)</span></span>
-<span id="cb2-317"><a href="#cb2-317"></a><span class="in">  ```</span></span>
-<span id="cb2-318"><a href="#cb2-318"></a></span>
-<span id="cb2-319"><a href="#cb2-319"></a><span class="fu">## Pros and cons of G-computation or weighting with data-adaptive regression</span></span>
-<span id="cb2-320"><a href="#cb2-320"></a></span>
-<span id="cb2-321"><a href="#cb2-321"></a><span class="ss">- </span>Pros:</span>
-<span id="cb2-322"><a href="#cb2-322"></a><span class="ss">  - </span>Easy to understand.</span>
-<span id="cb2-323"><a href="#cb2-323"></a><span class="ss">  - </span>Alleviate model-misspecification bias.</span>
-<span id="cb2-324"><a href="#cb2-324"></a></span>
-<span id="cb2-325"><a href="#cb2-325"></a><span class="ss">- </span>Cons:</span>
-<span id="cb2-326"><a href="#cb2-326"></a><span class="ss">  - </span>Might be harder to implement depending on the regression procedures used.</span>
-<span id="cb2-327"><a href="#cb2-327"></a><span class="ss">  - </span>No general approaches for computation of standard errors and confidence</span>
-<span id="cb2-328"><a href="#cb2-328"></a>    intervals.</span>
-<span id="cb2-329"><a href="#cb2-329"></a><span class="ss">  - </span>For example, the bootstrap is not guaranteed to work, and it is known to</span>
-<span id="cb2-330"><a href="#cb2-330"></a>    fail in some cases.</span>
-<span id="cb2-331"><a href="#cb2-331"></a></span>
-<span id="cb2-332"><a href="#cb2-332"></a></span>
-<span id="cb2-333"><a href="#cb2-333"></a><span class="fu">## Solution to these problems: robust semiparametric efficient estimation</span></span>
+<span id="cb2-262"><a href="#cb2-262"></a><span class="ss">- </span>Let's perform a simulation where we draw 1000 datasets from the above</span>
+<span id="cb2-263"><a href="#cb2-263"></a>  distribution, and compute a parametric g-computation estimator based on</span>
+<span id="cb2-264"><a href="#cb2-264"></a></span>
+<span id="cb2-265"><a href="#cb2-265"></a>  <span class="in">```{webr-r}</span></span>
+<span id="cb2-266"><a href="#cb2-266"></a><span class="in">  gcomp &lt;- function(y, m, a, w) {</span></span>
+<span id="cb2-267"><a href="#cb2-267"></a><span class="in">    lm_y &lt;- lm(y ~ m + a + w)</span></span>
+<span id="cb2-268"><a href="#cb2-268"></a><span class="in">    pred_y1 &lt;- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))</span></span>
+<span id="cb2-269"><a href="#cb2-269"></a><span class="in">    pred_y0 &lt;- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))</span></span>
+<span id="cb2-270"><a href="#cb2-270"></a><span class="in">    pseudo &lt;- pred_y1 - pred_y0</span></span>
+<span id="cb2-271"><a href="#cb2-271"></a><span class="in">    lm_pseudo &lt;- lm(pseudo ~ a + w)</span></span>
+<span id="cb2-272"><a href="#cb2-272"></a><span class="in">    pred_pseudo &lt;- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))</span></span>
+<span id="cb2-273"><a href="#cb2-273"></a><span class="in">    estimate &lt;- mean(pred_pseudo)</span></span>
+<span id="cb2-274"><a href="#cb2-274"></a><span class="in">    return(estimate)</span></span>
+<span id="cb2-275"><a href="#cb2-275"></a><span class="in">  }</span></span>
+<span id="cb2-276"><a href="#cb2-276"></a><span class="in">  ```</span></span>
+<span id="cb2-277"><a href="#cb2-277"></a></span>
+<span id="cb2-278"><a href="#cb2-278"></a>  <span class="in">```{webr-r}</span></span>
+<span id="cb2-279"><a href="#cb2-279"></a><span class="in">  estimate &lt;- lapply(seq_len(1000), function(iter) {</span></span>
+<span id="cb2-280"><a href="#cb2-280"></a><span class="in">    n &lt;- 1000</span></span>
+<span id="cb2-281"><a href="#cb2-281"></a><span class="in">    w &lt;- runif(n, -1, 1)</span></span>
+<span id="cb2-282"><a href="#cb2-282"></a><span class="in">    a &lt;- rbinom(n, 1, pscore(w))</span></span>
+<span id="cb2-283"><a href="#cb2-283"></a><span class="in">    m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
+<span id="cb2-284"><a href="#cb2-284"></a><span class="in">    y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
+<span id="cb2-285"><a href="#cb2-285"></a><span class="in">    est &lt;- gcomp(y, m, a, w)</span></span>
+<span id="cb2-286"><a href="#cb2-286"></a><span class="in">    return(est)</span></span>
+<span id="cb2-287"><a href="#cb2-287"></a><span class="in">  })</span></span>
+<span id="cb2-288"><a href="#cb2-288"></a><span class="in">  estimate &lt;- do.call(c, estimate)</span></span>
+<span id="cb2-289"><a href="#cb2-289"></a></span>
+<span id="cb2-290"><a href="#cb2-290"></a><span class="in">  hist(estimate)</span></span>
+<span id="cb2-291"><a href="#cb2-291"></a><span class="in">  abline(v = trueval, col = "red", lwd = 4)</span></span>
+<span id="cb2-292"><a href="#cb2-292"></a><span class="in">  ```</span></span>
+<span id="cb2-293"><a href="#cb2-293"></a></span>
+<span id="cb2-294"><a href="#cb2-294"></a><span class="ss">- </span>The bias also affects the confidence intervals:</span>
+<span id="cb2-295"><a href="#cb2-295"></a></span>
+<span id="cb2-296"><a href="#cb2-296"></a>  <span class="in">```{webr-r}</span></span>
+<span id="cb2-297"><a href="#cb2-297"></a><span class="in">  #| fig-width: 8</span></span>
+<span id="cb2-298"><a href="#cb2-298"></a><span class="in">  cis &lt;- cbind(</span></span>
+<span id="cb2-299"><a href="#cb2-299"></a><span class="in">    estimate - qnorm(0.975) * sd(estimate),</span></span>
+<span id="cb2-300"><a href="#cb2-300"></a><span class="in">    estimate + qnorm(0.975) * sd(estimate)</span></span>
+<span id="cb2-301"><a href="#cb2-301"></a><span class="in">  )</span></span>
+<span id="cb2-302"><a href="#cb2-302"></a></span>
+<span id="cb2-303"><a href="#cb2-303"></a><span class="in">  ord &lt;- order(rowSums(cis))</span></span>
+<span id="cb2-304"><a href="#cb2-304"></a><span class="in">  lower &lt;- cis[ord, 1]</span></span>
+<span id="cb2-305"><a href="#cb2-305"></a><span class="in">  upper &lt;- cis[ord, 2]</span></span>
+<span id="cb2-306"><a href="#cb2-306"></a><span class="in">  curve(trueval + 0 * x,</span></span>
+<span id="cb2-307"><a href="#cb2-307"></a><span class="in">    ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",</span></span>
+<span id="cb2-308"><a href="#cb2-308"></a><span class="in">    xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2</span></span>
+<span id="cb2-309"><a href="#cb2-309"></a><span class="in">  )</span></span>
+<span id="cb2-310"><a href="#cb2-310"></a><span class="in">  for (i in 1:1000) {</span></span>
+<span id="cb2-311"><a href="#cb2-311"></a><span class="in">    clr &lt;- rgb(0.5, 0, 0.75, 0.5)</span></span>
+<span id="cb2-312"><a href="#cb2-312"></a><span class="in">    if (upper[i] &lt; trueval || lower[i] &gt; trueval) clr &lt;- rgb(1, 0, 0, 1)</span></span>
+<span id="cb2-313"><a href="#cb2-313"></a><span class="in">    points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)</span></span>
+<span id="cb2-314"><a href="#cb2-314"></a><span class="in">  }</span></span>
+<span id="cb2-315"><a href="#cb2-315"></a><span class="in">  text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)</span></span>
+<span id="cb2-316"><a href="#cb2-316"></a><span class="in">  text(450, 0.01, paste0(</span></span>
+<span id="cb2-317"><a href="#cb2-317"></a><span class="in">    "Coverage probability = ",</span></span>
+<span id="cb2-318"><a href="#cb2-318"></a><span class="in">    mean(lower &lt; trueval &amp; trueval &lt; upper), "%"</span></span>
+<span id="cb2-319"><a href="#cb2-319"></a><span class="in">  ), cex = 1.2)</span></span>
+<span id="cb2-320"><a href="#cb2-320"></a><span class="in">  ```</span></span>
+<span id="cb2-321"><a href="#cb2-321"></a></span>
+<span id="cb2-322"><a href="#cb2-322"></a><span class="fu">### Pros and cons of g-computation or IPW with data-adaptive regression</span></span>
+<span id="cb2-323"><a href="#cb2-323"></a></span>
+<span id="cb2-324"><a href="#cb2-324"></a><span class="ss">- </span>Pros:</span>
+<span id="cb2-325"><a href="#cb2-325"></a><span class="ss">  - </span>Easy to understand.</span>
+<span id="cb2-326"><a href="#cb2-326"></a><span class="ss">  - </span>Alleviate model-misspecification bias.</span>
+<span id="cb2-327"><a href="#cb2-327"></a></span>
+<span id="cb2-328"><a href="#cb2-328"></a><span class="ss">- </span>Cons:</span>
+<span id="cb2-329"><a href="#cb2-329"></a><span class="ss">  - </span>Might be harder to implement depending on the regression procedures used.</span>
+<span id="cb2-330"><a href="#cb2-330"></a><span class="ss">  - </span>No general approaches for computation of standard errors and confidence</span>
+<span id="cb2-331"><a href="#cb2-331"></a>    intervals.</span>
+<span id="cb2-332"><a href="#cb2-332"></a><span class="ss">  - </span>For example, the bootstrap is not guaranteed to work, and it is known to</span>
+<span id="cb2-333"><a href="#cb2-333"></a>    fail in some cases.</span>
 <span id="cb2-334"><a href="#cb2-334"></a></span>
-<span id="cb2-335"><a href="#cb2-335"></a><span class="ss">- </span>Intuitively, it combines the three above estimators to obtain an</span>
-<span id="cb2-336"><a href="#cb2-336"></a>  estimator with improved robustness properties</span>
-<span id="cb2-337"><a href="#cb2-337"></a><span class="ss">- </span>It offers a way to use data-adaptive regression to</span>
-<span id="cb2-338"><a href="#cb2-338"></a><span class="ss">  - </span>avoid model misspecification bias,</span>
-<span id="cb2-339"><a href="#cb2-339"></a><span class="ss">  - </span>endow the estimators with additional robustness (e.g., multiple robustness),</span>
-<span id="cb2-340"><a href="#cb2-340"></a>    while</span>
-<span id="cb2-341"><a href="#cb2-341"></a><span class="ss">  - </span>allowing the computation of correct standard errors and confidence</span>
-<span id="cb2-342"><a href="#cb2-342"></a>  intervals using Gaussian approximations</span>
-<span id="cb2-343"><a href="#cb2-343"></a></span>
-<span id="cb2-344"><a href="#cb2-344"></a><span class="co">&lt;!--</span></span>
-<span id="cb2-345"><a href="#cb2-345"></a><span class="co"> - This can be achieved by adding a bias correction factor the the</span></span>
-<span id="cb2-346"><a href="#cb2-346"></a><span class="co">   G-computation as follows:</span></span>
-<span id="cb2-347"><a href="#cb2-347"></a><span class="co">   \begin{equation*}</span></span>
-<span id="cb2-348"><a href="#cb2-348"></a><span class="co">     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)</span></span>
-<span id="cb2-349"><a href="#cb2-349"></a><span class="co">   \end{equation*}</span></span>
-<span id="cb2-350"><a href="#cb2-350"></a><span class="co">   for some function $D(O_i)$ of the data</span></span>
-<span id="cb2-351"><a href="#cb2-351"></a><span class="co"> - The function $D(O)$ is called _the efficient influence function_ (EIF)</span></span>
-<span id="cb2-352"><a href="#cb2-352"></a><span class="co"> - The EIF must be found on a case-by-case basis for each parameter $\psi(\P)$</span></span>
-<span id="cb2-353"><a href="#cb2-353"></a><span class="co"> - For example, for estimating the standardized mean $\psi(\P)=\E[\E(Y\mid A=1,</span></span>
-<span id="cb2-354"><a href="#cb2-354"></a><span class="co">   W)]$, we have</span></span>
-<span id="cb2-355"><a href="#cb2-355"></a><span class="co">   \begin{equation*}</span></span>
-<span id="cb2-356"><a href="#cb2-356"></a><span class="co">     D(O) = \frac{A}{\hat \P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +</span></span>
-<span id="cb2-357"><a href="#cb2-357"></a><span class="co">     \hat\E(Y\mid A=1, W) - \psi(\hat\P)</span></span>
-<span id="cb2-358"><a href="#cb2-358"></a><span class="co">   \end{equation*}</span></span>
-<span id="cb2-359"><a href="#cb2-359"></a><span class="co"> - The EIF is found by using a distributional analogue of a Taylor expansion</span></span>
-<span id="cb2-360"><a href="#cb2-360"></a><span class="co"> - In this workshop we will omit the specific form of $D(O)$ for</span></span>
-<span id="cb2-361"><a href="#cb2-361"></a><span class="co">   some of the parameters that we use</span></span>
-<span id="cb2-362"><a href="#cb2-362"></a><span class="co"> - But the estimators we discuss and implement in the R packages will be based</span></span>
-<span id="cb2-363"><a href="#cb2-363"></a><span class="co">   on these EIFs</span></span>
-<span id="cb2-364"><a href="#cb2-364"></a><span class="co"> - And the specific form of the EIF may be found in papers in the references</span></span>
-<span id="cb2-365"><a href="#cb2-365"></a></span>
-<span id="cb2-366"><a href="#cb2-366"></a><span class="co"> Note: the bias correction above may have an additional problem of</span></span>
-<span id="cb2-367"><a href="#cb2-367"></a><span class="co"> returning parameter estimates outside of natural bounds. For example,</span></span>
-<span id="cb2-368"><a href="#cb2-368"></a><span class="co"> probabilities greater than one. A solution to this (not discussed in</span></span>
-<span id="cb2-369"><a href="#cb2-369"></a><span class="co"> this workshop but implemented in some of the R packages) is targeted</span></span>
-<span id="cb2-370"><a href="#cb2-370"></a><span class="co"> minimum loss-based estimation.</span></span>
-<span id="cb2-371"><a href="#cb2-371"></a><span class="co">--&gt;</span></span>
-<span id="cb2-372"><a href="#cb2-372"></a></span>
-<span id="cb2-373"><a href="#cb2-373"></a><span class="fu"># Construction of a semiparametric efficient estimator for the NDE (a.k.a. the one-step estimator)</span></span>
-<span id="cb2-374"><a href="#cb2-374"></a></span>
-<span id="cb2-375"><a href="#cb2-375"></a><span class="co">&lt;!--</span></span>
-<span id="cb2-376"><a href="#cb2-376"></a><span class="co">- For illustration, we will first present how to construct an estimator of the</span></span>
-<span id="cb2-377"><a href="#cb2-377"></a><span class="co">  NDE that uses the EIF "by hand"</span></span>
-<span id="cb2-378"><a href="#cb2-378"></a><span class="co">--&gt;</span></span>
-<span id="cb2-379"><a href="#cb2-379"></a><span class="ss">- </span>Here we show the detail of how to construct an estimator for the NDE for</span>
-<span id="cb2-380"><a href="#cb2-380"></a>  illustration, but the construction of this estimator is a bit involved and may</span>
-<span id="cb2-381"><a href="#cb2-381"></a>  be complex in daily research practice</span>
-<span id="cb2-382"><a href="#cb2-382"></a><span class="ss">- </span>For practice, we will teach you how to use our packages <span class="in">`medoutcon`</span> (and</span>
-<span id="cb2-383"><a href="#cb2-383"></a>  <span class="in">`medshift`</span>, as detailed in the extra material) for automatic implementation of</span>
-<span id="cb2-384"><a href="#cb2-384"></a>  these estimators of the NDE and other parameters</span>
-<span id="cb2-385"><a href="#cb2-385"></a></span>
-<span id="cb2-386"><a href="#cb2-386"></a>First, we need to introduce some notation to describe the EIF for the NDE</span>
-<span id="cb2-387"><a href="#cb2-387"></a></span>
-<span id="cb2-388"><a href="#cb2-388"></a><span class="ss">- </span>Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)$</span>
-<span id="cb2-389"><a href="#cb2-389"></a><span class="ss">- </span>We can now introduce the semiparametric efficient estimator:</span>
+<span id="cb2-335"><a href="#cb2-335"></a></span>
+<span id="cb2-336"><a href="#cb2-336"></a><span class="fu">### Solution: Robust semi-parametric efficient estimation</span></span>
+<span id="cb2-337"><a href="#cb2-337"></a></span>
+<span id="cb2-338"><a href="#cb2-338"></a><span class="ss">- </span>Intuitively, it combines the three above estimators to obtain an</span>
+<span id="cb2-339"><a href="#cb2-339"></a>  estimator with improved robustness properties</span>
+<span id="cb2-340"><a href="#cb2-340"></a><span class="ss">- </span>It offers a way to use data-adaptive regression to</span>
+<span id="cb2-341"><a href="#cb2-341"></a><span class="ss">  - </span>avoid model misspecification bias,</span>
+<span id="cb2-342"><a href="#cb2-342"></a><span class="ss">  - </span>endow the estimators with additional robustness (e.g., multiple robustness),</span>
+<span id="cb2-343"><a href="#cb2-343"></a>    while</span>
+<span id="cb2-344"><a href="#cb2-344"></a><span class="ss">  - </span>allowing the computation of correct standard errors and confidence</span>
+<span id="cb2-345"><a href="#cb2-345"></a>  intervals using Gaussian approximations</span>
+<span id="cb2-346"><a href="#cb2-346"></a></span>
+<span id="cb2-347"><a href="#cb2-347"></a><span class="co">&lt;!--</span></span>
+<span id="cb2-348"><a href="#cb2-348"></a><span class="co"> - This can be achieved by adding a bias correction factor the the</span></span>
+<span id="cb2-349"><a href="#cb2-349"></a><span class="co">   G-computation as follows:</span></span>
+<span id="cb2-350"><a href="#cb2-350"></a><span class="co">   \begin{equation*}</span></span>
+<span id="cb2-351"><a href="#cb2-351"></a><span class="co">     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)</span></span>
+<span id="cb2-352"><a href="#cb2-352"></a><span class="co">   \end{equation*}</span></span>
+<span id="cb2-353"><a href="#cb2-353"></a><span class="co">   for some function $D(O_i)$ of the data</span></span>
+<span id="cb2-354"><a href="#cb2-354"></a><span class="co"> - The function $D(O)$ is called _the efficient influence function_ (EIF)</span></span>
+<span id="cb2-355"><a href="#cb2-355"></a><span class="co"> - The EIF must be found on a case-by-case basis for each parameter $\psi(\P)$</span></span>
+<span id="cb2-356"><a href="#cb2-356"></a><span class="co"> - For example, for estimating the standardized mean $\psi(\P)=\E[\E(Y\mid A=1,</span></span>
+<span id="cb2-357"><a href="#cb2-357"></a><span class="co">   W)]$, we have</span></span>
+<span id="cb2-358"><a href="#cb2-358"></a><span class="co">   \begin{equation*}</span></span>
+<span id="cb2-359"><a href="#cb2-359"></a><span class="co">     D(O) = \frac{A}{\hat \P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +</span></span>
+<span id="cb2-360"><a href="#cb2-360"></a><span class="co">     \hat\E(Y\mid A=1, W) - \psi(\hat\P)</span></span>
+<span id="cb2-361"><a href="#cb2-361"></a><span class="co">   \end{equation*}</span></span>
+<span id="cb2-362"><a href="#cb2-362"></a><span class="co"> - The EIF is found by using a distributional analogue of a Taylor expansion</span></span>
+<span id="cb2-363"><a href="#cb2-363"></a><span class="co"> - In this workshop we will omit the specific form of $D(O)$ for</span></span>
+<span id="cb2-364"><a href="#cb2-364"></a><span class="co">   some of the parameters that we use</span></span>
+<span id="cb2-365"><a href="#cb2-365"></a><span class="co"> - But the estimators we discuss and implement in the R packages will be based</span></span>
+<span id="cb2-366"><a href="#cb2-366"></a><span class="co">   on these EIFs</span></span>
+<span id="cb2-367"><a href="#cb2-367"></a><span class="co"> - And the specific form of the EIF may be found in papers in the references</span></span>
+<span id="cb2-368"><a href="#cb2-368"></a></span>
+<span id="cb2-369"><a href="#cb2-369"></a><span class="co"> Note: the bias correction above may have an additional problem of</span></span>
+<span id="cb2-370"><a href="#cb2-370"></a><span class="co"> returning parameter estimates outside of natural bounds. For example,</span></span>
+<span id="cb2-371"><a href="#cb2-371"></a><span class="co"> probabilities greater than one. A solution to this (not discussed in</span></span>
+<span id="cb2-372"><a href="#cb2-372"></a><span class="co"> this workshop but implemented in some of the R packages) is targeted</span></span>
+<span id="cb2-373"><a href="#cb2-373"></a><span class="co"> minimum loss-based estimation.</span></span>
+<span id="cb2-374"><a href="#cb2-374"></a><span class="co">--&gt;</span></span>
+<span id="cb2-375"><a href="#cb2-375"></a></span>
+<span id="cb2-376"><a href="#cb2-376"></a><span class="fu">## Semi-parametric efficient estimators (for the NDE)</span></span>
+<span id="cb2-377"><a href="#cb2-377"></a></span>
+<span id="cb2-378"><a href="#cb2-378"></a><span class="fu">### Constructing a semi-parametric efficient estimator (aka the one-step)</span></span>
+<span id="cb2-379"><a href="#cb2-379"></a></span>
+<span id="cb2-380"><a href="#cb2-380"></a><span class="co">&lt;!--</span></span>
+<span id="cb2-381"><a href="#cb2-381"></a><span class="co">- For illustration, we will first present how to construct an estimator of the</span></span>
+<span id="cb2-382"><a href="#cb2-382"></a><span class="co">  NDE that uses the EIF "by hand"</span></span>
+<span id="cb2-383"><a href="#cb2-383"></a><span class="co">--&gt;</span></span>
+<span id="cb2-384"><a href="#cb2-384"></a><span class="ss">- </span>Here we show the detail of how to construct an estimator for the NDE for</span>
+<span id="cb2-385"><a href="#cb2-385"></a>  illustration, but the construction of this estimator is a bit involved and may</span>
+<span id="cb2-386"><a href="#cb2-386"></a>  be complex in daily research practice</span>
+<span id="cb2-387"><a href="#cb2-387"></a><span class="ss">- </span>For practice, we will teach you how to use our packages <span class="in">`medoutcon`</span> (and</span>
+<span id="cb2-388"><a href="#cb2-388"></a>  <span class="in">`medshift`</span>, as detailed in the extra material) for automatic implementation of</span>
+<span id="cb2-389"><a href="#cb2-389"></a>  these estimators of the NDE and other parameters</span>
 <span id="cb2-390"><a href="#cb2-390"></a></span>
-<span id="cb2-391"><a href="#cb2-391"></a>\begin{align*}</span>
-<span id="cb2-392"><a href="#cb2-392"></a>    \hat{\psi} &amp;= \frac{1}{n} \sum_{i=1}^n \color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
-<span id="cb2-393"><a href="#cb2-393"></a>      \frac{\I(A_i=1)}{\hat{\P}(A_i=1 \mid W_i)}</span>
-<span id="cb2-394"><a href="#cb2-394"></a>      \frac{\hat{\P}(M_i \mid A_i=0,W)_i}{\hat{\P}(M_i \mid A_i=1,W_i)} -</span>
-<span id="cb2-395"><a href="#cb2-395"></a>      \frac{\I(A=0)}{\hat{\P}(A_i=0 \mid W_i)}\bigg<span class="sc">\}</span>}</span>
-<span id="cb2-396"><a href="#cb2-396"></a>      \color{Goldenrod}{<span class="co">[</span><span class="ot">Y_i - \hat{\E}(Y\mid A_i,M_i,W_i)</span><span class="co">]</span>} <span class="sc">\\</span></span>
-<span id="cb2-397"><a href="#cb2-397"></a>    &amp;+ \frac{1}{n} \sum_{i=1}^n \color{RoyalBlue}{\frac{\I(A=0)}{\P(A=0 \mid</span>
-<span id="cb2-398"><a href="#cb2-398"></a>      W)}} \color{Goldenrod}{\big<span class="sc">\{</span> \hat{Q}(M_i,W_i) -</span>
-<span id="cb2-399"><a href="#cb2-399"></a>      \hat{\E}<span class="co">[</span><span class="ot">\hat{Q}(M_i,W_i) \mid W_i, A_i = 0</span><span class="co">]</span> \big<span class="sc">\}</span>} <span class="sc">\\</span></span>
-<span id="cb2-400"><a href="#cb2-400"></a>    &amp;+ \frac{1}{n} \sum_{i=1}^n \color{Goldenrod}{</span>
-<span id="cb2-401"><a href="#cb2-401"></a>      \hat{\E}<span class="co">[</span><span class="ot">\hat{Q}(M_i,W_i) \mid W_i,A_i=0</span><span class="co">]</span>}</span>
-<span id="cb2-402"><a href="#cb2-402"></a>\end{align*}</span>
-<span id="cb2-403"><a href="#cb2-403"></a></span>
-<span id="cb2-404"><a href="#cb2-404"></a><span class="ss">- </span>In this estimator, you can recognize elements from the G-computation estimator</span>
-<span id="cb2-405"><a href="#cb2-405"></a>  and the weighted estimators:</span>
-<span id="cb2-406"><a href="#cb2-406"></a><span class="ss">  - </span>The third line is the G-computation estimator</span>
-<span id="cb2-407"><a href="#cb2-407"></a><span class="ss">  - </span>The second line is a centered version of the second weighted estimator</span>
-<span id="cb2-408"><a href="#cb2-408"></a><span class="ss">  - </span>The first line is a centered version of the first weighted estimator</span>
-<span id="cb2-409"><a href="#cb2-409"></a></span>
-<span id="cb2-410"><a href="#cb2-410"></a><span class="ss">- </span>Estimating $\P(M\mid A, W)$ is a very challenging problem when $M$ is</span>
-<span id="cb2-411"><a href="#cb2-411"></a>  high-dimensional. But, since we have the ratio of these conditional densities,</span>
-<span id="cb2-412"><a href="#cb2-412"></a>  we can re-parameterize using Bayes' rule to get something that is easier to</span>
-<span id="cb2-413"><a href="#cb2-413"></a>  compute:</span>
-<span id="cb2-414"><a href="#cb2-414"></a>  \begin{equation*}</span>
-<span id="cb2-415"><a href="#cb2-415"></a>    \frac{\P(M \mid A=0, W)}{\P(M \mid A=1,W)} = \frac{\P(A = 0 \mid M, W)</span>
-<span id="cb2-416"><a href="#cb2-416"></a>      \P(A=1 \mid W)}{\P(A = 1 \mid M, W) \P(A=0 \mid W)} \ .</span>
-<span id="cb2-417"><a href="#cb2-417"></a>  \end{equation*}</span>
-<span id="cb2-418"><a href="#cb2-418"></a></span>
-<span id="cb2-419"><a href="#cb2-419"></a>Thus we can change the expression of the estimator a bit as follows. First, some</span>
-<span id="cb2-420"><a href="#cb2-420"></a>more notation that will be useful later:</span>
-<span id="cb2-421"><a href="#cb2-421"></a></span>
-<span id="cb2-422"><a href="#cb2-422"></a><span class="ss">- </span>Let $g(a\mid w)$ denote $\P(A=a\mid W=w)$</span>
-<span id="cb2-423"><a href="#cb2-423"></a><span class="ss">- </span>Let $e(a\mid m, w)$ denote $\P(A=a\mid M=m, W=w)$</span>
-<span id="cb2-424"><a href="#cb2-424"></a><span class="ss">- </span>Let $b(a, m, w)$ denote $\E(Y\mid A=a, M=m, W=w)$</span>
-<span id="cb2-425"><a href="#cb2-425"></a><span class="ss">- </span>The quantity being averaged can be re-expressed as follows</span>
+<span id="cb2-391"><a href="#cb2-391"></a>First, we need to introduce some notation to describe the EIF for the NDE</span>
+<span id="cb2-392"><a href="#cb2-392"></a></span>
+<span id="cb2-393"><a href="#cb2-393"></a><span class="ss">- </span>Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)$</span>
+<span id="cb2-394"><a href="#cb2-394"></a><span class="ss">- </span>We can now introduce the semiparametric efficient estimator:</span>
+<span id="cb2-395"><a href="#cb2-395"></a></span>
+<span id="cb2-396"><a href="#cb2-396"></a>\begin{align*}</span>
+<span id="cb2-397"><a href="#cb2-397"></a>    \hat{\psi} &amp;= \frac{1}{n} \sum_{i=1}^n \color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
+<span id="cb2-398"><a href="#cb2-398"></a>      \frac{\I(A_i=1)}{\hat{\P}(A_i=1 \mid W_i)}</span>
+<span id="cb2-399"><a href="#cb2-399"></a>      \frac{\hat{\P}(M_i \mid A_i=0,W)_i}{\hat{\P}(M_i \mid A_i=1,W_i)} -</span>
+<span id="cb2-400"><a href="#cb2-400"></a>      \frac{\I(A=0)}{\hat{\P}(A_i=0 \mid W_i)}\bigg<span class="sc">\}</span>}</span>
+<span id="cb2-401"><a href="#cb2-401"></a>      \color{Goldenrod}{<span class="co">[</span><span class="ot">Y_i - \hat{\E}(Y\mid A_i,M_i,W_i)</span><span class="co">]</span>} <span class="sc">\\</span></span>
+<span id="cb2-402"><a href="#cb2-402"></a>    &amp;+ \frac{1}{n} \sum_{i=1}^n \color{RoyalBlue}{\frac{\I(A=0)}{\P(A=0 \mid</span>
+<span id="cb2-403"><a href="#cb2-403"></a>      W)}} \color{Goldenrod}{\big<span class="sc">\{</span> \hat{Q}(M_i,W_i) -</span>
+<span id="cb2-404"><a href="#cb2-404"></a>      \hat{\E}<span class="co">[</span><span class="ot">\hat{Q}(M_i,W_i) \mid W_i, A_i = 0</span><span class="co">]</span> \big<span class="sc">\}</span>} <span class="sc">\\</span></span>
+<span id="cb2-405"><a href="#cb2-405"></a>    &amp;+ \frac{1}{n} \sum_{i=1}^n \color{Goldenrod}{</span>
+<span id="cb2-406"><a href="#cb2-406"></a>      \hat{\E}<span class="co">[</span><span class="ot">\hat{Q}(M_i,W_i) \mid W_i,A_i=0</span><span class="co">]</span>}</span>
+<span id="cb2-407"><a href="#cb2-407"></a>\end{align*}</span>
+<span id="cb2-408"><a href="#cb2-408"></a></span>
+<span id="cb2-409"><a href="#cb2-409"></a><span class="ss">- </span>In this estimator, you can recognize elements from the G-computation estimator</span>
+<span id="cb2-410"><a href="#cb2-410"></a>  and the weighted estimators:</span>
+<span id="cb2-411"><a href="#cb2-411"></a><span class="ss">  - </span>The third line is the G-computation estimator</span>
+<span id="cb2-412"><a href="#cb2-412"></a><span class="ss">  - </span>The second line is a centered version of the second weighted estimator</span>
+<span id="cb2-413"><a href="#cb2-413"></a><span class="ss">  - </span>The first line is a centered version of the first weighted estimator</span>
+<span id="cb2-414"><a href="#cb2-414"></a></span>
+<span id="cb2-415"><a href="#cb2-415"></a><span class="ss">- </span>Estimating $\P(M\mid A, W)$ is a very challenging problem when $M$ is</span>
+<span id="cb2-416"><a href="#cb2-416"></a>  high-dimensional. But, since we have the ratio of these conditional densities,</span>
+<span id="cb2-417"><a href="#cb2-417"></a>  we can re-parameterize using Bayes' rule to get something that is easier to</span>
+<span id="cb2-418"><a href="#cb2-418"></a>  compute:</span>
+<span id="cb2-419"><a href="#cb2-419"></a>  \begin{equation*}</span>
+<span id="cb2-420"><a href="#cb2-420"></a>    \frac{\P(M \mid A=0, W)}{\P(M \mid A=1,W)} = \frac{\P(A = 0 \mid M, W)</span>
+<span id="cb2-421"><a href="#cb2-421"></a>      \P(A=1 \mid W)}{\P(A = 1 \mid M, W) \P(A=0 \mid W)} \ .</span>
+<span id="cb2-422"><a href="#cb2-422"></a>  \end{equation*}</span>
+<span id="cb2-423"><a href="#cb2-423"></a></span>
+<span id="cb2-424"><a href="#cb2-424"></a>Thus we can change the expression of the estimator a bit as follows. First, some</span>
+<span id="cb2-425"><a href="#cb2-425"></a>more notation that will be useful later:</span>
 <span id="cb2-426"><a href="#cb2-426"></a></span>
-<span id="cb2-427"><a href="#cb2-427"></a>\begin{align*}</span>
-<span id="cb2-428"><a href="#cb2-428"></a>    &amp; \color{RoyalBlue}{\bigg<span class="sc">\{</span> \frac{\I(A=1)}{g(0\mid W)}</span>
-<span id="cb2-429"><a href="#cb2-429"></a>      \frac{e(0\mid M,W)}{e(1\mid M,W)} - \frac{\I(A=0)}{g(0\mid W)}\bigg<span class="sc">\}</span>}</span>
-<span id="cb2-430"><a href="#cb2-430"></a>      \times \color{Goldenrod}{<span class="co">[</span><span class="ot">Y - b(A,M,W)</span><span class="co">]</span>} <span class="sc">\\</span></span>
-<span id="cb2-431"><a href="#cb2-431"></a>    &amp;+ \color{RoyalBlue}{\frac{\I(A=0)}{g(0\mid W)}}</span>
-<span id="cb2-432"><a href="#cb2-432"></a>      \color{Goldenrod}{\big<span class="sc">\{</span>Q(M,W) - \E<span class="co">[</span><span class="ot">Q(M,W) \mid W, A=0</span><span class="co">]</span> \big<span class="sc">\}</span>} <span class="sc">\\</span></span>
-<span id="cb2-433"><a href="#cb2-433"></a>    &amp;+ \color{Goldenrod}{\E<span class="co">[</span><span class="ot">Q(M,W) \mid W, A=0</span><span class="co">]</span>}</span>
-<span id="cb2-434"><a href="#cb2-434"></a>\end{align*}</span>
-<span id="cb2-435"><a href="#cb2-435"></a></span>
-<span id="cb2-436"><a href="#cb2-436"></a><span class="fu">## How to compute the one-step estimator (akin to Augmented IPW)</span></span>
-<span id="cb2-437"><a href="#cb2-437"></a></span>
-<span id="cb2-438"><a href="#cb2-438"></a>First we will generate some data:</span>
-<span id="cb2-439"><a href="#cb2-439"></a><span class="in">```{webr-r}</span></span>
-<span id="cb2-440"><a href="#cb2-440"></a><span class="in">mean_y &lt;- function(m, a, w) abs(w) + a * m</span></span>
-<span id="cb2-441"><a href="#cb2-441"></a><span class="in">mean_m &lt;- function(a, w)plogis(w^2 - a)</span></span>
-<span id="cb2-442"><a href="#cb2-442"></a><span class="in">pscore &lt;- function(w) plogis(1 - abs(w))</span></span>
-<span id="cb2-443"><a href="#cb2-443"></a></span>
-<span id="cb2-444"><a href="#cb2-444"></a><span class="in">w_big &lt;- runif(1e6, -1, 1)</span></span>
-<span id="cb2-445"><a href="#cb2-445"></a><span class="in">trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)</span></span>
-<span id="cb2-446"><a href="#cb2-446"></a><span class="in">                + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *</span></span>
-<span id="cb2-447"><a href="#cb2-447"></a><span class="in">                  (1 - mean_m(0, w_big)))</span></span>
+<span id="cb2-427"><a href="#cb2-427"></a><span class="ss">- </span>Let $g(a\mid w)$ denote $\P(A=a\mid W=w)$</span>
+<span id="cb2-428"><a href="#cb2-428"></a><span class="ss">- </span>Let $e(a\mid m, w)$ denote $\P(A=a\mid M=m, W=w)$</span>
+<span id="cb2-429"><a href="#cb2-429"></a><span class="ss">- </span>Let $b(a, m, w)$ denote $\E(Y\mid A=a, M=m, W=w)$</span>
+<span id="cb2-430"><a href="#cb2-430"></a><span class="ss">- </span>The quantity being averaged can be re-expressed as follows</span>
+<span id="cb2-431"><a href="#cb2-431"></a></span>
+<span id="cb2-432"><a href="#cb2-432"></a>\begin{align*}</span>
+<span id="cb2-433"><a href="#cb2-433"></a>    &amp; \color{RoyalBlue}{\bigg<span class="sc">\{</span> \frac{\I(A=1)}{g(0\mid W)}</span>
+<span id="cb2-434"><a href="#cb2-434"></a>      \frac{e(0\mid M,W)}{e(1\mid M,W)} - \frac{\I(A=0)}{g(0\mid W)}\bigg<span class="sc">\}</span>}</span>
+<span id="cb2-435"><a href="#cb2-435"></a>      \times \color{Goldenrod}{<span class="co">[</span><span class="ot">Y - b(A,M,W)</span><span class="co">]</span>} <span class="sc">\\</span></span>
+<span id="cb2-436"><a href="#cb2-436"></a>    &amp;+ \color{RoyalBlue}{\frac{\I(A=0)}{g(0\mid W)}}</span>
+<span id="cb2-437"><a href="#cb2-437"></a>      \color{Goldenrod}{\big<span class="sc">\{</span>Q(M,W) - \E<span class="co">[</span><span class="ot">Q(M,W) \mid W, A=0</span><span class="co">]</span> \big<span class="sc">\}</span>} <span class="sc">\\</span></span>
+<span id="cb2-438"><a href="#cb2-438"></a>    &amp;+ \color{Goldenrod}{\E<span class="co">[</span><span class="ot">Q(M,W) \mid W, A=0</span><span class="co">]</span>}</span>
+<span id="cb2-439"><a href="#cb2-439"></a>\end{align*}</span>
+<span id="cb2-440"><a href="#cb2-440"></a></span>
+<span id="cb2-441"><a href="#cb2-441"></a><span class="fu">### How to compute the one-step estimator (like Augmented IPW)</span></span>
+<span id="cb2-442"><a href="#cb2-442"></a></span>
+<span id="cb2-443"><a href="#cb2-443"></a>First we will generate some data:</span>
+<span id="cb2-444"><a href="#cb2-444"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-445"><a href="#cb2-445"></a><span class="in">mean_y &lt;- function(m, a, w) abs(w) + a * m</span></span>
+<span id="cb2-446"><a href="#cb2-446"></a><span class="in">mean_m &lt;- function(a, w)plogis(w^2 - a)</span></span>
+<span id="cb2-447"><a href="#cb2-447"></a><span class="in">pscore &lt;- function(w) plogis(1 - abs(w))</span></span>
 <span id="cb2-448"><a href="#cb2-448"></a></span>
-<span id="cb2-449"><a href="#cb2-449"></a><span class="in">n &lt;- 1000</span></span>
-<span id="cb2-450"><a href="#cb2-450"></a><span class="in">w &lt;- runif(n, -1, 1)</span></span>
-<span id="cb2-451"><a href="#cb2-451"></a><span class="in">a &lt;- rbinom(n, 1, pscore(w))</span></span>
-<span id="cb2-452"><a href="#cb2-452"></a><span class="in">m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
-<span id="cb2-453"><a href="#cb2-453"></a><span class="in">y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
-<span id="cb2-454"><a href="#cb2-454"></a><span class="in">```</span></span>
-<span id="cb2-455"><a href="#cb2-455"></a></span>
-<span id="cb2-456"><a href="#cb2-456"></a>Recall that the semiparametric efficient estimator can be computed  in the</span>
-<span id="cb2-457"><a href="#cb2-457"></a>following steps:</span>
-<span id="cb2-458"><a href="#cb2-458"></a></span>
-<span id="cb2-459"><a href="#cb2-459"></a><span class="ss">1. </span>Fit models for $g(a\mid w)$, $e(a\mid m, w)$, and $b(a, m, w)$</span>
-<span id="cb2-460"><a href="#cb2-460"></a><span class="ss">   - </span>In this example we will use Generalized Additive Models for tractability</span>
-<span id="cb2-461"><a href="#cb2-461"></a><span class="ss">   - </span>In applied settings we recommend using an ensemble of data-adaptive</span>
-<span id="cb2-462"><a href="#cb2-462"></a>     regression algorithms, such as the Super Learner <span class="co">[</span><span class="ot">@vdl2007super</span><span class="co">]</span></span>
+<span id="cb2-449"><a href="#cb2-449"></a><span class="in">w_big &lt;- runif(1e6, -1, 1)</span></span>
+<span id="cb2-450"><a href="#cb2-450"></a><span class="in">trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)</span></span>
+<span id="cb2-451"><a href="#cb2-451"></a><span class="in">                + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *</span></span>
+<span id="cb2-452"><a href="#cb2-452"></a><span class="in">                  (1 - mean_m(0, w_big)))</span></span>
+<span id="cb2-453"><a href="#cb2-453"></a></span>
+<span id="cb2-454"><a href="#cb2-454"></a><span class="in">n &lt;- 1000</span></span>
+<span id="cb2-455"><a href="#cb2-455"></a><span class="in">w &lt;- runif(n, -1, 1)</span></span>
+<span id="cb2-456"><a href="#cb2-456"></a><span class="in">a &lt;- rbinom(n, 1, pscore(w))</span></span>
+<span id="cb2-457"><a href="#cb2-457"></a><span class="in">m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
+<span id="cb2-458"><a href="#cb2-458"></a><span class="in">y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
+<span id="cb2-459"><a href="#cb2-459"></a><span class="in">```</span></span>
+<span id="cb2-460"><a href="#cb2-460"></a></span>
+<span id="cb2-461"><a href="#cb2-461"></a>Recall that the semiparametric efficient estimator can be computed  in the</span>
+<span id="cb2-462"><a href="#cb2-462"></a>following steps:</span>
 <span id="cb2-463"><a href="#cb2-463"></a></span>
-<span id="cb2-464"><a href="#cb2-464"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-465"><a href="#cb2-465"></a><span class="in">   library(mgcv)</span></span>
-<span id="cb2-466"><a href="#cb2-466"></a><span class="in">   ## fit model for E(Y | A, W)</span></span>
-<span id="cb2-467"><a href="#cb2-467"></a><span class="in">   b_fit &lt;- gam(y ~ m:a + s(w, by = a))</span></span>
-<span id="cb2-468"><a href="#cb2-468"></a><span class="in">   ## fit model for P(A = 1 | M, W)</span></span>
-<span id="cb2-469"><a href="#cb2-469"></a><span class="in">   e_fit &lt;- gam(a ~ m + w + s(w, by = m), family = binomial)</span></span>
-<span id="cb2-470"><a href="#cb2-470"></a><span class="in">   ## fit model for P(A = 1 | W)</span></span>
-<span id="cb2-471"><a href="#cb2-471"></a><span class="in">   g_fit &lt;- gam(a ~ w, family = binomial)</span></span>
-<span id="cb2-472"><a href="#cb2-472"></a><span class="in">   ```</span></span>
-<span id="cb2-473"><a href="#cb2-473"></a></span>
-<span id="cb2-474"><a href="#cb2-474"></a><span class="ss">2. </span>Compute predictions  $g(1\mid w)$, $g(0\mid w)$, $e(1\mid m, w)$,</span>
-<span id="cb2-475"><a href="#cb2-475"></a>   $e(0\mid m, w)$,$b(1, m, w)$, $b(0, m, w)$, and  $b(a, m, w)$</span>
-<span id="cb2-476"><a href="#cb2-476"></a></span>
-<span id="cb2-477"><a href="#cb2-477"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-478"><a href="#cb2-478"></a><span class="in">   ## Compute P(A = 1 | W)</span></span>
-<span id="cb2-479"><a href="#cb2-479"></a><span class="in">   g1_pred &lt;- predict(g_fit, type = 'response')</span></span>
-<span id="cb2-480"><a href="#cb2-480"></a><span class="in">   ## Compute P(A = 0 | W)</span></span>
-<span id="cb2-481"><a href="#cb2-481"></a><span class="in">   g0_pred &lt;- 1 - g1_pred</span></span>
-<span id="cb2-482"><a href="#cb2-482"></a><span class="in">   ## Compute P(A = 1 | M, W)</span></span>
-<span id="cb2-483"><a href="#cb2-483"></a><span class="in">   e1_pred &lt;- predict(e_fit, type = 'response')</span></span>
-<span id="cb2-484"><a href="#cb2-484"></a><span class="in">   ## Compute P(A = 0 | M, W)</span></span>
-<span id="cb2-485"><a href="#cb2-485"></a><span class="in">   e0_pred &lt;- 1 - e1_pred</span></span>
-<span id="cb2-486"><a href="#cb2-486"></a><span class="in">   ## Compute E(Y | A = 1, M, W)</span></span>
-<span id="cb2-487"><a href="#cb2-487"></a><span class="in">   b1_pred &lt;- predict(b_fit, newdata = data.frame(a = 1, m, w))</span></span>
-<span id="cb2-488"><a href="#cb2-488"></a><span class="in">   ## Compute E(Y | A = 0, M, W)</span></span>
-<span id="cb2-489"><a href="#cb2-489"></a><span class="in">   b0_pred &lt;- predict(b_fit, newdata = data.frame(a = 0, m, w))</span></span>
-<span id="cb2-490"><a href="#cb2-490"></a><span class="in">   ## Compute E(Y | A, M, W)</span></span>
-<span id="cb2-491"><a href="#cb2-491"></a><span class="in">   b_pred  &lt;- predict(b_fit)</span></span>
-<span id="cb2-492"><a href="#cb2-492"></a><span class="in">   ```</span></span>
-<span id="cb2-493"><a href="#cb2-493"></a></span>
-<span id="cb2-494"><a href="#cb2-494"></a><span class="ss">3. </span>Compute $Q(M, W)$, fit a model for $\E<span class="co">[</span><span class="ot">Q(M,W) \mid W,A</span><span class="co">]</span>$, and predict at</span>
-<span id="cb2-495"><a href="#cb2-495"></a>   $A=0$</span>
-<span id="cb2-496"><a href="#cb2-496"></a></span>
-<span id="cb2-497"><a href="#cb2-497"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-498"><a href="#cb2-498"></a><span class="in">   ## Compute Q(M, W)</span></span>
-<span id="cb2-499"><a href="#cb2-499"></a><span class="in">   pseudo &lt;- b1_pred - b0_pred</span></span>
-<span id="cb2-500"><a href="#cb2-500"></a><span class="in">   ## Fit model for E[Q(M, W) | A, W]</span></span>
-<span id="cb2-501"><a href="#cb2-501"></a><span class="in">   q_fit &lt;- gam(pseudo ~ a + w + s(w, by = a))</span></span>
-<span id="cb2-502"><a href="#cb2-502"></a><span class="in">   ## Compute E[Q(M, W) | A = 0, W]</span></span>
-<span id="cb2-503"><a href="#cb2-503"></a><span class="in">   q_pred &lt;- predict(q_fit, newdata = data.frame(a = 0, w = w))</span></span>
-<span id="cb2-504"><a href="#cb2-504"></a><span class="in">   ```</span></span>
-<span id="cb2-505"><a href="#cb2-505"></a></span>
-<span id="cb2-506"><a href="#cb2-506"></a><span class="ss">4. </span>Estimate the weights</span>
-<span id="cb2-507"><a href="#cb2-507"></a></span>
-<span id="cb2-508"><a href="#cb2-508"></a>   \begin{equation*}</span>
-<span id="cb2-509"><a href="#cb2-509"></a>   \color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
-<span id="cb2-510"><a href="#cb2-510"></a>     \frac{\I(A=1)}{g(0\mid W)} \frac{e(0 \mid M,W)}{e(1 \mid M,W)} -</span>
-<span id="cb2-511"><a href="#cb2-511"></a>     \frac{\I(A=0)}{g(0\mid W)} \bigg<span class="sc">\}</span>}</span>
-<span id="cb2-512"><a href="#cb2-512"></a>   \end{equation*}</span>
-<span id="cb2-513"><a href="#cb2-513"></a>   using the above predictions:</span>
-<span id="cb2-514"><a href="#cb2-514"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-515"><a href="#cb2-515"></a><span class="in">   ip_weights &lt;- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred</span></span>
-<span id="cb2-516"><a href="#cb2-516"></a><span class="in">   ```</span></span>
-<span id="cb2-517"><a href="#cb2-517"></a></span>
-<span id="cb2-518"><a href="#cb2-518"></a><span class="ss">5. </span>Compute the uncentered EIF:</span>
-<span id="cb2-519"><a href="#cb2-519"></a></span>
-<span id="cb2-520"><a href="#cb2-520"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-521"><a href="#cb2-521"></a><span class="in">   eif &lt;- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +</span></span>
-<span id="cb2-522"><a href="#cb2-522"></a><span class="in">     q_pred</span></span>
-<span id="cb2-523"><a href="#cb2-523"></a><span class="in">   ```</span></span>
+<span id="cb2-464"><a href="#cb2-464"></a><span class="ss">1. </span>Fit models for $g(a\mid w)$, $e(a\mid m, w)$, and $b(a, m, w)$</span>
+<span id="cb2-465"><a href="#cb2-465"></a><span class="ss">   - </span>In this example we will use Generalized Additive Models for tractability</span>
+<span id="cb2-466"><a href="#cb2-466"></a><span class="ss">   - </span>In applied settings we recommend using an ensemble of data-adaptive</span>
+<span id="cb2-467"><a href="#cb2-467"></a>     regression algorithms, such as the Super Learner <span class="co">[</span><span class="ot">@vdl2007super</span><span class="co">]</span></span>
+<span id="cb2-468"><a href="#cb2-468"></a></span>
+<span id="cb2-469"><a href="#cb2-469"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-470"><a href="#cb2-470"></a><span class="in">   library(mgcv)</span></span>
+<span id="cb2-471"><a href="#cb2-471"></a><span class="in">   ## fit model for E(Y | A, W)</span></span>
+<span id="cb2-472"><a href="#cb2-472"></a><span class="in">   b_fit &lt;- gam(y ~ m:a + s(w, by = a))</span></span>
+<span id="cb2-473"><a href="#cb2-473"></a><span class="in">   ## fit model for P(A = 1 | M, W)</span></span>
+<span id="cb2-474"><a href="#cb2-474"></a><span class="in">   e_fit &lt;- gam(a ~ m + w + s(w, by = m), family = binomial)</span></span>
+<span id="cb2-475"><a href="#cb2-475"></a><span class="in">   ## fit model for P(A = 1 | W)</span></span>
+<span id="cb2-476"><a href="#cb2-476"></a><span class="in">   g_fit &lt;- gam(a ~ w, family = binomial)</span></span>
+<span id="cb2-477"><a href="#cb2-477"></a><span class="in">   ```</span></span>
+<span id="cb2-478"><a href="#cb2-478"></a></span>
+<span id="cb2-479"><a href="#cb2-479"></a><span class="ss">2. </span>Compute predictions  $g(1\mid w)$, $g(0\mid w)$, $e(1\mid m, w)$,</span>
+<span id="cb2-480"><a href="#cb2-480"></a>   $e(0\mid m, w)$,$b(1, m, w)$, $b(0, m, w)$, and  $b(a, m, w)$</span>
+<span id="cb2-481"><a href="#cb2-481"></a></span>
+<span id="cb2-482"><a href="#cb2-482"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-483"><a href="#cb2-483"></a><span class="in">   ## Compute P(A = 1 | W)</span></span>
+<span id="cb2-484"><a href="#cb2-484"></a><span class="in">   g1_pred &lt;- predict(g_fit, type = 'response')</span></span>
+<span id="cb2-485"><a href="#cb2-485"></a><span class="in">   ## Compute P(A = 0 | W)</span></span>
+<span id="cb2-486"><a href="#cb2-486"></a><span class="in">   g0_pred &lt;- 1 - g1_pred</span></span>
+<span id="cb2-487"><a href="#cb2-487"></a><span class="in">   ## Compute P(A = 1 | M, W)</span></span>
+<span id="cb2-488"><a href="#cb2-488"></a><span class="in">   e1_pred &lt;- predict(e_fit, type = 'response')</span></span>
+<span id="cb2-489"><a href="#cb2-489"></a><span class="in">   ## Compute P(A = 0 | M, W)</span></span>
+<span id="cb2-490"><a href="#cb2-490"></a><span class="in">   e0_pred &lt;- 1 - e1_pred</span></span>
+<span id="cb2-491"><a href="#cb2-491"></a><span class="in">   ## Compute E(Y | A = 1, M, W)</span></span>
+<span id="cb2-492"><a href="#cb2-492"></a><span class="in">   b1_pred &lt;- predict(b_fit, newdata = data.frame(a = 1, m, w))</span></span>
+<span id="cb2-493"><a href="#cb2-493"></a><span class="in">   ## Compute E(Y | A = 0, M, W)</span></span>
+<span id="cb2-494"><a href="#cb2-494"></a><span class="in">   b0_pred &lt;- predict(b_fit, newdata = data.frame(a = 0, m, w))</span></span>
+<span id="cb2-495"><a href="#cb2-495"></a><span class="in">   ## Compute E(Y | A, M, W)</span></span>
+<span id="cb2-496"><a href="#cb2-496"></a><span class="in">   b_pred  &lt;- predict(b_fit)</span></span>
+<span id="cb2-497"><a href="#cb2-497"></a><span class="in">   ```</span></span>
+<span id="cb2-498"><a href="#cb2-498"></a></span>
+<span id="cb2-499"><a href="#cb2-499"></a><span class="ss">3. </span>Compute $Q(M, W)$, fit a model for $\E<span class="co">[</span><span class="ot">Q(M,W) \mid W,A</span><span class="co">]</span>$, and predict at</span>
+<span id="cb2-500"><a href="#cb2-500"></a>   $A=0$</span>
+<span id="cb2-501"><a href="#cb2-501"></a></span>
+<span id="cb2-502"><a href="#cb2-502"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-503"><a href="#cb2-503"></a><span class="in">   ## Compute Q(M, W)</span></span>
+<span id="cb2-504"><a href="#cb2-504"></a><span class="in">   pseudo &lt;- b1_pred - b0_pred</span></span>
+<span id="cb2-505"><a href="#cb2-505"></a><span class="in">   ## Fit model for E[Q(M, W) | A, W]</span></span>
+<span id="cb2-506"><a href="#cb2-506"></a><span class="in">   q_fit &lt;- gam(pseudo ~ a + w + s(w, by = a))</span></span>
+<span id="cb2-507"><a href="#cb2-507"></a><span class="in">   ## Compute E[Q(M, W) | A = 0, W]</span></span>
+<span id="cb2-508"><a href="#cb2-508"></a><span class="in">   q_pred &lt;- predict(q_fit, newdata = data.frame(a = 0, w = w))</span></span>
+<span id="cb2-509"><a href="#cb2-509"></a><span class="in">   ```</span></span>
+<span id="cb2-510"><a href="#cb2-510"></a></span>
+<span id="cb2-511"><a href="#cb2-511"></a><span class="ss">4. </span>Estimate the weights</span>
+<span id="cb2-512"><a href="#cb2-512"></a></span>
+<span id="cb2-513"><a href="#cb2-513"></a>   \begin{equation*}</span>
+<span id="cb2-514"><a href="#cb2-514"></a>   \color{RoyalBlue}{\bigg<span class="sc">\{</span></span>
+<span id="cb2-515"><a href="#cb2-515"></a>     \frac{\I(A=1)}{g(0\mid W)} \frac{e(0 \mid M,W)}{e(1 \mid M,W)} -</span>
+<span id="cb2-516"><a href="#cb2-516"></a>     \frac{\I(A=0)}{g(0\mid W)} \bigg<span class="sc">\}</span>}</span>
+<span id="cb2-517"><a href="#cb2-517"></a>   \end{equation*}</span>
+<span id="cb2-518"><a href="#cb2-518"></a>   using the above predictions:</span>
+<span id="cb2-519"><a href="#cb2-519"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-520"><a href="#cb2-520"></a><span class="in">   ip_weights &lt;- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred</span></span>
+<span id="cb2-521"><a href="#cb2-521"></a><span class="in">   ```</span></span>
+<span id="cb2-522"><a href="#cb2-522"></a></span>
+<span id="cb2-523"><a href="#cb2-523"></a><span class="ss">5. </span>Compute the uncentered EIF:</span>
 <span id="cb2-524"><a href="#cb2-524"></a></span>
-<span id="cb2-525"><a href="#cb2-525"></a><span class="ss">6. </span>The one step estimator is the mean of the uncentered EIF</span>
-<span id="cb2-526"><a href="#cb2-526"></a></span>
-<span id="cb2-527"><a href="#cb2-527"></a>   <span class="in">```{webr-r}</span></span>
-<span id="cb2-528"><a href="#cb2-528"></a><span class="in">   ## One-step estimator</span></span>
-<span id="cb2-529"><a href="#cb2-529"></a><span class="in">   mean(eif)</span></span>
-<span id="cb2-530"><a href="#cb2-530"></a><span class="in">   ```</span></span>
+<span id="cb2-525"><a href="#cb2-525"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-526"><a href="#cb2-526"></a><span class="in">   eif &lt;- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +</span></span>
+<span id="cb2-527"><a href="#cb2-527"></a><span class="in">     q_pred</span></span>
+<span id="cb2-528"><a href="#cb2-528"></a><span class="in">   ```</span></span>
+<span id="cb2-529"><a href="#cb2-529"></a></span>
+<span id="cb2-530"><a href="#cb2-530"></a><span class="ss">6. </span>The one step estimator is the mean of the uncentered EIF</span>
 <span id="cb2-531"><a href="#cb2-531"></a></span>
-<span id="cb2-532"><a href="#cb2-532"></a><span class="fu">## Performance of the one-step estimator in a small simulation study</span></span>
-<span id="cb2-533"><a href="#cb2-533"></a></span>
-<span id="cb2-534"><a href="#cb2-534"></a>First, we create a wrapper around the estimator</span>
-<span id="cb2-535"><a href="#cb2-535"></a></span>
-<span id="cb2-536"><a href="#cb2-536"></a><span class="in">```{webr-r}</span></span>
-<span id="cb2-537"><a href="#cb2-537"></a><span class="in">one_step &lt;- function(y, m, a, w) {</span></span>
-<span id="cb2-538"><a href="#cb2-538"></a><span class="in">  b_fit &lt;- gam(y ~ m:a + s(w, by = a))</span></span>
-<span id="cb2-539"><a href="#cb2-539"></a><span class="in">  e_fit &lt;- gam(a ~ m + w + s(w, by = m), family = binomial)</span></span>
-<span id="cb2-540"><a href="#cb2-540"></a><span class="in">  g_fit &lt;- gam(a ~ w, family = binomial)</span></span>
-<span id="cb2-541"><a href="#cb2-541"></a><span class="in">  g1_pred &lt;- predict(g_fit, type = 'response')</span></span>
-<span id="cb2-542"><a href="#cb2-542"></a><span class="in">  g0_pred &lt;- 1 - g1_pred</span></span>
-<span id="cb2-543"><a href="#cb2-543"></a><span class="in">  e1_pred &lt;- predict(e_fit, type = 'response')</span></span>
-<span id="cb2-544"><a href="#cb2-544"></a><span class="in">  e0_pred &lt;- 1 - e1_pred</span></span>
-<span id="cb2-545"><a href="#cb2-545"></a><span class="in">  b1_pred &lt;- predict(</span></span>
-<span id="cb2-546"><a href="#cb2-546"></a><span class="in">    b_fit, newdata = data.frame(a = 1, m, w), type = 'response'</span></span>
-<span id="cb2-547"><a href="#cb2-547"></a><span class="in">  )</span></span>
-<span id="cb2-548"><a href="#cb2-548"></a><span class="in">  b0_pred &lt;- predict(</span></span>
-<span id="cb2-549"><a href="#cb2-549"></a><span class="in">    b_fit, newdata = data.frame(a = 0, m, w), type = 'response'</span></span>
-<span id="cb2-550"><a href="#cb2-550"></a><span class="in">  )</span></span>
-<span id="cb2-551"><a href="#cb2-551"></a><span class="in">  b_pred  &lt;- predict(b_fit, type = 'response')</span></span>
-<span id="cb2-552"><a href="#cb2-552"></a><span class="in">  pseudo &lt;- b1_pred - b0_pred</span></span>
-<span id="cb2-553"><a href="#cb2-553"></a><span class="in">  q_fit &lt;- gam(pseudo ~ a + w + s(w, by = a))</span></span>
-<span id="cb2-554"><a href="#cb2-554"></a><span class="in">  q_pred &lt;- predict(q_fit, newdata = data.frame(a = 0, w = w))</span></span>
-<span id="cb2-555"><a href="#cb2-555"></a><span class="in">  ip_weights &lt;- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred</span></span>
-<span id="cb2-556"><a href="#cb2-556"></a><span class="in">  eif &lt;- ip_weights * (y - b_pred) + (1 - a) / g0_pred *</span></span>
-<span id="cb2-557"><a href="#cb2-557"></a><span class="in">    (pseudo - q_pred) + q_pred</span></span>
-<span id="cb2-558"><a href="#cb2-558"></a><span class="in">  return(mean(eif))</span></span>
-<span id="cb2-559"><a href="#cb2-559"></a><span class="in">}</span></span>
-<span id="cb2-560"><a href="#cb2-560"></a><span class="in">```</span></span>
-<span id="cb2-561"><a href="#cb2-561"></a></span>
-<span id="cb2-562"><a href="#cb2-562"></a>Let us first examine the bias</span>
-<span id="cb2-563"><a href="#cb2-563"></a></span>
-<span id="cb2-564"><a href="#cb2-564"></a><span class="ss">- </span>The true value is:</span>
-<span id="cb2-565"><a href="#cb2-565"></a></span>
-<span id="cb2-566"><a href="#cb2-566"></a><span class="in">```{webr-r}</span></span>
-<span id="cb2-567"><a href="#cb2-567"></a><span class="in">w_big &lt;- runif(1e6, -1, 1)</span></span>
-<span id="cb2-568"><a href="#cb2-568"></a><span class="in">trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)</span></span>
-<span id="cb2-569"><a href="#cb2-569"></a><span class="in">  + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))</span></span>
-<span id="cb2-570"><a href="#cb2-570"></a><span class="in">print(trueval)</span></span>
-<span id="cb2-571"><a href="#cb2-571"></a><span class="in">```</span></span>
-<span id="cb2-572"><a href="#cb2-572"></a></span>
-<span id="cb2-573"><a href="#cb2-573"></a><span class="ss">- </span>Bias simulation</span>
-<span id="cb2-574"><a href="#cb2-574"></a></span>
-<span id="cb2-575"><a href="#cb2-575"></a><span class="in">```{webr-r}</span></span>
-<span id="cb2-576"><a href="#cb2-576"></a><span class="in">estimate &lt;- lapply(seq_len(1000), function(iter) {</span></span>
-<span id="cb2-577"><a href="#cb2-577"></a><span class="in">  n &lt;- 1000</span></span>
-<span id="cb2-578"><a href="#cb2-578"></a><span class="in">  w &lt;- runif(n, -1, 1)</span></span>
-<span id="cb2-579"><a href="#cb2-579"></a><span class="in">  a &lt;- rbinom(n, 1, pscore(w))</span></span>
-<span id="cb2-580"><a href="#cb2-580"></a><span class="in">  m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
-<span id="cb2-581"><a href="#cb2-581"></a><span class="in">  y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
-<span id="cb2-582"><a href="#cb2-582"></a><span class="in">  estimate &lt;- one_step(y, m, a, w)</span></span>
-<span id="cb2-583"><a href="#cb2-583"></a><span class="in">  return(estimate)</span></span>
-<span id="cb2-584"><a href="#cb2-584"></a><span class="in">})</span></span>
-<span id="cb2-585"><a href="#cb2-585"></a><span class="in">estimate &lt;- do.call(c, estimate)</span></span>
-<span id="cb2-586"><a href="#cb2-586"></a></span>
-<span id="cb2-587"><a href="#cb2-587"></a><span class="in">hist(estimate)</span></span>
-<span id="cb2-588"><a href="#cb2-588"></a><span class="in">abline(v = trueval, col = "red", lwd = 4)</span></span>
-<span id="cb2-589"><a href="#cb2-589"></a><span class="in">```</span></span>
-<span id="cb2-590"><a href="#cb2-590"></a></span>
-<span id="cb2-591"><a href="#cb2-591"></a><span class="ss">- </span>And now the confidence intervals:</span>
-<span id="cb2-592"><a href="#cb2-592"></a></span>
-<span id="cb2-593"><a href="#cb2-593"></a><span class="in">```{webr-r}</span></span>
-<span id="cb2-594"><a href="#cb2-594"></a><span class="in">#| fig-width: 8</span></span>
-<span id="cb2-595"><a href="#cb2-595"></a><span class="in">cis &lt;- cbind(</span></span>
-<span id="cb2-596"><a href="#cb2-596"></a><span class="in">  estimate - qnorm(0.975) * sd(estimate),</span></span>
-<span id="cb2-597"><a href="#cb2-597"></a><span class="in">  estimate + qnorm(0.975) * sd(estimate)</span></span>
-<span id="cb2-598"><a href="#cb2-598"></a><span class="in">)</span></span>
-<span id="cb2-599"><a href="#cb2-599"></a></span>
-<span id="cb2-600"><a href="#cb2-600"></a><span class="in">ord &lt;- order(rowSums(cis))</span></span>
-<span id="cb2-601"><a href="#cb2-601"></a><span class="in">lower &lt;- cis[ord, 1]</span></span>
-<span id="cb2-602"><a href="#cb2-602"></a><span class="in">upper &lt;- cis[ord, 2]</span></span>
-<span id="cb2-603"><a href="#cb2-603"></a><span class="in">curve(trueval + 0 * x,</span></span>
-<span id="cb2-604"><a href="#cb2-604"></a><span class="in">  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",</span></span>
-<span id="cb2-605"><a href="#cb2-605"></a><span class="in">  xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2</span></span>
-<span id="cb2-606"><a href="#cb2-606"></a><span class="in">)</span></span>
-<span id="cb2-607"><a href="#cb2-607"></a><span class="in">for (i in 1:1000) {</span></span>
-<span id="cb2-608"><a href="#cb2-608"></a><span class="in">  clr &lt;- rgb(0.5, 0, 0.75, 0.5)</span></span>
-<span id="cb2-609"><a href="#cb2-609"></a><span class="in">  if (upper[i] &lt; trueval || lower[i] &gt; trueval) clr &lt;- rgb(1, 0, 0, 1)</span></span>
-<span id="cb2-610"><a href="#cb2-610"></a><span class="in">  points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)</span></span>
-<span id="cb2-611"><a href="#cb2-611"></a><span class="in">}</span></span>
-<span id="cb2-612"><a href="#cb2-612"></a><span class="in">text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)</span></span>
-<span id="cb2-613"><a href="#cb2-613"></a><span class="in">text(450, 0.01, paste0(</span></span>
-<span id="cb2-614"><a href="#cb2-614"></a><span class="in">  "Coverage probability = ",</span></span>
-<span id="cb2-615"><a href="#cb2-615"></a><span class="in">  mean(lower &lt; trueval &amp; trueval &lt; upper), "%"</span></span>
-<span id="cb2-616"><a href="#cb2-616"></a><span class="in">), cex = 1.2)</span></span>
-<span id="cb2-617"><a href="#cb2-617"></a><span class="in">```</span></span>
-<span id="cb2-618"><a href="#cb2-618"></a></span>
-<span id="cb2-619"><a href="#cb2-619"></a><span class="fu">## A note about targeted minimum loss-based estimation (TMLE)</span></span>
-<span id="cb2-620"><a href="#cb2-620"></a></span>
-<span id="cb2-621"><a href="#cb2-621"></a><span class="ss">- </span>The above estimator is great because it allows us to use data-adaptive</span>
-<span id="cb2-622"><a href="#cb2-622"></a>  regression to avoid bias, while allowing the computation of correct standard</span>
-<span id="cb2-623"><a href="#cb2-623"></a>  errors</span>
-<span id="cb2-624"><a href="#cb2-624"></a><span class="ss">- </span>This estimator has a problem, though:</span>
-<span id="cb2-625"><a href="#cb2-625"></a><span class="ss">  - </span>It can yield answers outside of the bounds of the parameter space</span>
-<span id="cb2-626"><a href="#cb2-626"></a><span class="ss">  - </span>E.g., if $Y$ is binary, it could yield direct and indirect effects outside</span>
-<span id="cb2-627"><a href="#cb2-627"></a>    of $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$</span>
-<span id="cb2-628"><a href="#cb2-628"></a><span class="ss">  - </span>To solve this, you can compute a TMLE instead (implemented in the R</span>
-<span id="cb2-629"><a href="#cb2-629"></a>    packages, coming up)</span>
-<span id="cb2-630"><a href="#cb2-630"></a></span>
-<span id="cb2-631"><a href="#cb2-631"></a><span class="fu">## A note about cross-fitting</span></span>
-<span id="cb2-632"><a href="#cb2-632"></a></span>
-<span id="cb2-633"><a href="#cb2-633"></a><span class="ss">- </span>When using data-adaptive regression estimators, it is recommended to use</span>
-<span id="cb2-634"><a href="#cb2-634"></a>  cross-fitted estimators</span>
-<span id="cb2-635"><a href="#cb2-635"></a><span class="ss">- </span>Cross-fitting is similar to cross-validation:</span>
-<span id="cb2-636"><a href="#cb2-636"></a><span class="ss">  - </span>Randomly split the sample into K (e.g., K=10) subsets of equal size</span>
-<span id="cb2-637"><a href="#cb2-637"></a><span class="ss">  - </span>For each of the 9/10ths of the sample, fit the regression models</span>
-<span id="cb2-638"><a href="#cb2-638"></a><span class="ss">  - </span>Use the out-of-sample fit to predict in the remaining 1/10th of the sample</span>
-<span id="cb2-639"><a href="#cb2-639"></a><span class="ss">- </span>Cross-fitting further reduces the bias of the estimators</span>
-<span id="cb2-640"><a href="#cb2-640"></a><span class="ss">- </span>Cross-fitting aids in guaranteeing the correctness of the standard errors and</span>
-<span id="cb2-641"><a href="#cb2-641"></a>  confidence intervals</span>
-<span id="cb2-642"><a href="#cb2-642"></a><span class="ss">- </span>Cross-fitting is implemented by default in the R packages that you will see</span>
-<span id="cb2-643"><a href="#cb2-643"></a>  next</span>
+<span id="cb2-532"><a href="#cb2-532"></a>   <span class="in">```{webr-r}</span></span>
+<span id="cb2-533"><a href="#cb2-533"></a><span class="in">   ## One-step estimator</span></span>
+<span id="cb2-534"><a href="#cb2-534"></a><span class="in">   mean(eif)</span></span>
+<span id="cb2-535"><a href="#cb2-535"></a><span class="in">   ```</span></span>
+<span id="cb2-536"><a href="#cb2-536"></a></span>
+<span id="cb2-537"><a href="#cb2-537"></a><span class="fu">### Performance of the one-step estimator in a small simulation study</span></span>
+<span id="cb2-538"><a href="#cb2-538"></a></span>
+<span id="cb2-539"><a href="#cb2-539"></a>First, we create a wrapper around the estimator</span>
+<span id="cb2-540"><a href="#cb2-540"></a></span>
+<span id="cb2-541"><a href="#cb2-541"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-542"><a href="#cb2-542"></a><span class="in">one_step &lt;- function(y, m, a, w) {</span></span>
+<span id="cb2-543"><a href="#cb2-543"></a><span class="in">  b_fit &lt;- gam(y ~ m:a + s(w, by = a))</span></span>
+<span id="cb2-544"><a href="#cb2-544"></a><span class="in">  e_fit &lt;- gam(a ~ m + w + s(w, by = m), family = binomial)</span></span>
+<span id="cb2-545"><a href="#cb2-545"></a><span class="in">  g_fit &lt;- gam(a ~ w, family = binomial)</span></span>
+<span id="cb2-546"><a href="#cb2-546"></a><span class="in">  g1_pred &lt;- predict(g_fit, type = 'response')</span></span>
+<span id="cb2-547"><a href="#cb2-547"></a><span class="in">  g0_pred &lt;- 1 - g1_pred</span></span>
+<span id="cb2-548"><a href="#cb2-548"></a><span class="in">  e1_pred &lt;- predict(e_fit, type = 'response')</span></span>
+<span id="cb2-549"><a href="#cb2-549"></a><span class="in">  e0_pred &lt;- 1 - e1_pred</span></span>
+<span id="cb2-550"><a href="#cb2-550"></a><span class="in">  b1_pred &lt;- predict(</span></span>
+<span id="cb2-551"><a href="#cb2-551"></a><span class="in">    b_fit, newdata = data.frame(a = 1, m, w), type = 'response'</span></span>
+<span id="cb2-552"><a href="#cb2-552"></a><span class="in">  )</span></span>
+<span id="cb2-553"><a href="#cb2-553"></a><span class="in">  b0_pred &lt;- predict(</span></span>
+<span id="cb2-554"><a href="#cb2-554"></a><span class="in">    b_fit, newdata = data.frame(a = 0, m, w), type = 'response'</span></span>
+<span id="cb2-555"><a href="#cb2-555"></a><span class="in">  )</span></span>
+<span id="cb2-556"><a href="#cb2-556"></a><span class="in">  b_pred  &lt;- predict(b_fit, type = 'response')</span></span>
+<span id="cb2-557"><a href="#cb2-557"></a><span class="in">  pseudo &lt;- b1_pred - b0_pred</span></span>
+<span id="cb2-558"><a href="#cb2-558"></a><span class="in">  q_fit &lt;- gam(pseudo ~ a + w + s(w, by = a))</span></span>
+<span id="cb2-559"><a href="#cb2-559"></a><span class="in">  q_pred &lt;- predict(q_fit, newdata = data.frame(a = 0, w = w))</span></span>
+<span id="cb2-560"><a href="#cb2-560"></a><span class="in">  ip_weights &lt;- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred</span></span>
+<span id="cb2-561"><a href="#cb2-561"></a><span class="in">  eif &lt;- ip_weights * (y - b_pred) + (1 - a) / g0_pred *</span></span>
+<span id="cb2-562"><a href="#cb2-562"></a><span class="in">    (pseudo - q_pred) + q_pred</span></span>
+<span id="cb2-563"><a href="#cb2-563"></a><span class="in">  return(mean(eif))</span></span>
+<span id="cb2-564"><a href="#cb2-564"></a><span class="in">}</span></span>
+<span id="cb2-565"><a href="#cb2-565"></a><span class="in">```</span></span>
+<span id="cb2-566"><a href="#cb2-566"></a></span>
+<span id="cb2-567"><a href="#cb2-567"></a>Let us first examine the bias</span>
+<span id="cb2-568"><a href="#cb2-568"></a></span>
+<span id="cb2-569"><a href="#cb2-569"></a><span class="ss">- </span>The true value is:</span>
+<span id="cb2-570"><a href="#cb2-570"></a></span>
+<span id="cb2-571"><a href="#cb2-571"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-572"><a href="#cb2-572"></a><span class="in">w_big &lt;- runif(1e6, -1, 1)</span></span>
+<span id="cb2-573"><a href="#cb2-573"></a><span class="in">trueval &lt;- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)</span></span>
+<span id="cb2-574"><a href="#cb2-574"></a><span class="in">  + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))</span></span>
+<span id="cb2-575"><a href="#cb2-575"></a><span class="in">print(trueval)</span></span>
+<span id="cb2-576"><a href="#cb2-576"></a><span class="in">```</span></span>
+<span id="cb2-577"><a href="#cb2-577"></a></span>
+<span id="cb2-578"><a href="#cb2-578"></a><span class="ss">- </span>Bias simulation</span>
+<span id="cb2-579"><a href="#cb2-579"></a></span>
+<span id="cb2-580"><a href="#cb2-580"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-581"><a href="#cb2-581"></a><span class="in">estimate &lt;- lapply(seq_len(1000), function(iter) {</span></span>
+<span id="cb2-582"><a href="#cb2-582"></a><span class="in">  n &lt;- 1000</span></span>
+<span id="cb2-583"><a href="#cb2-583"></a><span class="in">  w &lt;- runif(n, -1, 1)</span></span>
+<span id="cb2-584"><a href="#cb2-584"></a><span class="in">  a &lt;- rbinom(n, 1, pscore(w))</span></span>
+<span id="cb2-585"><a href="#cb2-585"></a><span class="in">  m &lt;- rbinom(n, 1, mean_m(a, w))</span></span>
+<span id="cb2-586"><a href="#cb2-586"></a><span class="in">  y &lt;- rnorm(n, mean_y(m, a, w))</span></span>
+<span id="cb2-587"><a href="#cb2-587"></a><span class="in">  estimate &lt;- one_step(y, m, a, w)</span></span>
+<span id="cb2-588"><a href="#cb2-588"></a><span class="in">  return(estimate)</span></span>
+<span id="cb2-589"><a href="#cb2-589"></a><span class="in">})</span></span>
+<span id="cb2-590"><a href="#cb2-590"></a><span class="in">estimate &lt;- do.call(c, estimate)</span></span>
+<span id="cb2-591"><a href="#cb2-591"></a></span>
+<span id="cb2-592"><a href="#cb2-592"></a><span class="in">hist(estimate)</span></span>
+<span id="cb2-593"><a href="#cb2-593"></a><span class="in">abline(v = trueval, col = "red", lwd = 4)</span></span>
+<span id="cb2-594"><a href="#cb2-594"></a><span class="in">```</span></span>
+<span id="cb2-595"><a href="#cb2-595"></a></span>
+<span id="cb2-596"><a href="#cb2-596"></a><span class="ss">- </span>And now the confidence intervals:</span>
+<span id="cb2-597"><a href="#cb2-597"></a></span>
+<span id="cb2-598"><a href="#cb2-598"></a><span class="in">```{webr-r}</span></span>
+<span id="cb2-599"><a href="#cb2-599"></a><span class="in">#| fig-width: 8</span></span>
+<span id="cb2-600"><a href="#cb2-600"></a><span class="in">cis &lt;- cbind(</span></span>
+<span id="cb2-601"><a href="#cb2-601"></a><span class="in">  estimate - qnorm(0.975) * sd(estimate),</span></span>
+<span id="cb2-602"><a href="#cb2-602"></a><span class="in">  estimate + qnorm(0.975) * sd(estimate)</span></span>
+<span id="cb2-603"><a href="#cb2-603"></a><span class="in">)</span></span>
+<span id="cb2-604"><a href="#cb2-604"></a></span>
+<span id="cb2-605"><a href="#cb2-605"></a><span class="in">ord &lt;- order(rowSums(cis))</span></span>
+<span id="cb2-606"><a href="#cb2-606"></a><span class="in">lower &lt;- cis[ord, 1]</span></span>
+<span id="cb2-607"><a href="#cb2-607"></a><span class="in">upper &lt;- cis[ord, 2]</span></span>
+<span id="cb2-608"><a href="#cb2-608"></a><span class="in">curve(trueval + 0 * x,</span></span>
+<span id="cb2-609"><a href="#cb2-609"></a><span class="in">  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",</span></span>
+<span id="cb2-610"><a href="#cb2-610"></a><span class="in">  xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2</span></span>
+<span id="cb2-611"><a href="#cb2-611"></a><span class="in">)</span></span>
+<span id="cb2-612"><a href="#cb2-612"></a><span class="in">for (i in 1:1000) {</span></span>
+<span id="cb2-613"><a href="#cb2-613"></a><span class="in">  clr &lt;- rgb(0.5, 0, 0.75, 0.5)</span></span>
+<span id="cb2-614"><a href="#cb2-614"></a><span class="in">  if (upper[i] &lt; trueval || lower[i] &gt; trueval) clr &lt;- rgb(1, 0, 0, 1)</span></span>
+<span id="cb2-615"><a href="#cb2-615"></a><span class="in">  points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)</span></span>
+<span id="cb2-616"><a href="#cb2-616"></a><span class="in">}</span></span>
+<span id="cb2-617"><a href="#cb2-617"></a><span class="in">text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)</span></span>
+<span id="cb2-618"><a href="#cb2-618"></a><span class="in">text(450, 0.01, paste0(</span></span>
+<span id="cb2-619"><a href="#cb2-619"></a><span class="in">  "Coverage probability = ",</span></span>
+<span id="cb2-620"><a href="#cb2-620"></a><span class="in">  mean(lower &lt; trueval &amp; trueval &lt; upper), "%"</span></span>
+<span id="cb2-621"><a href="#cb2-621"></a><span class="in">), cex = 1.2)</span></span>
+<span id="cb2-622"><a href="#cb2-622"></a><span class="in">```</span></span>
+<span id="cb2-623"><a href="#cb2-623"></a></span>
+<span id="cb2-624"><a href="#cb2-624"></a><span class="fu">### On targeted minimum loss-based estimation (TMLE)</span></span>
+<span id="cb2-625"><a href="#cb2-625"></a></span>
+<span id="cb2-626"><a href="#cb2-626"></a><span class="ss">- </span>The above estimator is great because it allows us to use data-adaptive</span>
+<span id="cb2-627"><a href="#cb2-627"></a>  regression to avoid bias, while allowing the computation of correct standard</span>
+<span id="cb2-628"><a href="#cb2-628"></a>  errors</span>
+<span id="cb2-629"><a href="#cb2-629"></a><span class="ss">- </span>This estimator has a problem, though:</span>
+<span id="cb2-630"><a href="#cb2-630"></a><span class="ss">  - </span>It can yield answers outside of the bounds of the parameter space</span>
+<span id="cb2-631"><a href="#cb2-631"></a><span class="ss">  - </span>E.g., if $Y$ is binary, it could yield direct and indirect effects outside</span>
+<span id="cb2-632"><a href="#cb2-632"></a>    of $<span class="co">[</span><span class="ot">-1,1</span><span class="co">]</span>$</span>
+<span id="cb2-633"><a href="#cb2-633"></a><span class="ss">  - </span>To solve this, you can compute a TMLE instead (implemented in the R</span>
+<span id="cb2-634"><a href="#cb2-634"></a>    packages, coming up)</span>
+<span id="cb2-635"><a href="#cb2-635"></a></span>
+<span id="cb2-636"><a href="#cb2-636"></a><span class="fu">### On about cross-fitting</span></span>
+<span id="cb2-637"><a href="#cb2-637"></a></span>
+<span id="cb2-638"><a href="#cb2-638"></a><span class="ss">- </span>When using data-adaptive regression estimators, it is recommended to use</span>
+<span id="cb2-639"><a href="#cb2-639"></a>  cross-fitted estimators</span>
+<span id="cb2-640"><a href="#cb2-640"></a><span class="ss">- </span>Cross-fitting is similar to cross-validation:</span>
+<span id="cb2-641"><a href="#cb2-641"></a><span class="ss">  - </span>Randomly split the sample into K (e.g., K=10) subsets of equal size</span>
+<span id="cb2-642"><a href="#cb2-642"></a><span class="ss">  - </span>For each of the 9/10ths of the sample, fit the regression models</span>
+<span id="cb2-643"><a href="#cb2-643"></a><span class="ss">  - </span>Use the out-of-sample fit to predict in the remaining 1/10th of the sample</span>
+<span id="cb2-644"><a href="#cb2-644"></a><span class="ss">- </span>Cross-fitting further reduces the bias of the estimators</span>
+<span id="cb2-645"><a href="#cb2-645"></a><span class="ss">- </span>Cross-fitting aids in guaranteeing the correctness of the standard errors and</span>
+<span id="cb2-646"><a href="#cb2-646"></a>  confidence intervals</span>
+<span id="cb2-647"><a href="#cb2-647"></a><span class="ss">- </span>Cross-fitting is implemented by default in the R packages that you will see</span>
+<span id="cb2-648"><a href="#cb2-648"></a>  next</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

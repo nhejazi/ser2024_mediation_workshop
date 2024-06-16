@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","id":1,"options":{"fig-width":7,"autorun":"false","dpi":72,"read-only":"false","fig-height":5,"warning":"true","context":"interactive","editor-font-scale":"1","results":"markup","message":"true","out-width":"700px","editor-max-height":"","output":"true","label":"unnamed-chunk-1","out-height":"","classes":"","editor-quick-suggestions":"false","comment":"","fig-cap":""}},{"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","id":2,"options":{"fig-width":7,"autorun":"false","dpi":72,"read-only":"false","fig-height":5,"warning":"true","context":"interactive","editor-font-scale":"1","results":"markup","message":"true","out-width":"700px","editor-max-height":"","output":"true","label":"unnamed-chunk-2","out-height":"","classes":"","editor-quick-suggestions":"false","comment":"","fig-cap":""}}];
+globalThis.qwebrCellDetails = [{"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","id":1,"options":{"dpi":72,"autorun":"false","comment":"","editor-max-height":"","fig-height":5,"fig-width":7,"classes":"","context":"interactive","warning":"true","label":"unnamed-chunk-1","read-only":"false","out-height":"","fig-cap":"","editor-quick-suggestions":"false","message":"true","results":"markup","editor-font-scale":"1","output":"true","out-width":"700px"}},{"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","id":2,"options":{"dpi":72,"autorun":"false","comment":"","editor-max-height":"","fig-height":5,"fig-width":7,"classes":"","context":"interactive","warning":"true","label":"unnamed-chunk-2","read-only":"false","out-height":"","fig-cap":"","editor-quick-suggestions":"false","message":"true","results":"markup","editor-font-scale":"1","output":"true","out-width":"700px"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1303,7 +1303,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./estimation_natural_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">

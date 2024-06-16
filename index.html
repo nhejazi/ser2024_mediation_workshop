@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./estimation_natural_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -284,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Modern Causal Mediation Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Modern Causal Mediation Analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -412,11 +412,12 @@ taught annually thereafter.
 <li>While <code>renv</code> is active, the <code>R</code> session will only have access to the packages (and their dependencies) that are listed in the <code>renv.lock</code> file – that is, you should not expect to have access to any other <code>R</code> packages that may be installed elsewhere (e.g., a global package cache) on the computing system being used.</li>
 <li>Upon an initial attempt, <code>renv</code> will prompt you to install packages listed in the <code>renv.lock</code> file, by printing a message like the following:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="in"># - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="in"># - One or more packages recorded in the lockfile are not installed.</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="in"># - Use `renv::status()` for more details.</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># - One or more packages recorded in the lockfile are not installed.</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># - Use `renv::status()` for more details.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p>In any such case, please call <code><a href="https://rstudio.github.io/renv/reference/status.html">renv::status()</a></code> to review the list of packages missing and to view <code>renv</code>’s recommendations for fixing the issue; usually, <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code> will be the next step necessary to install any missing packages. Note that you <strong>do <em>not</em> need to manually install</strong> the packages via <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code>, <code>remotes::install_github()</code>, or similar, as <code>renv</code> will attempt do this for you.</p>
 <p>While unnecessary for the purposes of this workshop, if you’d like to learn more about the details of how the <code>renv</code> virtual environment system works, the following references may be helpful:</p>
 <ol type="1">
@@ -1144,32 +1145,34 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb2-249"><a href="#cb2-249"></a><span class="ss">* </span>Upon an initial attempt, <span class="in">`renv`</span> will prompt you to install packages listed in</span>
 <span id="cb2-250"><a href="#cb2-250"></a>  the <span class="in">`renv.lock`</span> file, by printing a message like the following:</span>
 <span id="cb2-251"><a href="#cb2-251"></a></span>
-<span id="cb2-252"><a href="#cb2-252"></a><span class="in">```{r}</span></span>
-<span id="cb2-253"><a href="#cb2-253"></a><span class="in"># - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]</span></span>
-<span id="cb2-254"><a href="#cb2-254"></a><span class="in"># - One or more packages recorded in the lockfile are not installed.</span></span>
-<span id="cb2-255"><a href="#cb2-255"></a><span class="in"># - Use `renv::status()` for more details.</span></span>
-<span id="cb2-256"><a href="#cb2-256"></a><span class="in">```</span></span>
-<span id="cb2-257"><a href="#cb2-257"></a>In any such case, please call <span class="in">`renv::status()`</span> to review the list of packages</span>
-<span id="cb2-258"><a href="#cb2-258"></a>missing and to view <span class="in">`renv`</span>'s recommendations for fixing the issue; usually,</span>
-<span id="cb2-259"><a href="#cb2-259"></a><span class="in">`renv::restore()`</span> will be the next step necessary to install any missing</span>
-<span id="cb2-260"><a href="#cb2-260"></a>packages. Note that you **do *not* need to manually install** the packages via</span>
-<span id="cb2-261"><a href="#cb2-261"></a><span class="in">`install.packages()`</span>, <span class="in">`remotes::install_github()`</span>, or similar, as <span class="in">`renv`</span> will</span>
-<span id="cb2-262"><a href="#cb2-262"></a>attempt do this for you.</span>
-<span id="cb2-263"><a href="#cb2-263"></a></span>
-<span id="cb2-264"><a href="#cb2-264"></a>While unnecessary for the purposes of this workshop, if you'd like to learn</span>
-<span id="cb2-265"><a href="#cb2-265"></a>more about the details of how the <span class="in">`renv`</span> virtual environment system works, the</span>
-<span id="cb2-266"><a href="#cb2-266"></a>following references may be helpful:</span>
+<span id="cb2-254"><a href="#cb2-254"></a><span class="in">```{r}</span></span>
+<span id="cb2-255"><a href="#cb2-255"></a><span class="co">#| label: renv-status-example</span></span>
+<span id="cb2-256"><a href="#cb2-256"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-257"><a href="#cb2-257"></a><span class="co"># - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]</span></span>
+<span id="cb2-258"><a href="#cb2-258"></a><span class="co"># - One or more packages recorded in the lockfile are not installed.</span></span>
+<span id="cb2-259"><a href="#cb2-259"></a><span class="co"># - Use `renv::status()` for more details.</span></span>
+<span id="cb2-260"><a href="#cb2-260"></a><span class="in">```</span></span>
+<span id="cb2-261"><a href="#cb2-261"></a>In any such case, please call <span class="in">`renv::status()`</span> to review the list of packages</span>
+<span id="cb2-262"><a href="#cb2-262"></a>missing and to view <span class="in">`renv`</span>'s recommendations for fixing the issue; usually,</span>
+<span id="cb2-263"><a href="#cb2-263"></a><span class="in">`renv::restore()`</span> will be the next step necessary to install any missing</span>
+<span id="cb2-264"><a href="#cb2-264"></a>packages. Note that you **do *not* need to manually install** the packages via</span>
+<span id="cb2-265"><a href="#cb2-265"></a><span class="in">`install.packages()`</span>, <span class="in">`remotes::install_github()`</span>, or similar, as <span class="in">`renv`</span> will</span>
+<span id="cb2-266"><a href="#cb2-266"></a>attempt do this for you.</span>
 <span id="cb2-267"><a href="#cb2-267"></a></span>
-<span id="cb2-268"><a href="#cb2-268"></a><span class="ss">1. </span>[Collaborating with</span>
-<span id="cb2-269"><a href="#cb2-269"></a>    <span class="in">`renv`</span>](https://rstudio.github.io/renv/articles/collaborating.html)</span>
-<span id="cb2-270"><a href="#cb2-270"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Introduction to `renv`</span><span class="co">](https://rstudio.github.io/renv/articles/renv.html)</span></span>
+<span id="cb2-268"><a href="#cb2-268"></a>While unnecessary for the purposes of this workshop, if you'd like to learn</span>
+<span id="cb2-269"><a href="#cb2-269"></a>more about the details of how the <span class="in">`renv`</span> virtual environment system works, the</span>
+<span id="cb2-270"><a href="#cb2-270"></a>following references may be helpful:</span>
 <span id="cb2-271"><a href="#cb2-271"></a></span>
-<span id="cb2-272"><a href="#cb2-272"></a>In some rare cases, <span class="in">`R`</span> packages that <span class="in">`renv`</span> automatically tries to install as</span>
-<span id="cb2-273"><a href="#cb2-273"></a>part of the <span class="in">`renv::restore()`</span> process may fail due to missing systems-level</span>
-<span id="cb2-274"><a href="#cb2-274"></a>dependencies. In such cases, a reference to the missing dependencies and</span>
-<span id="cb2-275"><a href="#cb2-275"></a>system-specific instructions their installation involving, e.g., [Ubuntu</span>
-<span id="cb2-276"><a href="#cb2-276"></a>Linux's <span class="in">`apt`</span>](http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html) or</span>
-<span id="cb2-277"><a href="#cb2-277"></a><span class="co">[</span><span class="ot">`homebrew` for macOS</span><span class="co">](https://brew.sh/)</span>, will usually be displayed.</span>
+<span id="cb2-272"><a href="#cb2-272"></a><span class="ss">1. </span>[Collaborating with</span>
+<span id="cb2-273"><a href="#cb2-273"></a>    <span class="in">`renv`</span>](https://rstudio.github.io/renv/articles/collaborating.html)</span>
+<span id="cb2-274"><a href="#cb2-274"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Introduction to `renv`</span><span class="co">](https://rstudio.github.io/renv/articles/renv.html)</span></span>
+<span id="cb2-275"><a href="#cb2-275"></a></span>
+<span id="cb2-276"><a href="#cb2-276"></a>In some rare cases, <span class="in">`R`</span> packages that <span class="in">`renv`</span> automatically tries to install as</span>
+<span id="cb2-277"><a href="#cb2-277"></a>part of the <span class="in">`renv::restore()`</span> process may fail due to missing systems-level</span>
+<span id="cb2-278"><a href="#cb2-278"></a>dependencies. In such cases, a reference to the missing dependencies and</span>
+<span id="cb2-279"><a href="#cb2-279"></a>system-specific instructions their installation involving, e.g., [Ubuntu</span>
+<span id="cb2-280"><a href="#cb2-280"></a>Linux's <span class="in">`apt`</span>](http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html) or</span>
+<span id="cb2-281"><a href="#cb2-281"></a><span class="co">[</span><span class="ot">`homebrew` for macOS</span><span class="co">](https://brew.sh/)</span>, will usually be displayed.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
