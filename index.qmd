@@ -77,7 +77,7 @@ parameter estimable from the observed data distribution). Familiarity with the
   <!-- Nima, 55-->
 * 12:00A-12:30P: Wrap-up
 
-__NOTE: All times listed in Pacific Time.__
+**NOTE: All times listed in *Central Daylight Time* (CDT).**
 
 ## About the instructors {#instructors}
 
