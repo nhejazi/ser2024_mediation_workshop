@@ -1,4 +1,4 @@
-# Causal mediation analysis intro {#mediation}
+# What is causal mediation analysis? {#mediation}
 
 ```{r}
 #| label: load-renv

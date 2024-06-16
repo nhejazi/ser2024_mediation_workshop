@@ -21,7 +21,7 @@ book:
   repo-actions: [edit, issue]
   reader-mode: true
   sidebar:
-    style: "docked"
+    style: "floating"
   chapters:
     - index.qmd
     - part: "Identification"
@@ -62,8 +62,8 @@ format:
     code-fold: true
     code-tools: true
     code-line-numbers: true
-    #code-block-bg: dark
-    highlight-style: ayu-mirage
+    code-block-bg: light
+    highlight-style: gruvbox
 
 bibliography: refs.bib
 editor: visual
@@ -76,7 +76,7 @@ webr:
   # Check to see if COOP&COEP headers are set for speed.
   #show-header-message: false
   # Pre-install dependencies
-  packages: ['ggplot2', 'dplyr', 'data.table', 'mgcv']
+  packages: ['data.table', 'ggplot2', 'dplyr', 'mgcv']
   autoload-packages: true
   # Base URL used for specifying where R WebAssembly binaries should be located
   #base-url: ''

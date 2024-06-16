@@ -84,7 +84,7 @@ __NOTE: All times listed in Pacific Time.__
 ### [Iván Díaz](https://www.idiaz.xyz/) {.unnumbered}
 
 I am an Associate Professor of Biostatistics in the [Department of Population
-Health at the New York University Grossman School of
+Health at the NYU Grossman School of
 Medicine](https://med.nyu.edu/faculty/ivan-l-diaz). My research focuses on the
 development of non-parametric statistical methods for causal inference from
 observational and randomized studies with complex datasets, using machine
@@ -97,26 +97,26 @@ high-dimensional data.
 
 ### [Nima Hejazi](https://nimahejazi.org) {.unnumbered}
 
-I am an Assistant Professor of Biostatistics at the [Harvard T.H. Chan School of
-Public
-Health](https://connects.catalyst.harvard.edu/Profiles/display/Person/207609).
-My research interests blend causal inference, machine learning, non- and
-semi-parametric inference, and computational statistics, with areas of recent
-emphasis having included causal mediation analysis, estimation under
-outcome-dependent sampling, causal inference with continuous-valued or ordinal
-treatments, and sieve methods for machine learning-based estimation in causal
-inference. My methodological work is motivated by scientific problems arising
-in clinical trials and observational studies of infectious diseases and
-infectious disease epidemiology. I am also passionate about statistical
-computing and programming, and the design of open source software tools for
-reproducible statistical data science.
+I'm an Assistant Professor of Biostatistics at the [Harvard T.H. Chan School of
+Public Health](https://www.hsph.harvard.edu/profile/nima-s-hejazi/).
+My research explores how advances in causal inference, statistical machine
+learning, and computational statistics can empower discovery in the biomedical
+and health sciences. I focus on developing model-agnostic or assumption-lean
+statistical inference techniques, emphasizing a science-first, translational
+perspective to methodological research. Areas of recent emphasis have included
+causal mediation analysis, inference under outcome-dependent sampling, causal
+inference for continuous exposures, and sieve methods in causal machine
+learning. My methodological work is usually motivated by scientific problems
+from clinical trials and observational studies of infectious diseases, though
+I've also explored topics ranging from environmental health to healthcare
+equity. I'm also passionate about open source software, reproducible and
+transparent data science, and high-performance computing.
 
 
 ### [Kara Rudolph](https://kararudolph.github.io/) {.unnumbered}
 
-I am an Assistant Professor of Epidemiology in the [Mailman School of Public
-Health at Columbia
-University](https://www.publichealth.columbia.edu/academics/departments/epidemiology).
+I am an Assistant Professor of Epidemiology in the [Columbia Mailman School of
+Public Health](https://www.publichealth.columbia.edu/profile/kara-rudolph-phd).
 My research interests are in developing and applying causal inference methods to
 understand social and contextual influences on mental health, substance use, and
 violence in disadvantaged, urban areas of the United States. My current work
@@ -247,9 +247,7 @@ versions). A few important notes to keep in mind:
 * Upon an initial attempt, `renv` will prompt you to install packages listed in
   the `renv.lock` file, by printing a message like the following:
 
-```{r}
-#| label: renv-setup-test
-#| eval: false
+```{{r}}
 # - Project '~/git/ser2024_mediation_workshop' loaded. [renv 1.0.7]
 # - One or more packages recorded in the lockfile are not installed.
 # - Use `renv::status()` for more details.

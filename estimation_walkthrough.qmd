@@ -60,7 +60,7 @@ of participating in a sports team (`sports`) on the BMI of children (`bmi`),
 taking into consideration several mediators (`snack`, `exercises`, `overweigh`);
 all other measured covariates are taken to be potential baseline confounders.
 
-## `medoutcon`: Natural and interventional (in)direct effects
+## `medoutcon`: Efficient estimation of natural and interventional (in)direct effects
 
 The data on a single observational unit can be represented $O = (W, A, M, Y)$,
 with the data pooled across all participants denoted $O_1, \ldots, O_n$, for a
@@ -128,7 +128,7 @@ shorten >=2pt,}
 \end{tikzpicture}
 ```
 
-### Natural (in)direct effects
+## Natural (in)direct effects
 
 To start, we will consider estimation of the _natural_ direct and indirect effects,
 which, we recall, are defined as follows
@@ -245,7 +245,7 @@ summary(nie_onestep)
   finite-sample performance, instead of the one-step estimators. Doing this is
   as simple as setting the `estimator = "tmle"` in the relevant argument.
 
-### Interventional (in)direct effects
+## Interventional (in)direct effects
 
 Since our knowledge of the system under study is incomplete, we might worry that
 one (or more) of the measured variables are not mediators, but, in fact,
