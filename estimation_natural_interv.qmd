@@ -1,4 +1,4 @@
-# Construction of G-computation and weighted estimators for the NDE: The case of the natural direct effect
+# Construction of G-computation and weighted estimators: The case of the NDE
 
 ```{r}
 #| label: load-renv
@@ -8,7 +8,7 @@ renv::load(here::here())
 library(here)
 ```
 
-## Recap of definition and identification of the natural direct effect
+## Recap: Definition and identification of the NDE
 
 Recall:
 
@@ -157,8 +157,9 @@ Then, the NDE is identified as
   - Computing the probability $\P(W=w)$ for all values $w$
   - Computing the mean over all values $w$
 
+## Plug-in and re-weighting estimators
 
-## Plug-in (a.k.a g-computation) estimator
+### Plug-in (aka g-computation) estimator
 
 The above is how you would compute the _true value_ __if you know__ the true
 distribution $\P$
@@ -177,7 +178,9 @@ distribution $\P$
     $$
 - This is known as the G-computation estimator.
 
-## First weighted estimator (akin to inverse probability weighted)
+### Reweighting (aka IPW) estimators
+
+#### First weighted estimator (like inverse probability weighted)
 
 - An alternative expression of the parameter functional (for the NDE) is given
   by
@@ -195,7 +198,7 @@ distribution $\P$
     \color{Goldenrod}{Y_i} \bigg]
   $$
 
-## Second weighted estimator
+#### Second weighted estimator
 
 - The parameter functional for the NDE can also be expressed as a combination of
   regression and weighting:
@@ -213,13 +216,13 @@ distribution $\P$
     \hat{\E}(Y \mid A=0, M_i, W_i)}\bigg]
   $$
 
-## How can g-estimation and weighted estimation be implemented in practice?
+### Implementation of g-computation and IPW estimators in practice?
 
 - There are two possible ways to do G-computation or weighted estimation:
   - Using parametric models for the above regressions
   - Using flexible data-adaptive regression (aka machine learning)
 
-## Pros and cons of G-computation and weighting parametric models
+### Pros and cons of g-computation and IPW with parametric modeling
 
 - Pros:
   - Easy to understand
@@ -233,10 +236,10 @@ distribution $\P$
   - This modelling assumptions have become less necessary in the presence of
     data-adaptive regression tools (a.k.a., machine learning)
 
-## An example of the bias of a g-computation estimator of the natural direct effect
+### Example: Bias of a parametric g-computation estimator of the NDE
 
 - The following `R` chunk provides simulation code to exemplify the bias of a
-  G-computation parametric estimator in a simple situation
+  parametric g-computation estimator in a simple situation
 
   ```{webr-r}
   mean_y <- function(m, a, w) abs(w) + a * m
@@ -253,7 +256,7 @@ distribution $\P$
   ```
 
 - Let's perform a simulation where we draw 1000 datasets from the above
-  distribution, and compute a g-computation estimator based on
+  distribution, and compute a parametric g-computation estimator based on
 
   ```{webr-r}
   gcomp <- function(y, m, a, w) {
@@ -312,7 +315,7 @@ distribution $\P$
   ), cex = 1.2)
   ```
 
-## Pros and cons of G-computation or weighting with data-adaptive regression
+### Pros and cons of g-computation or IPW with data-adaptive regression
 
 - Pros:
   - Easy to understand.
@@ -326,7 +329,7 @@ distribution $\P$
     fail in some cases.
 
 
-## Solution to these problems: robust semiparametric efficient estimation
+### Solution: Robust semi-parametric efficient estimation
 
 - Intuitively, it combines the three above estimators to obtain an
   estimator with improved robustness properties
@@ -366,7 +369,9 @@ distribution $\P$
  minimum loss-based estimation.
 -->
 
-# Construction of a semiparametric efficient estimator for the NDE (a.k.a. the one-step estimator)
+## Semi-parametric efficient estimators (for the NDE)
+
+### Constructing a semi-parametric efficient estimator (aka the one-step)
 
 <!--
 - For illustration, we will first present how to construct an estimator of the
@@ -429,7 +434,7 @@ more notation that will be useful later:
     &+ \color{Goldenrod}{\E[Q(M,W) \mid W, A=0]}
 \end{align*}
 
-## How to compute the one-step estimator (akin to Augmented IPW)
+### How to compute the one-step estimator (like Augmented IPW)
 
 First we will generate some data:
 ```{webr-r}
@@ -525,7 +530,7 @@ following steps:
    mean(eif)
    ```
 
-## Performance of the one-step estimator in a small simulation study
+### Performance of the one-step estimator in a small simulation study
 
 First, we create a wrapper around the estimator
 
@@ -612,7 +617,7 @@ text(450, 0.01, paste0(
 ), cex = 1.2)
 ```
 
-## A note about targeted minimum loss-based estimation (TMLE)
+### On targeted minimum loss-based estimation (TMLE)
 
 - The above estimator is great because it allows us to use data-adaptive
   regression to avoid bias, while allowing the computation of correct standard
@@ -624,7 +629,7 @@ text(450, 0.01, paste0(
   - To solve this, you can compute a TMLE instead (implemented in the R
     packages, coming up)
 
-## A note about cross-fitting
+### On about cross-fitting
 
 - When using data-adaptive regression estimators, it is recommended to use
   cross-fitted estimators
