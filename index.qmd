@@ -260,7 +260,7 @@ packages. Note that you **do *not* need to manually install** the packages via
 attempt do this for you.
 
 While unnecessary for the purposes of this workshop, if you'd like to learn
-more about hte details of how the `renv` virtual environment system works, the
+more about the details of how the `renv` virtual environment system works, the
 following references may be helpful:
 
 1. [Collaborating with
