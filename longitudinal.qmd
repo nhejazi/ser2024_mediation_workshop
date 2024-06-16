@@ -61,6 +61,7 @@ $n$ i.i.d. observations of $O$. The associated DAG is
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph for time-varying treatments, mediators, and confounders
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -225,6 +226,7 @@ confounding. To see why, let us look at the DAG again:
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph with intermediate confounding
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}

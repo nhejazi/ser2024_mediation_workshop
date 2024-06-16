@@ -108,6 +108,7 @@ types of graph:
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -171,6 +172,7 @@ shorten >=2pt,}
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}

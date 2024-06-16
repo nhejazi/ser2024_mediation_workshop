@@ -14,6 +14,7 @@ library(here)
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -276,6 +277,7 @@ mediator-outcome relationship (e.g., adherence)?_
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -373,6 +375,7 @@ shorten >=2pt,}
 
 ```{tikz}
 #| fig-cap: Parallel worlds model of the scenario considered
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}

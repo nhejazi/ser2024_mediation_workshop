@@ -69,6 +69,7 @@ chapter](#estimands), which represents the data-generating process:
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -258,6 +259,7 @@ mediator to aid in their identification.
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}

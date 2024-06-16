@@ -59,11 +59,11 @@ format:
     fig-asp: 0.618
     # code block options
     code-link: true
-    code-fold: true
+    code-fold: show
     code-tools: true
     code-line-numbers: true
-    code-block-bg: light
-    highlight-style: gruvbox
+    code-block-bg: dark
+    highlight-style: nord
 
 bibliography: refs.bib
 editor: visual

@@ -14,6 +14,7 @@ Consider the following directed acyclic graph.
 
 ```{tikz}
 #| fig-cap: Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment
+#| echo: false
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
