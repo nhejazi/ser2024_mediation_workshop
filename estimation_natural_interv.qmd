@@ -630,7 +630,7 @@ text(450, 0.01, paste0(
   - To solve this, you can compute a TMLE instead (implemented in the R
     packages, coming up)
 
-### On about cross-fitting
+### On cross-fitting
 
 - When using data-adaptive regression estimators, it is recommended to use
   cross-fitted estimators

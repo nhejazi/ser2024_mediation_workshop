@@ -1,24 +1,23 @@
 Package: mcmaWorkshops
 Type: Website
 Title: Modern Causal Mediation Analysis Workshops
-Version: 0.3.1
+Version: 2024
 Authors@R: c(
     person("Nima", "Hejazi", email = "nh@nimahejazi.org",
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-7127-2789")),
     person("Iván", "Díaz", email = "ild2005@med.cornell.edu",
-           role = "aut",
+           role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-9056-2047")),
     person("Kara", "Rudolph", email = "kr2854@cumc.columbia.edu",
-           role = "aut",
+           role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-9417-7960"))
   )
 Maintainer: Nima Hejazi <nh@nimahejazi.org>
 Depends:
-  R (>= 4.2.0),
-  tidyverse,
-  data.table
+  R (>= 4.2.0)
 Imports:
+  data.table,
   downlit,
   rmarkdown,
   quarto,
@@ -33,6 +32,12 @@ Imports:
   checkmate,
   sessioninfo,
   skimr,
+  gam,
+  earth,
+  glmnet,
+  speedglm,
+  ranger,
+  hal9001,
   origami,
   sl3,
   medshift,
@@ -42,12 +47,6 @@ Suggests:
   nnls,
   Rsolnp,
   nloptr,
-  gam,
-  earth,
-  glmnet,
-  speedglm,
-  ranger,
-  hal9001,
   SuperLearner
 Remotes:
   github::tlverse/sl3@devel,
@@ -59,8 +58,8 @@ Remotes:
   github::xoopR/set6,
   github::ropensci/aorsf
 URL:
-  https://github.com/nhejazi/causal_mediation_workshop,
-  https://codex.nimahejazi.org/causal_mediation_workshop
-BugReports: https://github.com/nhejazi/causal_mediation_workshops/issues
+  https://github.com/nhejazi/ser2024_mediation_workshop,
+  https://codex.nimahejazi.org/ser2024_mediation_workshop
+BugReports: https://github.com/nhejazi/ser2024_mediation_workshop/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.1

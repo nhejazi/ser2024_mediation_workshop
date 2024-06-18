@@ -11,12 +11,12 @@ execute:
   message: false
 
 book:
-  title: "Modern Causal Mediation Analysis"
+  title: "*Modern* Causal Mediation Analysis"
   page-footer:
     left: |
     right: |
-  site-url: https://codex.nimahejazi.org/causal_mediation_workshops/
-  repo-url: https://github.com/nhejazi/causal_mediation_workshops/
+  site-url: https://codex.nimahejazi.org/ser2024_mediation_workshop/
+  repo-url: https://github.com/nhejazi/ser2024_mediation_workshop/
   repo-branch: master
   repo-actions: [edit, issue]
   reader-mode: true
@@ -34,11 +34,11 @@ book:
         - estimation_prelims.qmd
         - estimation_natural_interv.qmd
         - estimation_walkthrough.qmd
-        - longitudinal.qmd
     - part: "Appendices"
       chapters:
-        - appx_additional_readings.qmd
-        - appx_stochastic_effects.qmd
+        - additional_readings.qmd
+        - stochastic_effects.qmd
+        - longitudinal.qmd
 
 format:
   html:

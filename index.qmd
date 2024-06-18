@@ -131,7 +131,7 @@ These workshop materials were written using the [Quarto](https://quarto.org/),
 an open-source, cross-platform technical publishing system built on
 [RMarkdown](https://rmarkdown.rstudio.com/),
 and the complete source is available on
-[GitHub](https://github.com/nhejazi/causal_mediation_workshops). This version of
+[GitHub](https://github.com/nhejazi/ser2024_mediation_workshop). This version of
 the book was built with `r R.version.string`, [pandoc](https://pandoc.org/)
 version `r rmarkdown::pandoc_version()`, and [quarto](https://quarto.org/)
 version `r quarto::quarto_version()`. See the [`renv.lock`
