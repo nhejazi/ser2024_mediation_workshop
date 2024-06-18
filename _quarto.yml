@@ -35,7 +35,7 @@ book:
         - chapters/estimation_natural_interv.qmd
         - chapters/estimation_walkthrough.qmd
     - references.qmd
-    - part: "Appendices"
+    - part: "Appendix"
       chapters:
         - chapters/additional_readings.qmd
         - chapters/stochastic_effects.qmd
@@ -55,6 +55,8 @@ format:
     # citation/reference location
     reference-location: margin
     citation-location: margin
+    citations-hover: true
+    crossrefs-hover: true
     # figure options
     fig-width: 8
     fig-asp: 0.618
@@ -64,7 +66,7 @@ format:
     code-tools: true
     code-line-numbers: true
     code-block-bg: dark
-    highlight-style: nord
+    highlight-style: ayu-mirage
 
 bibliography: refs.bib
 editor: visual
