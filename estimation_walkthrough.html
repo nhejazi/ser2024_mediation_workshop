@@ -80,7 +80,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./longitudinal.html" rel="next">
+<link href="./additional_readings.html" rel="next">
 <link href="./estimation_natural_interv.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -197,9 +197,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Modern Causal Mediation Analysis</a> 
+      <a href="./"><em>Modern</em> Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/nhejazi/causal_mediation_workshops/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/nhejazi/ser2024_mediation_workshop/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -277,12 +277,6 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -296,14 +290,20 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_additional_readings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
+  <a href="./additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_stochastic_effects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  <a href="./stochastic_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
   </div>
 </li>
       </ul>
@@ -319,7 +319,7 @@ window.Quarto = {
 <li><a href="#medoutcon-efficient-estimation-of-natural-and-interventional-indirect-effects" id="toc-medoutcon-efficient-estimation-of-natural-and-interventional-indirect-effects" class="nav-link active" data-scroll-target="#medoutcon-efficient-estimation-of-natural-and-interventional-indirect-effects"><span class="header-section-number">6.1</span> <code>medoutcon</code>: Efficient estimation of natural and interventional (in)direct effects</a></li>
   <li><a href="#natural-indirect-effects" id="toc-natural-indirect-effects" class="nav-link" data-scroll-target="#natural-indirect-effects"><span class="header-section-number">6.2</span> Natural (in)direct effects</a></li>
   <li><a href="#interventional-indirect-effects" id="toc-interventional-indirect-effects" class="nav-link" data-scroll-target="#interventional-indirect-effects"><span class="header-section-number">6.3</span> Interventional (in)direct effects</a></li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/estimation_walkthrough.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/estimation_walkthrough.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./estimation_walkthrough.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></a></li></ol></nav><div class="quarto-title">
@@ -910,7 +910,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/causal_mediation_workshops\/");
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/ser2024_mediation_workshop\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1243,8 +1243,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./longitudinal.html" class="pagination-link" aria-label="Mediation with time-varying treatments, mediators, and covariates">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./additional_readings.html" class="pagination-link" aria-label="Appendix: Additional topics of interest">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -1778,4 +1778,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/estimation_walkthrough.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/estimation_walkthrough.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Modern Causal Mediation Analysis - 9&nbsp; Appendix: Stochastic direct and indirect effects</title>
+<title>Modern Causal Mediation Analysis - 8&nbsp; Appendix: Stochastic direct and indirect effects</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./appx_additional_readings.html" rel="prev">
+<link href="./longitudinal.html" rel="next">
+<link href="./additional_readings.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -185,7 +186,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appx_additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appx_stochastic_effects.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./stochastic_effects.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -196,9 +197,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Modern Causal Mediation Analysis</a> 
+      <a href="./"><em>Modern</em> Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/nhejazi/causal_mediation_workshops/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/nhejazi/ser2024_mediation_workshop/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -276,12 +277,6 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -295,14 +290,20 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_additional_readings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
+  <a href="./additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_stochastic_effects.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  <a href="./stochastic_effects.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
   </div>
 </li>
       </ul>
@@ -315,17 +316,17 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-<li><a href="#definition-of-the-effects" id="toc-definition-of-the-effects" class="nav-link active" data-scroll-target="#definition-of-the-effects"><span class="header-section-number">9.1</span> Definition of the effects</a></li>
-  <li><a href="#motivation-for-stochastic-interventions" id="toc-motivation-for-stochastic-interventions" class="nav-link" data-scroll-target="#motivation-for-stochastic-interventions"><span class="header-section-number">9.2</span> Motivation for stochastic interventions</a></li>
-  <li><a href="#definition-of-stochastic-effects" id="toc-definition-of-stochastic-effects" class="nav-link" data-scroll-target="#definition-of-stochastic-effects"><span class="header-section-number">9.3</span> Definition of stochastic effects</a></li>
-  <li><a href="#identification-assumptions" id="toc-identification-assumptions" class="nav-link" data-scroll-target="#identification-assumptions"><span class="header-section-number">9.4</span> Identification assumptions</a></li>
-  <li><a href="#what-are-the-odds-of-exposure-under-intervention-vs-real-world" id="toc-what-are-the-odds-of-exposure-under-intervention-vs-real-world" class="nav-link" data-scroll-target="#what-are-the-odds-of-exposure-under-intervention-vs-real-world"><span class="header-section-number">9.5</span> What are the odds of exposure under intervention vs real world?</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.6</span> Summary</a></li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/appx_stochastic_effects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<li><a href="#definition-of-the-effects" id="toc-definition-of-the-effects" class="nav-link active" data-scroll-target="#definition-of-the-effects"><span class="header-section-number">8.1</span> Definition of the effects</a></li>
+  <li><a href="#motivation-for-stochastic-interventions" id="toc-motivation-for-stochastic-interventions" class="nav-link" data-scroll-target="#motivation-for-stochastic-interventions"><span class="header-section-number">8.2</span> Motivation for stochastic interventions</a></li>
+  <li><a href="#definition-of-stochastic-effects" id="toc-definition-of-stochastic-effects" class="nav-link" data-scroll-target="#definition-of-stochastic-effects"><span class="header-section-number">8.3</span> Definition of stochastic effects</a></li>
+  <li><a href="#identification-assumptions" id="toc-identification-assumptions" class="nav-link" data-scroll-target="#identification-assumptions"><span class="header-section-number">8.4</span> Identification assumptions</a></li>
+  <li><a href="#what-are-the-odds-of-exposure-under-intervention-vs-real-world" id="toc-what-are-the-odds-of-exposure-under-intervention-vs-real-world" class="nav-link" data-scroll-target="#what-are-the-odds-of-exposure-under-intervention-vs-real-world"><span class="header-section-number">8.5</span> What are the odds of exposure under intervention vs real world?</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8.6</span> Summary</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/stochastic_effects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appx_additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appx_stochastic_effects.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></a></li></ol></nav><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="stochastic" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./stochastic_effects.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="stochastic" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -339,19 +340,19 @@ window.Quarto = {
   
 
 
-</header><section id="definition-of-the-effects" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="definition-of-the-effects">
-<span class="header-section-number">9.1</span> Definition of the effects</h2>
+</header><section id="definition-of-the-effects" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="definition-of-the-effects">
+<span class="header-section-number">8.1</span> Definition of the effects</h2>
 <p>Consider the following directed acyclic graph.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="appx_stochastic_effects_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+<figure class="figure"><p><img src="stochastic_effects_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
 <figcaption>Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment</figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="motivation-for-stochastic-interventions" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="motivation-for-stochastic-interventions">
-<span class="header-section-number">9.2</span> Motivation for stochastic interventions</h2>
+</section><section id="motivation-for-stochastic-interventions" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="motivation-for-stochastic-interventions">
+<span class="header-section-number">8.2</span> Motivation for stochastic interventions</h2>
 <ul>
 <li>So far we have discussed controlled, natural, and interventional (in)direct effects</li>
 <li>These effects require that <span class="math inline">\(0 &lt; \P(A=1\mid W) &lt; 1\)</span>
@@ -359,8 +360,8 @@ window.Quarto = {
 <li>They are defined only for binary exposures</li>
 <li><em>What can we do when the positivity assumption does not hold or the exposure is continuous?</em></li>
 <li>Solution: We can use stochastic effects</li>
-</ul></section><section id="definition-of-stochastic-effects" class="level2 page-columns page-full" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="definition-of-stochastic-effects">
-<span class="header-section-number">9.3</span> Definition of stochastic effects</h2>
+</ul></section><section id="definition-of-stochastic-effects" class="level2 page-columns page-full" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="definition-of-stochastic-effects">
+<span class="header-section-number">8.3</span> Definition of stochastic effects</h2>
 <p>There are two possible ways of defining stochastic effects:</p>
 <ul>
 <li>Consider the effect of an intervention where the exposure is drawn from a distribution
@@ -376,8 +377,8 @@ window.Quarto = {
 <li>In both cases <span class="math inline">\(A \mid W\)</span> is a non-deterministic intervention, thus the name <em>stochastic intervention</em>
 </li>
 </ul>
-<section id="ipsi" class="level3 page-columns page-full" data-number="9.3.1"><h3 data-number="9.3.1" class="anchored" data-anchor-id="ipsi">
-<span class="header-section-number">9.3.1</span> Example: incremental propensity score interventions (IPSI) <span class="citation" data-cites="kennedy2018nonparametric">(<a href="#ref-kennedy2018nonparametric" role="doc-biblioref">Kennedy 2018</a>)</span>
+<section id="ipsi" class="level3 page-columns page-full" data-number="8.3.1"><h3 data-number="8.3.1" class="anchored" data-anchor-id="ipsi">
+<span class="header-section-number">8.3.1</span> Example: incremental propensity score interventions (IPSI) <span class="citation" data-cites="kennedy2018nonparametric">(<a href="#ref-kennedy2018nonparametric" role="doc-biblioref">Kennedy 2018</a>)</span>
 </h3>
 <div class="no-row-height column-margin column-container"><div id="ref-kennedy2018nonparametric" class="csl-entry" role="listitem">
 Kennedy, Edward H. 2018. <span>“Nonparametric Causal Effects Based on Incremental Propensity Score Interventions.”</span> <em>Journal of the American Statistical Association</em>, no. just-accepted.
@@ -401,8 +402,8 @@ Kennedy, Edward H. 2018. <span>“Nonparametric Causal Effects Based on Incremen
 <li>Interpretation: <em>what would happen in a world where the odds of receiving treatment is increased by <span class="math inline">\(\delta\)</span></em>
 </li>
 <li>Let <span class="math inline">\(Y_{A_\delta}\)</span> denote the outcome in this hypothetical world</li>
-</ul></section><section id="illustrative-application-for-ipsis" class="level4" data-number="9.3.1.1"><h4 data-number="9.3.1.1" class="anchored" data-anchor-id="illustrative-application-for-ipsis">
-<span class="header-section-number">9.3.1.1</span> Illustrative application for IPSIs</h4>
+</ul></section><section id="illustrative-application-for-ipsis" class="level4" data-number="8.3.1.1"><h4 data-number="8.3.1.1" class="anchored" data-anchor-id="illustrative-application-for-ipsis">
+<span class="header-section-number">8.3.1.1</span> Illustrative application for IPSIs</h4>
 <ul>
 <li>Consider the effect of participation in sports on children’s BMI</li>
 <li>Mediation through snacking, exercising, etc.</li>
@@ -421,8 +422,8 @@ Dı́az, Iván, and Nima S Hejazi. 2020. <span>“Causal Mediation Analysis for 
 </li>
 <li>Example: <span class="math inline">\(A\)</span> is pollution measured as <span class="math inline">\(PM_{2.5}\)</span> and you are interested in an intervention that reduces <span class="math inline">\(PM_{2.5}\)</span> concentration by some amount <span class="math inline">\(\delta\)</span>
 </li>
-</ul></section></section><section id="mediation-analysis-for-stochastic-interventions" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="mediation-analysis-for-stochastic-interventions">
-<span class="header-section-number">9.3.2</span> Mediation analysis for stochastic interventions</h3>
+</ul></section></section><section id="mediation-analysis-for-stochastic-interventions" class="level3" data-number="8.3.2"><h3 data-number="8.3.2" class="anchored" data-anchor-id="mediation-analysis-for-stochastic-interventions">
+<span class="header-section-number">8.3.2</span> Mediation analysis for stochastic interventions</h3>
 <ul>
 <li><p>The total effect of an IPSI can be computed as a contrast of the outcome under intervention vs no intervention: <span class="math display">\[\begin{equation*}
   \psi = \E[Y_{A_\delta} - Y]
@@ -449,8 +450,8 @@ Y_{A,M_{A}}\)</span></p></li>
     Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct
       effect}}
 \end{align*}\]</span></p></li>
-</ul></section></section><section id="identification-assumptions" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="identification-assumptions">
-<span class="header-section-number">9.4</span> Identification assumptions</h2>
+</ul></section></section><section id="identification-assumptions" class="level2" data-number="8.4"><h2 data-number="8.4" class="anchored" data-anchor-id="identification-assumptions">
+<span class="header-section-number">8.4</span> Identification assumptions</h2>
 <ul>
 <li>Confounder assumptions:
 <ul>
@@ -536,14 +537,14 @@ Y_{A,M_{A}}\)</span></p></li>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="appx_stochastic_effects_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="768"></p>
+<figure class="figure"><p><img src="stochastic_effects_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 </div>
 </li>
-</ul></section><section id="what-are-the-odds-of-exposure-under-intervention-vs-real-world" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="what-are-the-odds-of-exposure-under-intervention-vs-real-world">
-<span class="header-section-number">9.5</span> What are the odds of exposure under intervention vs real world?</h2>
+</ul></section><section id="what-are-the-odds-of-exposure-under-intervention-vs-real-world" class="level2" data-number="8.5"><h2 data-number="8.5" class="anchored" data-anchor-id="what-are-the-odds-of-exposure-under-intervention-vs-real-world">
+<span class="header-section-number">8.5</span> What are the odds of exposure under intervention vs real world?</h2>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>odds <span class="ot">&lt;-</span> (pscore_delta <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pscore_delta)) <span class="sc">/</span> (pscore <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pscore))</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="fu">summary</span>(odds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -569,7 +570,7 @@ Y_{A,M_{A}}\)</span></p></li>
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="do">## E[Y(Adelta) - Y(Adelta, M)]</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="fu">mean</span>(indirect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1092526</code></pre>
+<pre><code>[1] 0.1094722</code></pre>
 </div>
 </div>
 </li>
@@ -585,12 +586,12 @@ Y_{A,M_{A}}\)</span></p></li>
 <span id="cb12-2"><a href="#cb12-2"></a>       (pred_y1_a0 <span class="sc">-</span> y) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> pscore_delta)</span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="fu">mean</span>(direct)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1090703</code></pre>
+<pre><code>[1] 0.1092223</code></pre>
 </div>
 </div>
 </li>
-</ul></section><section id="summary" class="level2 page-columns page-full" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="summary">
-<span class="header-section-number">9.6</span> Summary</h2>
+</ul></section><section id="summary" class="level2 page-columns page-full" data-number="8.6"><h2 data-number="8.6" class="anchored" data-anchor-id="summary">
+<span class="header-section-number">8.6</span> Summary</h2>
 <ul>
 <li>Stochastic (in)direct effects
 <ul>
@@ -748,7 +749,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/causal_mediation_workshops\/");
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/ser2024_mediation_workshop\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1076,11 +1077,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./appx_additional_readings.html" class="pagination-link" aria-label="Appendix: Additional topics of interest">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span>
+      <a href="./additional_readings.html" class="pagination-link" aria-label="Appendix: Additional topics of interest">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./longitudinal.html" class="pagination-link" aria-label="Mediation with time-varying treatments, mediators, and covariates">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu"># Appendix: Stochastic direct and indirect effects {#stochastic}</span></span>
@@ -1388,4 +1392,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/appx_stochastic_effects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/stochastic_effects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Modern Causal Mediation Analysis - 7&nbsp; Mediation with time-varying treatments, mediators, and covariates</title>
+<title>Modern Causal Mediation Analysis - 9&nbsp; Mediation with time-varying treatments, mediators, and covariates</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,8 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./appx_additional_readings.html" rel="next">
-<link href="./estimation_walkthrough.html" rel="prev">
+<link href="./stochastic_effects.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -166,7 +165,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./longitudinal.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./longitudinal.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -177,9 +176,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Modern Causal Mediation Analysis</a> 
+      <a href="./"><em>Modern</em> Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/nhejazi/causal_mediation_workshops/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/nhejazi/ser2024_mediation_workshop/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -257,12 +256,6 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -276,14 +269,20 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_additional_readings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
+  <a href="./additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_stochastic_effects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  <a href="./stochastic_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
   </div>
 </li>
       </ul>
@@ -296,18 +295,18 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
    
   <ul class="collapse">
-<li><a href="#illustrative-example" id="toc-illustrative-example" class="nav-link active" data-scroll-target="#illustrative-example"><span class="header-section-number">7.1</span> Illustrative example</a></li>
-  <li><a href="#defining-causal-effects-in-this-example" id="toc-defining-causal-effects-in-this-example" class="nav-link" data-scroll-target="#defining-causal-effects-in-this-example"><span class="header-section-number">7.2</span> Defining causal effects in this example</a></li>
-  <li><a href="#how-do-we-define-mediation-causal-effects-with-time-varying-data" id="toc-how-do-we-define-mediation-causal-effects-with-time-varying-data" class="nav-link" data-scroll-target="#how-do-we-define-mediation-causal-effects-with-time-varying-data"><span class="header-section-number">7.3</span> How do we define mediation causal effects with time-varying data?</a></li>
-  <li><a href="#identification-assumptions-and-formula" id="toc-identification-assumptions-and-formula" class="nav-link" data-scroll-target="#identification-assumptions-and-formula"><span class="header-section-number">7.4</span> Identification assumptions and formula</a></li>
-  <li><a href="#estimators-and-r-package" id="toc-estimators-and-r-package" class="nav-link" data-scroll-target="#estimators-and-r-package"><span class="header-section-number">7.5</span> Estimators and <code>R</code> package</a></li>
-  <li><a href="#pros-and-cons-of-this-methodology" id="toc-pros-and-cons-of-this-methodology" class="nav-link" data-scroll-target="#pros-and-cons-of-this-methodology"><span class="header-section-number">7.6</span> Pros and cons of this methodology</a></li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<li><a href="#illustrative-example" id="toc-illustrative-example" class="nav-link active" data-scroll-target="#illustrative-example"><span class="header-section-number">9.1</span> Illustrative example</a></li>
+  <li><a href="#defining-causal-effects-in-this-example" id="toc-defining-causal-effects-in-this-example" class="nav-link" data-scroll-target="#defining-causal-effects-in-this-example"><span class="header-section-number">9.2</span> Defining causal effects in this example</a></li>
+  <li><a href="#how-do-we-define-mediation-causal-effects-with-time-varying-data" id="toc-how-do-we-define-mediation-causal-effects-with-time-varying-data" class="nav-link" data-scroll-target="#how-do-we-define-mediation-causal-effects-with-time-varying-data"><span class="header-section-number">9.3</span> How do we define mediation causal effects with time-varying data?</a></li>
+  <li><a href="#identification-assumptions-and-formula" id="toc-identification-assumptions-and-formula" class="nav-link" data-scroll-target="#identification-assumptions-and-formula"><span class="header-section-number">9.4</span> Identification assumptions and formula</a></li>
+  <li><a href="#estimators-and-r-package" id="toc-estimators-and-r-package" class="nav-link" data-scroll-target="#estimators-and-r-package"><span class="header-section-number">9.5</span> Estimators and <code>R</code> package</a></li>
+  <li><a href="#pros-and-cons-of-this-methodology" id="toc-pros-and-cons-of-this-methodology" class="nav-link" data-scroll-target="#pros-and-cons-of-this-methodology"><span class="header-section-number">9.6</span> Pros and cons of this methodology</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estimation_prelims.html">Estimation</a></li><li class="breadcrumb-item"><a href="./longitudinal.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="./longitudinal.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span>
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
@@ -335,8 +334,8 @@ window.Quarto = {
 <a href="https://arxiv.org/abs/2403.09928">Identification and estimation of mediational effects of longitudinal modified treatment policies</a> by Brian Gilbert, Katherine L. Hoffman, Nicholas Williams, Kara E. Rudolph, Edward J. Schenck, Iván Díaz.</li>
 </ul>
 <p>In this chapter, we will be using the <a href="https://github.com/nt-williams/lcm"><code>lcm</code> <code>R</code> package</a>, which supports binary time-varying treatments and categorical mediators, and the <a href="https://github.com/nt-williams/lcmmtp"><code>lcmmtp</code> <code>R</code> package</a> package, which supports continuous, multivariate, and binary time-varying treatments and categorical mediators.</p>
-<section id="illustrative-example" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="illustrative-example">
-<span class="header-section-number">7.1</span> Illustrative example</h2>
+<section id="illustrative-example" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="illustrative-example">
+<span class="header-section-number">9.1</span> Illustrative example</h2>
 <p>As an illustrative example, we will use a dataset from an observational study looking at the effect of invasive mechanical ventilation (IMV) on the survival of COVID-19 patients, considering acute kidney injury (AKI) as a mediating factor.</p>
 <p>Briefly, IMV is a treatment for acute respiratory distress syndrome (ARDS). While IMV is a potentially life-saving therapy in patients with ARDS, its usage has been associated with several iatrogenic risks. Of interest to our illustrative study is acute kidney injury (AKI), a critical condition that complicates ICU stays and is associated with increased mortality. The causal model underlying this problem is as follows:</p>
 <p>The data on a single observational unit can be represented by the vector <span class="math inline">\(O=(L_1,
@@ -363,8 +362,8 @@ A_1, Z_1, M_1, L_2, \ldots, A_\tau, Z_\tau, M_\tau, Y)\)</span>, with the data p
 <li>
 <span class="math inline">\(Y\)</span>: mortality at end of study</li>
 <li>We will use <span class="math inline">\(H_t\)</span> as a shorthand to denote all the data measured up until right before <span class="math inline">\(A_t\)</span> occurs</li>
-</ul></section><section id="defining-causal-effects-in-this-example" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="defining-causal-effects-in-this-example">
-<span class="header-section-number">7.2</span> Defining causal effects in this example</h2>
+</ul></section><section id="defining-causal-effects-in-this-example" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="defining-causal-effects-in-this-example">
+<span class="header-section-number">9.2</span> Defining causal effects in this example</h2>
 <p>How can we define (total) causal effects in this example?</p>
 <ul>
 <li>Main challenge: cannot consider static treatmemt regimes (e.g., do not intubate)</li>
@@ -383,8 +382,8 @@ A_1, Z_1, M_1, L_2, \ldots, A_\tau, Z_\tau, M_\tau, Y)\)</span>, with the data p
   \end{cases}
 \end{equation}\]</span> - We could then define the total effect as <span class="math inline">\(E[Y(d) - Y]\)</span>, where <span class="math inline">\(Y(d)\)</span> is the counterfactual mortality if the above rule had been implemented every day, i.e., the intervention is <span class="math inline">\(d=(d_1,d_2,\ldots,
   d_\tau)\)</span>. - This is a contrast of the mortality rate under a treatment rule that would delay intubation by one day vs the mortality rate that was actually observed.</p>
-</section><section id="how-do-we-define-mediation-causal-effects-with-time-varying-data" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="how-do-we-define-mediation-causal-effects-with-time-varying-data">
-<span class="header-section-number">7.3</span> How do we define mediation causal effects with time-varying data?</h2>
+</section><section id="how-do-we-define-mediation-causal-effects-with-time-varying-data" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="how-do-we-define-mediation-causal-effects-with-time-varying-data">
+<span class="header-section-number">9.3</span> How do we define mediation causal effects with time-varying data?</h2>
 <p>The above causal effect could be decomposed into natural direct and indirect effects as follows</p>
 <p><span class="math display">\[\begin{align*}
 E[Y(d) - Y] &amp; = E[Y(d, M(d)) - Y(A, M)]\\
@@ -422,8 +421,8 @@ E[Y(d) - Y] &amp; = E[Y(d, M(d)) - Y(A, M)]\\
 <span class="math inline">\(M(d)\)</span> is the observed AKI status of patients under a delay in intubation. If <span class="math inline">\(W\)</span> is age, and we are deciding how to intervene on a patient who is 45 years old, we take all the AKI statuses of 45 year olds and draw one of these AKI values at random. Call this random draw <span class="math inline">\(G(d)\)</span>
 </li>
 <li>For a 45 year old patient, <span class="math inline">\(Y(d, G(d))\)</span> is the counterfactual mortality of a patient if intubation had been delayed, and their AKI status would have been assigned to a random draw from the AKI status of 45 year patients.</li>
-</ul></section><section id="identification-assumptions-and-formula" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="identification-assumptions-and-formula">
-<span class="header-section-number">7.4</span> Identification assumptions and formula</h2>
+</ul></section><section id="identification-assumptions-and-formula" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="identification-assumptions-and-formula">
+<span class="header-section-number">9.4</span> Identification assumptions and formula</h2>
 <p>The above effects are identified under the following assumptions:</p>
 <ul>
 <li>All the common causes of <span class="math inline">\(A_t\)</span> and <span class="math inline">\((Z_s, M_s, A_{s+1}, L_{s+1})\)</span> are measured for <span class="math inline">\(s\geq t\)</span>
@@ -455,8 +454,8 @@ Z_2, M_2, Y)\)</span>.</p>
 <p><span class="math display">\[
   \E[Y(d, G(d)) = \sum_{m_1, m_2}\tilde Y_1^d(m_1, m_2)P(m_1, m_2) \ .
 \]</span></p>
-</section><section id="estimators-and-r-package" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="estimators-and-r-package">
-<span class="header-section-number">7.5</span> Estimators and <code>R</code> package</h2>
+</section><section id="estimators-and-r-package" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="estimators-and-r-package">
+<span class="header-section-number">9.5</span> Estimators and <code>R</code> package</h2>
 <p>As before, we can develop inverse probability weighted estimators, as well as substitution estimators based on the g-computation formula and doubly robust (DR) estimators.</p>
 <p>All of these estimators get significantly more complex. For instance, an g-computation estimator may be developed by running the regressions indicated in the above sequential regression procedures.</p>
 <p>Fortunately, the doubly robust estimators are coded in a package that can be used off-the-shelf without having to code any complicated sequential regression strategies on your own. Let us look at an example from the <code>lcmmtp</code> R package. First, let’s take a look at a simulated dataset available in the package:</p>
@@ -527,12 +526,12 @@ Z_2, M_2, Y)\)</span>.</p>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
   
-    theta shift  ref std.error conf.low conf.high p.value
-1 -0.0175 0.403 0.42    0.0182  -0.0532    0.0183   0.339</code></pre>
+    theta shift   ref std.error conf.low conf.high p.value
+1 -0.0166 0.405 0.421    0.0184  -0.0527    0.0195   0.368</code></pre>
 </div>
 </div>
-</section><section id="pros-and-cons-of-this-methodology" class="level2" data-number="7.6"><h2 data-number="7.6" class="anchored" data-anchor-id="pros-and-cons-of-this-methodology">
-<span class="header-section-number">7.6</span> Pros and cons of this methodology</h2>
+</section><section id="pros-and-cons-of-this-methodology" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="pros-and-cons-of-this-methodology">
+<span class="header-section-number">9.6</span> Pros and cons of this methodology</h2>
 <section id="pros" class="level4 unnumbered"><h4 class="unnumbered anchored" data-anchor-id="pros">Pros</h4>
 <ul>
 <li>Allows the non-parametric definition, identification, and estimation of mediational causal effects for general longitudinal data structures</li>
@@ -683,7 +682,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/causal_mediation_workshops\/");
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/ser2024_mediation_workshop\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1011,14 +1010,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./estimation_walkthrough.html" class="pagination-link" aria-label="Some `R` packages for estimation of the causal (in)direct effects">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span>
+      <a href="./stochastic_effects.html" class="pagination-link" aria-label="Appendix: Stochastic direct and indirect effects">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./appx_additional_readings.html" class="pagination-link" aria-label="Appendix: Additional topics of interest">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># Mediation with time-varying treatments, mediators, and covariates</span></span>
@@ -1541,4 +1537,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -151,9 +151,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Modern Causal Mediation Analysis</a> 
+      <a href="./"><em>Modern</em> Causal Mediation Analysis</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/nhejazi/causal_mediation_workshops/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/nhejazi/ser2024_mediation_workshop/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -231,12 +231,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -250,14 +244,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_additional_readings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
+  <a href="./additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix: Additional topics of interest</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appx_stochastic_effects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  <a href="./stochastic_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appendix: Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./longitudinal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Mediation with time-varying treatments, mediators, and covariates</span></span></a>
   </div>
 </li>
       </ul>
@@ -280,11 +280,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup instructions</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Modern Causal Mediation Analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title">
+<em>Modern</em> Causal Mediation Analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -361,7 +362,7 @@ taught annually thereafter.
 </section><section id="kara-rudolph" class="level3 unnumbered"><h3 class="unnumbered anchored" data-anchor-id="kara-rudolph"><a href="https://kararudolph.github.io/">Kara Rudolph</a></h3>
 <p>I am an Assistant Professor of Epidemiology in the <a href="https://www.publichealth.columbia.edu/profile/kara-rudolph-phd">Columbia Mailman School of Public Health</a>. My research interests are in developing and applying causal inference methods to understand social and contextual influences on mental health, substance use, and violence in disadvantaged, urban areas of the United States. My current work focuses on developing methods for transportability and mediation, and subsequently applying those methods to understand how aspects of the school and peer environments mediate relationships between neighborhood factors and adolescent drug use across populations. More generally, my work on generalizing/transporting findings from study samples to target populations and identifying subpopulations most likely to benefit from interventions contributes to efforts to optimally target available policy and program resources.</p>
 </section></section><section id="repro" class="level2"><h2 class="anchored" data-anchor-id="repro">Reproducibility note</h2>
-<p>These workshop materials were written using the <a href="https://quarto.org/">Quarto</a>, an open-source, cross-platform technical publishing system built on <a href="https://rmarkdown.rstudio.com/">RMarkdown</a>, and the complete source is available on <a href="https://github.com/nhejazi/causal_mediation_workshops">GitHub</a>. This version of the book was built with R version 4.4.1 (2024-06-14), <a href="https://pandoc.org/">pandoc</a> version 3.1.11, and <a href="https://quarto.org/">quarto</a> version 1.4.555. See the <a href="https://github.com/nhejazi/ser2024_mediation_workshop/blob/master/renv.lock"><code>renv.lock</code> file</a> in the source repository for an up-to-date list of the packages used.</p>
+<p>These workshop materials were written using the <a href="https://quarto.org/">Quarto</a>, an open-source, cross-platform technical publishing system built on <a href="https://rmarkdown.rstudio.com/">RMarkdown</a>, and the complete source is available on <a href="https://github.com/nhejazi/ser2024_mediation_workshop">GitHub</a>. This version of the book was built with R version 4.4.1 (2024-06-14), <a href="https://pandoc.org/">pandoc</a> version 3.1.11, and <a href="https://quarto.org/">quarto</a> version 1.4.555. See the <a href="https://github.com/nhejazi/ser2024_mediation_workshop/blob/master/renv.lock"><code>renv.lock</code> file</a> in the source repository for an up-to-date list of the packages used.</p>
 </section><section id="setup" class="level2"><h2 class="anchored" data-anchor-id="setup">Setup instructions</h2>
 <section id="r-and-rstudio" class="level3"><h3 class="anchored" data-anchor-id="r-and-rstudio">R and RStudio</h3>
 <p><strong>R</strong> and <strong>RStudio</strong> are separate downloads and installations. R is the underlying statistical computing environment. RStudio is a graphical integrated development environment (IDE) that makes using R much easier and more interactive. You need to install R before you install RStudio.</p>
@@ -561,7 +562,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/causal_mediation_workshops\/");
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/ser2024_mediation_workshop\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1029,7 +1030,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb2-133"><a href="#cb2-133"></a>an open-source, cross-platform technical publishing system built on</span>
 <span id="cb2-134"><a href="#cb2-134"></a><span class="co">[</span><span class="ot">RMarkdown</span><span class="co">](https://rmarkdown.rstudio.com/)</span>,</span>
 <span id="cb2-135"><a href="#cb2-135"></a>and the complete source is available on</span>
-<span id="cb2-136"><a href="#cb2-136"></a><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/nhejazi/causal_mediation_workshops)</span>. This version of</span>
+<span id="cb2-136"><a href="#cb2-136"></a><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/nhejazi/ser2024_mediation_workshop)</span>. This version of</span>
 <span id="cb2-137"><a href="#cb2-137"></a>the book was built with <span class="in">`r R.version.string`</span>, <span class="co">[</span><span class="ot">pandoc</span><span class="co">](https://pandoc.org/)</span></span>
 <span id="cb2-138"><a href="#cb2-138"></a>version <span class="in">`r rmarkdown::pandoc_version()`</span>, and <span class="co">[</span><span class="ot">quarto</span><span class="co">](https://quarto.org/)</span></span>
 <span id="cb2-139"><a href="#cb2-139"></a>version <span class="in">`r quarto::quarto_version()`</span>. See the [<span class="in">`renv.lock`</span></span>
@@ -1176,4 +1177,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/causal_mediation_workshops/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/causal_mediation_workshops/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
