@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","id":1,"options":{"label":"unnamed-chunk-1","fig-height":5,"dpi":72,"read-only":"false","autorun":"false","message":"true","out-height":"","output":"true","classes":"","warning":"true","fig-width":7,"editor-quick-suggestions":"false","editor-max-height":"","results":"markup","context":"interactive","editor-font-scale":"1","fig-cap":"","out-width":"700px","comment":""}},{"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","id":2,"options":{"label":"unnamed-chunk-2","fig-height":5,"dpi":72,"read-only":"false","autorun":"false","message":"true","out-height":"","output":"true","classes":"","warning":"true","fig-width":7,"editor-quick-suggestions":"false","editor-max-height":"","results":"markup","context":"interactive","editor-font-scale":"1","fig-cap":"","out-width":"700px","comment":""}}];
+globalThis.qwebrCellDetails = [{"id":1,"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","options":{"label":"unnamed-chunk-1","classes":"","fig-cap":"","fig-height":5,"out-width":"700px","editor-font-scale":"1","comment":"","editor-max-height":"","fig-width":7,"warning":"true","message":"true","dpi":72,"editor-quick-suggestions":"false","results":"markup","output":"true","out-height":"","autorun":"false","read-only":"false","context":"interactive"}},{"id":2,"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","options":{"label":"unnamed-chunk-2","classes":"","fig-cap":"","fig-height":5,"out-width":"700px","editor-font-scale":"1","comment":"","editor-max-height":"","fig-width":7,"warning":"true","message":"true","dpi":72,"editor-quick-suggestions":"false","results":"markup","output":"true","out-height":"","autorun":"false","read-only":"false","context":"interactive"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -2267,7 +2267,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-33"><a href="#cb1-33"></a><span class="ss">  - </span>Are those mediated effects different for homeless vs non-homeless</span>
 <span id="cb1-34"><a href="#cb1-34"></a>    individuals?</span>
 <span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="al">![](/img/ctndag.png)</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="al">![](../img/ctndag.png)</span></span>
 <span id="cb1-37"><a href="#cb1-37"></a></span>
 <span id="cb1-38"><a href="#cb1-38"></a><span class="fu">## What is causal mediation analysis?</span></span>
 <span id="cb1-39"><a href="#cb1-39"></a></span>
