@@ -1,4 +1,4 @@
-# Mediation with time-varying treatments, mediators, and covariates
+# Time-varying treatments, mediators, and covariates
 
 ```{r}
 #| label: load-renv

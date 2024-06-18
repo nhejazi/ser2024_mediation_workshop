@@ -1,4 +1,4 @@
-# Appendix: Stochastic direct and indirect effects {#stochastic}
+# Stochastic direct and indirect effects {#stochastic}
 
 ```{r}
 #| label: load-renv

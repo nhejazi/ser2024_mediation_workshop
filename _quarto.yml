@@ -26,19 +26,20 @@ book:
     - index.qmd
     - part: "Identification"
       chapters:
-        - preface.qmd
-        - effects_defn.qmd
-        - how_to_choose.qmd
+        - chapters/intro.qmd
+        - chapters/effects_defn.qmd
+        - chapters/how_to_choose.qmd
     - part: "Estimation"
       chapters:
-        - estimation_prelims.qmd
-        - estimation_natural_interv.qmd
-        - estimation_walkthrough.qmd
+        - chapters/estimation_prelims.qmd
+        - chapters/estimation_natural_interv.qmd
+        - chapters/estimation_walkthrough.qmd
+    - references.qmd
     - part: "Appendices"
       chapters:
-        - additional_readings.qmd
-        - stochastic_effects.qmd
-        - longitudinal.qmd
+        - chapters/additional_readings.qmd
+        - chapters/stochastic_effects.qmd
+        - chapters/longitudinal.qmd
 
 format:
   html:

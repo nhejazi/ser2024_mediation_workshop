@@ -1,4 +1,4 @@
-# Appendix: Additional topics of interest
+# Additional topics of interest
 
 The literature on mediation analysis has grown considerably in the last few
 decades and there are now many novel methods to tackle important questions with
