@@ -3,7 +3,7 @@
 This is the GitHub repository for the workshop **Modern Causal Mediation
 Analysis**, co-taught by [Iván Díaz](https://www.idiaz.xyz/), [Nima
 Hejazi](https://nimahejazi.org), and [Kara
-Rudolph](https://kararudolph.github.io/) at the [SER 2023 annual
+Rudolph](https://kararudolph.github.io/) at the [SER 2024 annual
 meeting](https://epiresearch.org/annual-meeting/2024-meeting/2024-workshops/).
 The workshop materials are built using [Quarto](https://quarto.org) and make
 use of the [WebR](https://docs.r-wasm.org/webr/latest/) framework for
