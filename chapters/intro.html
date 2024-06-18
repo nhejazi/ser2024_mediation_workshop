@@ -356,7 +356,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"id":1,"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)","options":{"label":"unnamed-chunk-1","classes":"","fig-cap":"","fig-height":5,"out-width":"700px","editor-font-scale":"1","comment":"","editor-max-height":"","fig-width":7,"warning":"true","message":"true","dpi":72,"editor-quick-suggestions":"false","results":"markup","output":"true","out-height":"","autorun":"false","read-only":"false","context":"interactive"}},{"id":2,"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]","options":{"label":"unnamed-chunk-2","classes":"","fig-cap":"","fig-height":5,"out-width":"700px","editor-font-scale":"1","comment":"","editor-max-height":"","fig-width":7,"warning":"true","message":"true","dpi":72,"editor-quick-suggestions":"false","results":"markup","output":"true","out-height":"","autorun":"false","read-only":"false","context":"interactive"}}];
+globalThis.qwebrCellDetails = [{"id":1,"options":{"fig-width":7,"fig-cap":"","context":"interactive","label":"unnamed-chunk-1","dpi":72,"fig-height":5,"editor-max-height":"","autorun":"false","out-height":"","comment":"","warning":"true","out-width":"700px","results":"markup","message":"true","classes":"","read-only":"false","output":"true","editor-font-scale":"1","editor-quick-suggestions":"false"},"code":"n <- 1e6\nw <- rnorm(n)\na <- rbinom(n, 1, 0.5)\nz <- rbinom(n, 1, 0.2 * a + 0.3)\nm <- rnorm(n, w + z)\ny <- rnorm(n, m + w - a + z)"},{"id":2,"options":{"fig-width":7,"fig-cap":"","context":"interactive","label":"unnamed-chunk-2","dpi":72,"fig-height":5,"editor-max-height":"","autorun":"false","out-height":"","comment":"","warning":"true","out-width":"700px","results":"markup","message":"true","classes":"","read-only":"false","output":"true","editor-font-scale":"1","editor-quick-suggestions":"false"},"code":"lm_y <- lm(y ~ m + a + w + z)\nlm_m <- lm(m ~ a + w + z)\n## product of coefficients\ncoef(lm_y)[2] * coef(lm_m)[2]"}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1323,7 +1323,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
+ <span class="menu-text">Appendix</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 

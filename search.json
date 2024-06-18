@@ -351,7 +351,7 @@
     "section": "",
     "text": "7.1 Mediation with multiple mediators and multiple intermediate confounders\nNote that the medoutcon R package works for multiple mediators but is limited to settings with only a single, binary intermediate confounder. If your data scenario includes multiple mediators and multiple intermediate confounders, you should consider using the HDmediation R package instead.",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Additional topics of interest</span>"
     ]
   },
@@ -362,7 +362,7 @@
     "section": "",
     "text": "Practical causal mediation analysis: extending nonparametric estimators to estimate the mediated effects of housing voucher receipt on adolescent risk behavior By Kara E. Rudolph, Nicholas Williams, and Iván Díaz",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Additional topics of interest</span>"
     ]
   },
@@ -373,7 +373,7 @@
     "section": "7.2 Mediation with monotonicity of A-Z relationship",
     "text": "7.2 Mediation with monotonicity of A-Z relationship\n\nOn identification of natural direct effects when a confounder of the mediator is directly affected by exposure by Eric J. Tchetgen Tchetgen and Tyler J. VanderWeele\nEfficient and flexible estimation of natural mediation effects under intermediate confounding and monotonicity constraints by Kara E. Rudolph and Iván Díaz",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Additional topics of interest</span>"
     ]
   },
@@ -384,7 +384,7 @@
     "section": "7.3 Mediation with instrumental variables",
     "text": "7.3 Mediation with instrumental variables\n\nDirect and indirect treatment effects–causal chains and mediation analysis with instrumental variables by Markus Frolich and Martin Huber\nCausal mediation with instrumental variables by Kara E. Rudolph, Nicholas Williams, and Iván Díaz",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Additional topics of interest</span>"
     ]
   },
@@ -395,7 +395,7 @@
     "section": "7.4 Mediation with separable effects",
     "text": "7.4 Mediation with separable effects\n\nAn Interventionist Approach to Mediation Analysis by James M. Robins, Thomas S. Richardson, and Ilya Shpitser\nConditional Separable Effects by Mats J. Stensrud, James M. Robins, Aaron Sarvet, Eric J. Tchetgen Tchetgen, and Jessica G. Young\nSeparable Effects for Causal Inference in the Presence of Competing Events by Mats J. Stensrud, Jessica G. Young, Vanessa Didelez, James M. Robins, and Miguel A. Hernán\nA Generalized Theory of Separable Effects in Competing Event Settings by Mats J. Stensrud, Miguel A. Hernán, Eric J. Tchetgen Tchetgen, James M. Robins, Vanessa Didelez, and Jessica G. Young",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Additional topics of interest</span>"
     ]
   },
@@ -406,7 +406,7 @@
     "section": "",
     "text": "8.1 Definition of the effects\nConsider the following directed acyclic graph.\nDirected acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -417,7 +417,7 @@
     "section": "\n8.2 Motivation for stochastic interventions",
     "text": "8.2 Motivation for stochastic interventions\n\nSo far we have discussed controlled, natural, and interventional (in)direct effects\nThese effects require that \\(0 &lt; \\P(A=1\\mid W) &lt; 1\\)\n\nThey are defined only for binary exposures\nWhat can we do when the positivity assumption does not hold or the exposure is continuous?\nSolution: We can use stochastic effects",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -428,7 +428,7 @@
     "section": "\n8.3 Definition of stochastic effects",
     "text": "8.3 Definition of stochastic effects\nThere are two possible ways of defining stochastic effects:\n\nConsider the effect of an intervention where the exposure is drawn from a distribution\n\nFor example incremental propensity score interventions\n\n\nConsider the effect of an intervention where the post-intervention exposure is a function of the actually received exposure\n\nFor example modified treatment policies\n\n\nIn both cases \\(A \\mid W\\) is a non-deterministic intervention, thus the name stochastic intervention\n\n\n\n8.3.1 Example: incremental propensity score interventions (IPSI) (Kennedy 2018)\n\n\nKennedy, Edward H. 2018. “Nonparametric Causal Effects Based on Incremental Propensity Score Interventions.” Journal of the American Statistical Association, no. just-accepted.\nDefinition of the intervention\n\nAssume \\(A\\) is binary, and \\(\\P(A=1\\mid W=w) = g(1\\mid w)\\) is the propensity score\nConsider an intervention in which each individual receives the intervention with probability \\(g_\\delta(1\\mid w)\\), equal to \\[\\begin{equation*}\n  g_\\delta(1\\mid w)=\\frac{\\delta g(1\\mid w)}{\\delta g(1\\mid w) +\n  1 - g(1\\mid w)}\n\\end{equation*}\\]\n\ne.g., draw the post-intervention exposure from a Bernoulli variable with probability \\(g_\\delta(1\\mid w)\\)\n\nThe value \\(\\delta\\) is user given\nLet \\(A_\\delta\\) denote the post-intervention exposure distribution\nSome algebra shows that \\(\\delta\\) is an odds ratio comparing the pre- and post-intervention exposure distributions \\[\\begin{equation*}\n  \\delta = \\frac{\\text{odds}(A_\\delta = 1\\mid W=w)}\n  {\\text{odds}(A = 1\\mid W=w)}\n\\end{equation*}\\]\n\nInterpretation: what would happen in a world where the odds of receiving treatment is increased by \\(\\delta\\)\n\nLet \\(Y_{A_\\delta}\\) denote the outcome in this hypothetical world\n\n8.3.1.1 Illustrative application for IPSIs\n\nConsider the effect of participation in sports on children’s BMI\nMediation through snacking, exercising, etc.\nIntervention: for each individual, increase the odds of participating in sports by \\(\\delta=2\\)\n\nThe post-intervention exposure is a draw \\(A_\\delta\\) from a Bernoulli distribution with probability \\(g_\\delta(1\\mid w)\\)\n\nExample: modified treatment policies (MTP) (Dı́az and Hejazi 2020)\n\n\nDı́az, Iván, and Nima S Hejazi. 2020. “Causal Mediation Analysis for Stochastic Interventions.” Journal of the Royal Statistical Society: Series B (Statistical Methodology) 82 (3): 661–83.\nDefinition of the intervention\n\nConsider a continuous exposure \\(A\\) taking values in the real numbers\nConsider an intervention that assigns exposure as \\(A_\\delta = A - \\delta\\)\n\nExample: \\(A\\) is pollution measured as \\(PM_{2.5}\\) and you are interested in an intervention that reduces \\(PM_{2.5}\\) concentration by some amount \\(\\delta\\)\n\n\n8.3.2 Mediation analysis for stochastic interventions\n\nThe total effect of an IPSI can be computed as a contrast of the outcome under intervention vs no intervention: \\[\\begin{equation*}\n  \\psi = \\E[Y_{A_\\delta} - Y]\n\\end{equation*}\\]\nRecall the NPSEM \\[\\begin{align*}\n  W & = f_W(U_W)\\\\\n  A & = f_A(W, U_A)\\\\\n  M & = f_M(W, A, U_M)\\\\\n  Y & = f_Y(W, A, M, U_Y)\n\\end{align*}\\]\nFrom this we have \\[\\begin{align*}\nM_{A_\\delta} & = f_M(W, A_\\delta, U_M)\\\\\nY_{A_\\delta} & = f_Y(W, A_\\delta, M_{A_\\delta}, U_Y)\n\\end{align*}\\]\nThus, we have \\(Y_{A_\\delta} = Y_{A_\\delta, M_{A_\\delta}}\\) and \\(Y =\nY_{A,M_{A}}\\)\nLet us introduce the counterfactual \\(Y_{A_\\delta, M}\\), interpreted as the outcome observed in a world where the intervention on \\(A\\) is performed but the mediator is fixed at the value it would have taken under no intervention: [Y_{A_, M} = f_Y(W, A_, M, U_Y)]\nThen we can decompose the total effect into: \\[\\begin{align*}\n  \\E[Y&_{A_\\delta,M_{A_\\delta}} - Y_{A,M_A}] = \\\\\n  &\\underbrace{\\E[Y_{\\color{red}{A_\\delta},\\color{blue}{M_{A_\\delta}}} -\n    Y_{\\color{red}{A_\\delta},\\color{blue}{M}}]}_{\\text{stochastic natural\n      indirect effect}} +\n    \\underbrace{\\E[Y_{\\color{blue}{A_\\delta},\\color{red}{M}} -\n    Y_{\\color{blue}{A},\\color{red}{M}}]}_{\\text{stochastic natural direct\n      effect}}\n\\end{align*}\\]",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -439,7 +439,7 @@
     "section": "\n8.4 Identification assumptions",
     "text": "8.4 Identification assumptions\n\nConfounder assumptions:\n\n\\(A \\indep Y_{a,m} \\mid W\\)\n\\(M \\indep Y_{a,m} \\mid W, A\\)\n\n\nNo confounder of \\(M\\rightarrow Y\\) affected by \\(A\\)\n\nPositivity assumptions:\n\nIf \\(g_\\delta(a \\mid w)&gt;0\\) then \\(g(a \\mid w)&gt;0\\)\n\nIf \\(\\P(M=m\\mid W=w)&gt;0\\) then \\(\\P(M=m\\mid A=a,W=w)&gt;0\\)\n\n\n\n\nUnder these assumptions, stochastic effects are identified as follows\n\nThe indirect effect can be identified as follows \\[\\begin{align*}\n\\E&(Y_{A_\\delta} - Y_{A_\\delta, M}) =\\\\\n&\\E\\left[\\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, W)\n  -\\E(Y\\mid A=a, M, W)\\}}g_\\delta(a\\mid W)}\\right]\n\\end{align*}\\]\nThe direct effect can be identified as follows \\[\\begin{align*}\n\\E&(Y_{A_\\delta} - Y_{A_\\delta, M}) =\\\\\n&\\E\\left[\\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, M, W)\n  - Y\\}}g_\\delta(a\\mid W)}\\right]\n\\end{align*}\\]\n\nLet’s dissect the formula for the indirect effect in R:\n\nCoden &lt;- 1e6\nw &lt;- rnorm(n)\na &lt;- rbinom(n, 1, plogis(1 + w))\nm &lt;- rnorm(n, w + a)\ny &lt;- rnorm(n, w + a + m)\n\n\n\n\nFirst, fit regressions of the outcome on \\((A,W)\\) and \\((M,A,W)\\):\n\nCodefit_y1 &lt;- lm(y ~ m + a + w)\nfit_y2 &lt;- lm(y ~ a + w)\n\n\n\n\nGet predictions fixing \\(A=a\\) for all possible values \\(a\\)\n\nCodepred_y1_a1 &lt;- predict(fit_y1, newdata = data.frame(a = 1, m, w))\npred_y1_a0 &lt;- predict(fit_y1, newdata = data.frame(a = 0, m, w))\npred_y2_a1 &lt;- predict(fit_y2, newdata = data.frame(a = 1, w))\npred_y2_a0 &lt;- predict(fit_y2, newdata = data.frame(a = 0, w))\n\n\n\n\nCompute [] for each value \\(a\\)\n\nCodepseudo_a1 &lt;- pred_y2_a1 - pred_y1_a1\npseudo_a0 &lt;- pred_y2_a0 - pred_y1_a0\n\n\n\n\nEstimate the propensity score \\(g(1\\mid w)\\) and evaluate the post-intervention propensity score \\(g_\\delta(1\\mid w)\\)\n\nCodepscore_fit &lt;- glm(a ~ w, family = binomial())\npscore &lt;- predict(pscore_fit, type = 'response')\n## How do the intervention vs observed propensity score compare\npscore_delta &lt;- 2 * pscore / (2 * pscore + 1 - pscore)\n\n\n\n\nWhat do the post-intervention propensity scores look like?\n\nCodeplot(pscore, pscore_delta, xlab = 'Observed prop. score',\n     ylab = 'Prop. score under intervention')\nabline(0, 1)",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -448,9 +448,9 @@
     "href": "chapters/stochastic_effects.html#what-are-the-odds-of-exposure-under-intervention-vs-real-world",
     "title": "8  Stochastic direct and indirect effects",
     "section": "\n8.5 What are the odds of exposure under intervention vs real world?",
-    "text": "8.5 What are the odds of exposure under intervention vs real world?\n\nCodeodds &lt;- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))\nsummary(odds)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n      2       2       2       2       2       2 \n\n\n\n\nCompute the sum \\[\\begin{equation*}\n  \\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, W) -\n    \\E(Y\\mid A=a, M, W)\\}}g_\\delta(a\\mid W)}\n\\end{equation*}\\]\n\nCodeindirect &lt;- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)\n\n\n\n\nThe average of this value is the indirect effect\n\nCode## E[Y(Adelta) - Y(Adelta, M)]\nmean(indirect)\n\n[1] 0.1088037\n\n\n\nThe direct effect is \\[\\begin{align*}\n  \\E&(Y_{A_\\delta} - Y_{A_\\delta, M}) =\\\\\n  &\\E\\left[\\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, M,\n    W) - Y\\}}g_\\delta(a\\mid W)}\\right]\n\\end{align*}\\]\n\nWhich can be computed as\n\nCodedirect &lt;- (pred_y1_a1 - y) * pscore_delta +\n       (pred_y1_a0 - y) * (1 - pscore_delta)\nmean(direct)\n\n[1] 0.108916",
+    "text": "8.5 What are the odds of exposure under intervention vs real world?\n\nCodeodds &lt;- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))\nsummary(odds)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n      2       2       2       2       2       2 \n\n\n\n\nCompute the sum \\[\\begin{equation*}\n  \\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, W) -\n    \\E(Y\\mid A=a, M, W)\\}}g_\\delta(a\\mid W)}\n\\end{equation*}\\]\n\nCodeindirect &lt;- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)\n\n\n\n\nThe average of this value is the indirect effect\n\nCode## E[Y(Adelta) - Y(Adelta, M)]\nmean(indirect)\n\n[1] 0.1094063\n\n\n\nThe direct effect is \\[\\begin{align*}\n  \\E&(Y_{A_\\delta} - Y_{A_\\delta, M}) =\\\\\n  &\\E\\left[\\color{Goldenrod}{\\sum_{a}\\color{ForestGreen}{\\{\\E(Y\\mid A=a, M,\n    W) - Y\\}}g_\\delta(a\\mid W)}\\right]\n\\end{align*}\\]\n\nWhich can be computed as\n\nCodedirect &lt;- (pred_y1_a1 - y) * pscore_delta +\n       (pred_y1_a0 - y) * (1 - pscore_delta)\nmean(direct)\n\n[1] 0.1096467",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -461,7 +461,7 @@
     "section": "\n8.6 Summary",
     "text": "8.6 Summary\n\nStochastic (in)direct effects\n\nRelax the positivity assumption\nCan be defined for non-binary exposures\nDo not require a cross-world assumption\n\n\nStill require the absence of intermediate confounders\n\nBut, compared to the NDE and NIE, we can design a randomized study where identifiability assumptions hold, at least in principle\nThere is a version of these effects that can accommodate intermediate confounders (Hejazi et al. 2022)\n\n\nR implementation to be released soon…stay tuned!\n\n\n\n\n\n\n\n\nHejazi, Nima S, Kara E Rudolph, Mark J van der Laan, and Iván Dı́az. 2022. “Nonparametric Causal Mediation Analysis for Stochastic Interventional (in) Direct Effects.” Biostatistics (in press). https://doi.org/10.1093/biostatistics/kxac002.",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Stochastic direct and indirect effects</span>"
     ]
   },
@@ -472,7 +472,7 @@
     "section": "",
     "text": "9.1 Illustrative example\nAs an illustrative example, we will use a dataset from an observational study looking at the effect of invasive mechanical ventilation (IMV) on the survival of COVID-19 patients, considering acute kidney injury (AKI) as a mediating factor.\nBriefly, IMV is a treatment for acute respiratory distress syndrome (ARDS). While IMV is a potentially life-saving therapy in patients with ARDS, its usage has been associated with several iatrogenic risks. Of interest to our illustrative study is acute kidney injury (AKI), a critical condition that complicates ICU stays and is associated with increased mortality. The causal model underlying this problem is as follows:\nThe data on a single observational unit can be represented by the vector \\(O=(L_1,\nA_1, Z_1, M_1, L_2, \\ldots, A_\\tau, Z_\\tau, M_\\tau, Y)\\), with the data pooled across all participants denoted \\(O_1, \\ldots, O_n\\), for a of \\(n\\) i.i.d. observations of \\(O\\). The associated DAG is\nDirected acyclic graph for time-varying treatments, mediators, and confounders\nWhere we are using the following notation:",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -483,7 +483,7 @@
     "section": "",
     "text": "\\(W\\): baseline variables such as comorbidities, demographics, etc.\n\n\\(L_t\\) and \\(Z_t\\): time-varying covariates such as lab results, vitals, treatments, etc.\n\n\\(A_t\\): type of oxygen support at time \\(t\\) (0: no oxygen support, 1: oxygen support excluding IMV, 2: IMV)\n\n\\(M_t\\): indicator of AKI at time \\(t\\)\n\n\n\\(Y\\): mortality at end of study\nWe will use \\(H_t\\) as a shorthand to denote all the data measured up until right before \\(A_t\\) occurs",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -494,7 +494,7 @@
     "section": "\n9.2 Defining causal effects in this example",
     "text": "9.2 Defining causal effects in this example\nHow can we define (total) causal effects in this example?\n\nMain challenge: cannot consider static treatmemt regimes (e.g., do not intubate)\nSuch regimes would not be supported in the data (doctors would always intubate a person whose blood oxygen is too low)\nWe use modified treatment policies to address this\nMain idea: consider a slight modification to the treatment a patient actually received\nFor example, can consider the effect of a small delay in receiving IMV\nSpecifically, we will consider a delay of one day in receiving IMV\nIn notation, the treatment regime would be as follows:\n\n\\[\\begin{equation}\n  d_t(a_t,h_t) =\n  \\begin{cases}\n    1 &\\text{ if } a_t=2 \\text{ and } a_s \\leq 1 \\text{ for all } s &lt; t,\\\\\n    a_t & \\text{ otherwise.}\n  \\end{cases}\n\\end{equation}\\] - We could then define the total effect as \\(E[Y(d) - Y]\\), where \\(Y(d)\\) is the counterfactual mortality if the above rule had been implemented every day, i.e., the intervention is \\(d=(d_1,d_2,\\ldots,\n  d_\\tau)\\). - This is a contrast of the mortality rate under a treatment rule that would delay intubation by one day vs the mortality rate that was actually observed.",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -505,7 +505,7 @@
     "section": "\n9.3 How do we define mediation causal effects with time-varying data?",
     "text": "9.3 How do we define mediation causal effects with time-varying data?\nThe above causal effect could be decomposed into natural direct and indirect effects as follows\n\\[\\begin{align*}\nE[Y(d) - Y] & = E[Y(d, M(d)) - Y(A, M)]\\\\\n&=\\underbrace{\\E[Y(\\color{red}{d},\\color{blue}{M(d)}) -\n    Y(\\color{red}{d},\\color{blue}{M})]}_{\\text{natural indirect effect}} +\n    \\underbrace{\\E[Y(\\color{blue}{d},\\color{red}{M}) -\n    Y(\\color{blue}{A},\\color{red}{M})]}_{\\text{natural direct effect}}\n\\end{align*}\\]\n\nHowever, as before, these natural mediation effects are not identified.\nThe reason is that time-varying mediators exacerbate the issue of intermediate confounding. To see why, let us look at the DAG again:\n\n\n\n\n\nDirected acyclic graph with intermediate confounding\n\n\n\nNote that all the variables in orange are confounders of the mediator \\(M_\\tau\\) and the outcome, and are also affected by treatment at time \\(t=2\\).\nOne possible solution to the above issues involves considering randomized versions of the above effects. Specifically:\n\nDefine \\(G(d)\\) to be a random draw from the distribution of \\(M(d)\\) conditional on baseline variables \\(W\\).\nWe can then obtain the decomposition \\[\n  \\E[Y(d, G(d)) - Y(A, G(A))]=\\underbrace{\\E[Y(\\color{red}{d},\\color{blue}{G(d)}) -\n  Y(\\color{red}{d},\\color{blue}{G(A)})]}_{\\text{randomized interventional indirect effect}} +\n  \\underbrace{\\E[Y(\\color{blue}{d},\\color{red}{G(A)}) -\n    Y(\\color{blue}{A},\\color{red}{G(A)})]}_{\\text{randomized interventional\n      direct effect}}\n\\]\n\nAs an example, consider the counterfactual \\(Y(d, G(d))\\).\n\n\\(M(d)\\) is the observed AKI status of patients under a delay in intubation. If \\(W\\) is age, and we are deciding how to intervene on a patient who is 45 years old, we take all the AKI statuses of 45 year olds and draw one of these AKI values at random. Call this random draw \\(G(d)\\)\n\nFor a 45 year old patient, \\(Y(d, G(d))\\) is the counterfactual mortality of a patient if intubation had been delayed, and their AKI status would have been assigned to a random draw from the AKI status of 45 year patients.",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -516,7 +516,7 @@
     "section": "\n9.4 Identification assumptions and formula",
     "text": "9.4 Identification assumptions and formula\nThe above effects are identified under the following assumptions:\n\nAll the common causes of \\(A_t\\) and \\((Z_s, M_s, A_{s+1}, L_{s+1})\\) are measured for \\(s\\geq t\\)\n\nAll the common causes of \\(M_t\\) and \\((Z_{s+1}, A_{s+1}, L_{s+1})\\) are measured for \\(s\\geq t\\)\n\nThe intervention \\(d\\) is supported in the data, meaning that for every patient with covariates \\(h_t\\) who had treatment status \\(a_t\\), it is possible to find a patient with covariates \\(h_t\\) who had treatment status \\(d(a_t, h_t)\\)\n\nIn our example, this translates roughly as: for every patient with covariate history \\(h_t\\) who was intubated at time \\(t\\), it is possible to find a patient covariate history \\(h_t\\) who was intubated at time \\(t+1\\).\n\n\nThere is a positive probability of the mediator \\(M_t\\) for all feasible covariate histories.\n\nThe identification formula is complex, but we will explain it in the case of two time points. That is, assume the data are \\(O=(W, A_1, Z_1, M_1, L_1, A_2,\nZ_2, M_2, Y)\\).\nIdentification can be based on the following procedure. First, for each value \\(m_1\\) and \\(m_2\\) of the mediator, compute outcome regressions as follows:\n\nRegress \\(Y\\) on \\(W, A_1, Z_1, M_1, L_1, A_2, Z_2, M_2\\). Use this regression to predict the outcome had the mediator been set to \\(M_2=m_2\\). Let \\(\\tilde Y_2(m_2)\\) denote this prediction.\nRegress \\(\\tilde Y_2(m_2)\\) on \\(W, A_1, Z_1, M_1, L_1, A_2\\). Use this regression to predict the outcome had the treatment \\(A_2\\) been set to \\(d(A_2, H_2)\\). Let \\(\\tilde Y_2^d(m_2)\\) denote this prediction.\nRegress \\(\\tilde Y_2(m_2, d_2)\\) on \\(W, A_1, Z_1, M_1\\). Use this regression to predict the outcome had the mediator been set to \\(M_1=m_1\\). Let \\(\\tilde Y_1(m_1, m_2)\\) denote this prediction.\nRegress \\(\\tilde Y_1(m_1, m_2)\\) on \\(W, A_1\\). Use this regression to predict the outcome had the treatment \\(A_1\\) been set to \\(d(A_1, H_1)\\). Let \\(\\tilde Y_1^d(m_1, m_2)\\) denote this prediction.\n\nThen, for each value \\(m_1\\) and \\(m_2\\) of the mediator, compute the mediator distribution as follows:\n\nRegress the binary variable \\(I(M_2=m_2)\\) on \\(W, A_1, Z_1, M_1, L_1, A_2\\). Use this model to predict the probability of \\(M_2=m_2\\) under an intervention that sets \\(A_2\\) to \\(d(A_2, H_2)\\). Let this predicted probability be denoted with \\(P(m_2)\\).\nRegress the binary variable \\(I(M_1=m_1)P(m_2)\\) on \\(W, A_1\\). Use this model to predict under an intervention that sets \\(A_1\\) to \\(d(A_1, H_1)\\). Let this prediction be denoted with \\(P(m_1, m_2)\\).\n\nAt the end of these two sequential regression procedures, we have values \\(\\tilde Y_1^d(m_1, m_2)\\) and \\(P(m_1, m_2)\\) for each value of the mediator \\((m_1, m_2)\\). Then, under identification assumptions, we have:\n\\[\n  \\E[Y(d, G(d)) = \\sum_{m_1, m_2}\\tilde Y_1^d(m_1, m_2)P(m_1, m_2) \\ .\n\\]",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -525,9 +525,9 @@
     "href": "chapters/longitudinal.html#estimators-and-r-package",
     "title": "\n9  Time-varying treatments, mediators, and covariates\n",
     "section": "\n9.5 Estimators and R package",
-    "text": "9.5 Estimators and R package\nAs before, we can develop inverse probability weighted estimators, as well as substitution estimators based on the g-computation formula and doubly robust (DR) estimators.\nAll of these estimators get significantly more complex. For instance, an g-computation estimator may be developed by running the regressions indicated in the above sequential regression procedures.\nFortunately, the doubly robust estimators are coded in a package that can be used off-the-shelf without having to code any complicated sequential regression strategies on your own. Let us look at an example from the lcmmtp R package. First, let’s take a look at a simulated dataset available in the package:\n\nCodelibrary(lcmmtp)\ndata &lt;- as.data.frame(apply(lcmmtp_foo, 2, as.numeric))\nhead(data)\n\n  ID L_1 A_1 Z_1 M_1 L_2 A_2 Z_2 M_2  Y c1 c2\n1  1   2   1   2   1   2   0   1   3 NA  1  0\n2  2   2   1   2   2   1   0   1   3  0  1  1\n3  3   1   0   2   2   3   1   2   3  0  1  1\n4  4   1   0   3   2   3   1   1   2  1  1  1\n5  5   1   0   1   2   2   1   1   2  1  1  1\n6  6   1   0   3   2   1   1   3   2  0  1  1\n\nCodedim(lcmmtp_foo)\n\n[1] 5000   12\n\n\nNow, let us perform an analysis where we assume our intent is to estimate \\(\\E[Y(1), G(0)]\\):\n\nCodelibrary(mlr3extralearners)\nvars &lt;- lcmmtp:::lcmmtp_variables$new(\n    L = list(c(\"L_1\"), c(\"L_2\")),\n    A = c(\"A_1\", \"A_2\"),\n    Z = list(c(\"Z_1\"), c(\"Z_2\")),\n    M = c(\"M_1\", \"M_2\"),\n    Y = \"Y\",\n    cens = c(\"c1\", \"c2\")\n)\nlrnrs &lt;- c(\"mean\", \"earth\", \"glm\")\nd_ap &lt;- function(data, trt) rep(1, length(data[[trt]]))\nd_as &lt;- function(data, trt) rep(0, length(data[[trt]]))\n\nEY10 &lt;- lcmmtp(\n  data, vars, d_ap, d_as,\n  control = .lcmmtp_control(folds = 2,\n                            learners_trt = lrnrs,\n                            learners_mediator = lrnrs,\n                            learners_QL = lrnrs,\n                            learners_QZ = lrnrs,\n                            learners_QM = lrnrs)\n)\n\n\nNow, assume that we want to estimate the direct effect by contrasting \\(\\E[Y(1), G(0)] - \\E[Y(0), G(0)]\\):\n\nCodeEY00 &lt;- lcmmtp(\n  lcmmtp_foo, vars, d_as, d_as,\n  control = .lcmmtp_control(folds = 2,\n                            learners_trt = lrnrs,\n                            learners_mediator = lrnrs,\n                            learners_QL = lrnrs,\n                            learners_QZ = lrnrs,\n                            learners_QM = lrnrs)\n)\n\n\nAnd we can contrast the two using a convenient function from the lmtp R package:\n\nCodelibrary(lmtp)\nclass(EY00) &lt;- class(EY10) &lt;- 'lmtp'\nEY00$estimator &lt;- EY10$estimator &lt;- 'SDR'\nnames(EY00)[3] &lt;- names(EY10)[3] &lt;- 'eif'\nlmtp_contrast(EY10, ref = EY00)\n\n\n  \n    theta shift   ref std.error conf.low conf.high p.value\n1 -0.0148 0.404 0.419    0.0183  -0.0507     0.021   0.417",
+    "text": "9.5 Estimators and R package\nAs before, we can develop inverse probability weighted estimators, as well as substitution estimators based on the g-computation formula and doubly robust (DR) estimators.\nAll of these estimators get significantly more complex. For instance, an g-computation estimator may be developed by running the regressions indicated in the above sequential regression procedures.\nFortunately, the doubly robust estimators are coded in a package that can be used off-the-shelf without having to code any complicated sequential regression strategies on your own. Let us look at an example from the lcmmtp R package. First, let’s take a look at a simulated dataset available in the package:\n\nCodelibrary(lcmmtp)\ndata &lt;- as.data.frame(apply(lcmmtp_foo, 2, as.numeric))\nhead(data)\n\n  ID L_1 A_1 Z_1 M_1 L_2 A_2 Z_2 M_2  Y c1 c2\n1  1   2   1   2   1   2   0   1   3 NA  1  0\n2  2   2   1   2   2   1   0   1   3  0  1  1\n3  3   1   0   2   2   3   1   2   3  0  1  1\n4  4   1   0   3   2   3   1   1   2  1  1  1\n5  5   1   0   1   2   2   1   1   2  1  1  1\n6  6   1   0   3   2   1   1   3   2  0  1  1\n\nCodedim(lcmmtp_foo)\n\n[1] 5000   12\n\n\nNow, let us perform an analysis where we assume our intent is to estimate \\(\\E[Y(1), G(0)]\\):\n\nCodelibrary(mlr3extralearners)\nvars &lt;- lcmmtp:::lcmmtp_variables$new(\n    L = list(c(\"L_1\"), c(\"L_2\")),\n    A = c(\"A_1\", \"A_2\"),\n    Z = list(c(\"Z_1\"), c(\"Z_2\")),\n    M = c(\"M_1\", \"M_2\"),\n    Y = \"Y\",\n    cens = c(\"c1\", \"c2\")\n)\nlrnrs &lt;- c(\"mean\", \"earth\", \"glm\")\nd_ap &lt;- function(data, trt) rep(1, length(data[[trt]]))\nd_as &lt;- function(data, trt) rep(0, length(data[[trt]]))\n\nEY10 &lt;- lcmmtp(\n  data, vars, d_ap, d_as,\n  control = .lcmmtp_control(folds = 2,\n                            learners_trt = lrnrs,\n                            learners_mediator = lrnrs,\n                            learners_QL = lrnrs,\n                            learners_QZ = lrnrs,\n                            learners_QM = lrnrs)\n)\n\n\nNow, assume that we want to estimate the direct effect by contrasting \\(\\E[Y(1), G(0)] - \\E[Y(0), G(0)]\\):\n\nCodeEY00 &lt;- lcmmtp(\n  lcmmtp_foo, vars, d_as, d_as,\n  control = .lcmmtp_control(folds = 2,\n                            learners_trt = lrnrs,\n                            learners_mediator = lrnrs,\n                            learners_QL = lrnrs,\n                            learners_QZ = lrnrs,\n                            learners_QM = lrnrs)\n)\n\n\nAnd we can contrast the two using a convenient function from the lmtp R package:\n\nCodelibrary(lmtp)\nclass(EY00) &lt;- class(EY10) &lt;- 'lmtp'\nEY00$estimator &lt;- EY10$estimator &lt;- 'SDR'\nnames(EY00)[3] &lt;- names(EY10)[3] &lt;- 'eif'\nlmtp_contrast(EY10, ref = EY00)\n\n\n  \n    theta shift   ref std.error conf.low conf.high p.value\n1 -0.0149 0.404 0.419    0.0183  -0.0507     0.021   0.416",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   },
@@ -538,7 +538,7 @@
     "section": "\n9.6 Pros and cons of this methodology",
     "text": "9.6 Pros and cons of this methodology\nPros\n\nAllows the non-parametric definition, identification, and estimation of mediational causal effects for general longitudinal data structures\nAllows for the use of machine learning to alleviate model misspecification bias, and is equipped with formulas for the computation of correct standard errors and confidence intervals\nEasy-to-use software\nCons\n\nSome limitations remain: mediators \\(M\\) need to be discrete random variables\nAs before, interventional effects do not satisfy the mediational sharp null criteria, meaning that they may be different from zero when no individual in the population experiences mediational effects\n\nThis is probably not a big worry in practice, but it is something we are keeping in mind as we develop novel estimators",
     "crumbs": [
-      "Appendices",
+      "Appendix",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Time-varying treatments, mediators, and covariates</span>"
     ]
   }
