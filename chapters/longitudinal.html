@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Modern Causal Mediation Analysis - 9&nbsp; Time-varying treatments, mediators, and covariates</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/stochastic_effects.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script>
+  MathJax = {
+    tex: {
+      tags: 'ams',  // should be 'ams', 'none', or 'all'
+      macros: {
+        E: '{\\mathbb{E}}',
+        V: '{\\mathbb{V}}',
+        P: '{\\mathsf{P}}',
+        M: '{\\mathsf{M}}',
+        Pr: '{\\mathbb{P}}',
+        R: '{\\mathbb{R}}',
+        I: '{\\mathbb{I}}',
+        1: '{\\mathbb{1}}',
+        D: '{\\mathcal{D}}',
+        F: '{\\mathcal{F}}',
+        M: '{\\mathcal{M}}',
+        C: '{\\mathcal{C}}',
+        G: '{\\mathcal{G}}',
+        X: '{\\mathcal{X}}',
+        Z: '{\\mathcal{Z}}',
+        Hold: '{\\mathcal{H}}',
+        lik: '{\\mathcal{L}}',
+        logit: '{\\operatorname{logit}}',
+        expit: '{\\operatorname{expit}}',
+        argmin: '{\\operatorname*{arg\\,min}}',
+        argmax: '{\\operatorname*{arg\\,max}}',
+        indep: '{\\perp\\!\\!\\!\\perp}',
+        notindep: '{\\centernot{\\perp\\!\\!\\!\\perp}}',
+        coloneqq: '{\\mathrel{\\vcenter{:}}=}',
+        iid: '{\\,\\, \\mathbin{\\overset{\\text{iid}}{\\sim}} \\,\\,}',
+        asto: '{\\mathbin{\\underset{a.s.}{\\to}}}',
+        pto: '{\\mathbin{\\underset{p}{\\to}}}',
+        dto: '{\\mathbin{\\underset{d}{\\to}}}'
+      }
+    }
+  };
+</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="../chapters/longitudinal.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Time-varying treatments, mediators, and covariates</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../"><em>Modern</em> Causal Mediation Analysis</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/nhejazi/ser2024_mediation_workshop/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to SER 2024!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Identification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is causal mediation analysis?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/effects_defn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Types of path-specific causal mediation effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/how_to_choose.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">How to choose an estimand: Real-world example</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Estimation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estimation_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Estimation preliminaries: Review of doubly robust estimators for the ATE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estimation_natural_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Construction of G-computation and weighted estimators: The case of the NDE</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estimation_walkthrough.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some <code>R</code> packages for estimation of the causal (in)direct effects</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/additional_readings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Additional topics of interest</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/stochastic_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Stochastic direct and indirect effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/longitudinal.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Time-varying treatments, mediators, and covariates</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+<li><a href="#illustrative-example" id="toc-illustrative-example" class="nav-link active" data-scroll-target="#illustrative-example"><span class="header-section-number">9.1</span> Illustrative example</a></li>
+  <li><a href="#defining-causal-effects-in-this-example" id="toc-defining-causal-effects-in-this-example" class="nav-link" data-scroll-target="#defining-causal-effects-in-this-example"><span class="header-section-number">9.2</span> Defining causal effects in this example</a></li>
+  <li><a href="#how-do-we-define-mediation-causal-effects-with-time-varying-data" id="toc-how-do-we-define-mediation-causal-effects-with-time-varying-data" class="nav-link" data-scroll-target="#how-do-we-define-mediation-causal-effects-with-time-varying-data"><span class="header-section-number">9.3</span> How do we define mediation causal effects with time-varying data?</a></li>
+  <li><a href="#identification-assumptions-and-formula" id="toc-identification-assumptions-and-formula" class="nav-link" data-scroll-target="#identification-assumptions-and-formula"><span class="header-section-number">9.4</span> Identification assumptions and formula</a></li>
+  <li><a href="#estimators-and-r-package" id="toc-estimators-and-r-package" class="nav-link" data-scroll-target="#estimators-and-r-package"><span class="header-section-number">9.5</span> Estimators and <code>R</code> package</a></li>
+  <li><a href="#pros-and-cons-of-this-methodology" id="toc-pros-and-cons-of-this-methodology" class="nav-link" data-scroll-target="#pros-and-cons-of-this-methodology"><span class="header-section-number">9.6</span> Pros and cons of this methodology</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/chapters/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/additional_readings.html">Appendices</a></li><li class="breadcrumb-item"><a href="../chapters/longitudinal.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Time-varying treatments, mediators, and covariates</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Time-varying treatments, mediators, and covariates</span>
+</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>We’ll now turn to thinking about how to define and estimate effects for cases where treatment, mediators, and covariates are time-varying.</p>
+<p>Before we delve into the specific, here are a couple of papers on this topic that are interesting/useful:</p>
+<ul>
+<li>
+<a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12194">Mediation analysis with time varying exposures and mediators</a> by Tyler J. VanderWeele and Eric J. Tchetgen Tchetgen</li>
+<li>
+<a href="https://www.degruyter.com/document/doi/10.1515/jci-2016-0006/html">Longitudinal Mediation Analysis with Time-varying Mediators and Exposures, with Application to Survival Outcomes</a> by Wenjing Zheng and Mark J. van der Laan</li>
+<li>
+<a href="https://www.degruyter.com/document/doi/10.1515/jci-2022-0077/html">Efficient and flexible causal mediation with time-varying mediators, treatments, and confounders</a> by Iván Díaz, Nicholas Williams, and Kara E. Rudolph</li>
+<li>
+<a href="https://arxiv.org/abs/2403.09928">Identification and estimation of mediational effects of longitudinal modified treatment policies</a> by Brian Gilbert, Katherine L. Hoffman, Nicholas Williams, Kara E. Rudolph, Edward J. Schenck, Iván Díaz.</li>
+</ul>
+<p>In this chapter, we will be using the <a href="https://github.com/nt-williams/lcm"><code>lcm</code> <code>R</code> package</a>, which supports binary time-varying treatments and categorical mediators, and the <a href="https://github.com/nt-williams/lcmmtp"><code>lcmmtp</code> <code>R</code> package</a> package, which supports continuous, multivariate, and binary time-varying treatments and categorical mediators.</p>
+<section id="illustrative-example" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="illustrative-example">
+<span class="header-section-number">9.1</span> Illustrative example</h2>
+<p>As an illustrative example, we will use a dataset from an observational study looking at the effect of invasive mechanical ventilation (IMV) on the survival of COVID-19 patients, considering acute kidney injury (AKI) as a mediating factor.</p>
+<p>Briefly, IMV is a treatment for acute respiratory distress syndrome (ARDS). While IMV is a potentially life-saving therapy in patients with ARDS, its usage has been associated with several iatrogenic risks. Of interest to our illustrative study is acute kidney injury (AKI), a critical condition that complicates ICU stays and is associated with increased mortality. The causal model underlying this problem is as follows:</p>
+<p>The data on a single observational unit can be represented by the vector <span class="math inline">\(O=(L_1,
+A_1, Z_1, M_1, L_2, \ldots, A_\tau, Z_\tau, M_\tau, Y)\)</span>, with the data pooled across all participants denoted <span class="math inline">\(O_1, \ldots, O_n\)</span>, for a of <span class="math inline">\(n\)</span> i.i.d. observations of <span class="math inline">\(O\)</span>. The associated DAG is</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="longitudinal_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Directed acyclic graph for time-varying treatments, mediators, and confounders</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Where we are using the following notation:</p>
+<ul>
+<li>
+<span class="math inline">\(W\)</span>: baseline variables such as comorbidities, demographics, etc.</li>
+<li>
+<span class="math inline">\(L_t\)</span> and <span class="math inline">\(Z_t\)</span>: time-varying covariates such as lab results, vitals, treatments, etc.</li>
+<li>
+<span class="math inline">\(A_t\)</span>: type of oxygen support at time <span class="math inline">\(t\)</span> (0: no oxygen support, 1: oxygen support excluding IMV, 2: IMV)</li>
+<li>
+<span class="math inline">\(M_t\)</span>: indicator of AKI at time <span class="math inline">\(t\)</span>
+</li>
+<li>
+<span class="math inline">\(Y\)</span>: mortality at end of study</li>
+<li>We will use <span class="math inline">\(H_t\)</span> as a shorthand to denote all the data measured up until right before <span class="math inline">\(A_t\)</span> occurs</li>
+</ul></section><section id="defining-causal-effects-in-this-example" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="defining-causal-effects-in-this-example">
+<span class="header-section-number">9.2</span> Defining causal effects in this example</h2>
+<p>How can we define (total) causal effects in this example?</p>
+<ul>
+<li>Main challenge: cannot consider static treatmemt regimes (e.g., do not intubate)</li>
+<li>Such regimes would not be supported in the data (doctors would always intubate a person whose blood oxygen is too low)</li>
+<li>We use <em>modified treatment policies</em> to address this</li>
+<li>Main idea: consider a slight modification to the treatment a patient actually received</li>
+<li>For example, can consider the effect of a small delay in receiving IMV</li>
+<li>Specifically, we will consider a delay of one day in receiving IMV</li>
+<li>In notation, the treatment regime would be as follows:</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+  d_t(a_t,h_t) =
+  \begin{cases}
+    1 &amp;\text{ if } a_t=2 \text{ and } a_s \leq 1 \text{ for all } s &lt; t,\\
+    a_t &amp; \text{ otherwise.}
+  \end{cases}
+\end{equation}\]</span> - We could then define the total effect as <span class="math inline">\(E[Y(d) - Y]\)</span>, where <span class="math inline">\(Y(d)\)</span> is the counterfactual mortality if the above rule had been implemented every day, i.e., the intervention is <span class="math inline">\(d=(d_1,d_2,\ldots,
+  d_\tau)\)</span>. - This is a contrast of the mortality rate under a treatment rule that would delay intubation by one day vs the mortality rate that was actually observed.</p>
+</section><section id="how-do-we-define-mediation-causal-effects-with-time-varying-data" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="how-do-we-define-mediation-causal-effects-with-time-varying-data">
+<span class="header-section-number">9.3</span> How do we define mediation causal effects with time-varying data?</h2>
+<p>The above causal effect could be decomposed into natural direct and indirect effects as follows</p>
+<p><span class="math display">\[\begin{align*}
+E[Y(d) - Y] &amp; = E[Y(d, M(d)) - Y(A, M)]\\
+&amp;=\underbrace{\E[Y(\color{red}{d},\color{blue}{M(d)}) -
+    Y(\color{red}{d},\color{blue}{M})]}_{\text{natural indirect effect}} +
+    \underbrace{\E[Y(\color{blue}{d},\color{red}{M}) -
+    Y(\color{blue}{A},\color{red}{M})]}_{\text{natural direct effect}}
+\end{align*}\]</span></p>
+<ul>
+<li><p>However, as before, these natural mediation effects are not identified.</p></li>
+<li><p>The reason is that time-varying mediators exacerbate the issue of intermediate confounding. To see why, let us look at the DAG again:</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="longitudinal_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Directed acyclic graph with intermediate confounding</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Note that all the variables in orange are confounders of the mediator <span class="math inline">\(M_\tau\)</span> and the outcome, and are also affected by treatment at time <span class="math inline">\(t=2\)</span>.</p>
+<p>One possible solution to the above issues involves considering randomized versions of the above effects. Specifically:</p>
+<ul>
+<li>Define <span class="math inline">\(G(d)\)</span> to be a random draw from the distribution of <span class="math inline">\(M(d)\)</span> conditional on baseline variables <span class="math inline">\(W\)</span>.</li>
+<li>We can then obtain the decomposition <span class="math display">\[
+  \E[Y(d, G(d)) - Y(A, G(A))]=\underbrace{\E[Y(\color{red}{d},\color{blue}{G(d)}) -
+  Y(\color{red}{d},\color{blue}{G(A)})]}_{\text{randomized interventional indirect effect}} +
+  \underbrace{\E[Y(\color{blue}{d},\color{red}{G(A)}) -
+    Y(\color{blue}{A},\color{red}{G(A)})]}_{\text{randomized interventional
+      direct effect}}
+\]</span>
+</li>
+<li>As an example, consider the counterfactual <span class="math inline">\(Y(d, G(d))\)</span>.</li>
+<li>
+<span class="math inline">\(M(d)\)</span> is the observed AKI status of patients under a delay in intubation. If <span class="math inline">\(W\)</span> is age, and we are deciding how to intervene on a patient who is 45 years old, we take all the AKI statuses of 45 year olds and draw one of these AKI values at random. Call this random draw <span class="math inline">\(G(d)\)</span>
+</li>
+<li>For a 45 year old patient, <span class="math inline">\(Y(d, G(d))\)</span> is the counterfactual mortality of a patient if intubation had been delayed, and their AKI status would have been assigned to a random draw from the AKI status of 45 year patients.</li>
+</ul></section><section id="identification-assumptions-and-formula" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="identification-assumptions-and-formula">
+<span class="header-section-number">9.4</span> Identification assumptions and formula</h2>
+<p>The above effects are identified under the following assumptions:</p>
+<ul>
+<li>All the common causes of <span class="math inline">\(A_t\)</span> and <span class="math inline">\((Z_s, M_s, A_{s+1}, L_{s+1})\)</span> are measured for <span class="math inline">\(s\geq t\)</span>
+</li>
+<li>All the common causes of <span class="math inline">\(M_t\)</span> and <span class="math inline">\((Z_{s+1}, A_{s+1}, L_{s+1})\)</span> are measured for <span class="math inline">\(s\geq t\)</span>
+</li>
+<li>The intervention <span class="math inline">\(d\)</span> is supported in the data, meaning that for every patient with covariates <span class="math inline">\(h_t\)</span> who had treatment status <span class="math inline">\(a_t\)</span>, it is possible to find a patient with covariates <span class="math inline">\(h_t\)</span> who had treatment status <span class="math inline">\(d(a_t, h_t)\)</span>
+<ul>
+<li>In our example, this translates roughly as: for every patient with covariate history <span class="math inline">\(h_t\)</span> who was intubated at time <span class="math inline">\(t\)</span>, it is possible to find a patient covariate history <span class="math inline">\(h_t\)</span> who was intubated at time <span class="math inline">\(t+1\)</span>.</li>
+</ul>
+</li>
+<li>There is a positive probability of the mediator <span class="math inline">\(M_t\)</span> for all feasible covariate histories.</li>
+</ul>
+<p>The identification formula is complex, but we will explain it in the case of two time points. That is, assume the data are <span class="math inline">\(O=(W, A_1, Z_1, M_1, L_1, A_2,
+Z_2, M_2, Y)\)</span>.</p>
+<p>Identification can be based on the following procedure. First, for each value <span class="math inline">\(m_1\)</span> and <span class="math inline">\(m_2\)</span> of the mediator, compute outcome regressions as follows:</p>
+<ol type="1">
+<li>Regress <span class="math inline">\(Y\)</span> on <span class="math inline">\(W, A_1, Z_1, M_1, L_1, A_2, Z_2, M_2\)</span>. Use this regression to predict the outcome had the mediator been set to <span class="math inline">\(M_2=m_2\)</span>. Let <span class="math inline">\(\tilde Y_2(m_2)\)</span> denote this prediction.</li>
+<li>Regress <span class="math inline">\(\tilde Y_2(m_2)\)</span> on <span class="math inline">\(W, A_1, Z_1, M_1, L_1, A_2\)</span>. Use this regression to predict the outcome had the treatment <span class="math inline">\(A_2\)</span> been set to <span class="math inline">\(d(A_2, H_2)\)</span>. Let <span class="math inline">\(\tilde Y_2^d(m_2)\)</span> denote this prediction.</li>
+<li>Regress <span class="math inline">\(\tilde Y_2(m_2, d_2)\)</span> on <span class="math inline">\(W, A_1, Z_1, M_1\)</span>. Use this regression to predict the outcome had the mediator been set to <span class="math inline">\(M_1=m_1\)</span>. Let <span class="math inline">\(\tilde Y_1(m_1, m_2)\)</span> denote this prediction.</li>
+<li>Regress <span class="math inline">\(\tilde Y_1(m_1, m_2)\)</span> on <span class="math inline">\(W, A_1\)</span>. Use this regression to predict the outcome had the treatment <span class="math inline">\(A_1\)</span> been set to <span class="math inline">\(d(A_1, H_1)\)</span>. Let <span class="math inline">\(\tilde Y_1^d(m_1, m_2)\)</span> denote this prediction.</li>
+</ol>
+<p>Then, for each value <span class="math inline">\(m_1\)</span> and <span class="math inline">\(m_2\)</span> of the mediator, compute the mediator distribution as follows:</p>
+<ol type="1">
+<li>Regress the binary variable <span class="math inline">\(I(M_2=m_2)\)</span> on <span class="math inline">\(W, A_1, Z_1, M_1, L_1, A_2\)</span>. Use this model to predict the probability of <span class="math inline">\(M_2=m_2\)</span> under an intervention that sets <span class="math inline">\(A_2\)</span> to <span class="math inline">\(d(A_2, H_2)\)</span>. Let this predicted probability be denoted with <span class="math inline">\(P(m_2)\)</span>.</li>
+<li>Regress the binary variable <span class="math inline">\(I(M_1=m_1)P(m_2)\)</span> on <span class="math inline">\(W, A_1\)</span>. Use this model to predict under an intervention that sets <span class="math inline">\(A_1\)</span> to <span class="math inline">\(d(A_1, H_1)\)</span>. Let this prediction be denoted with <span class="math inline">\(P(m_1, m_2)\)</span>.</li>
+</ol>
+<p>At the end of these two sequential regression procedures, we have values <span class="math inline">\(\tilde Y_1^d(m_1, m_2)\)</span> and <span class="math inline">\(P(m_1, m_2)\)</span> for each value of the mediator <span class="math inline">\((m_1, m_2)\)</span>. Then, under identification assumptions, we have:</p>
+<p><span class="math display">\[
+  \E[Y(d, G(d)) = \sum_{m_1, m_2}\tilde Y_1^d(m_1, m_2)P(m_1, m_2) \ .
+\]</span></p>
+</section><section id="estimators-and-r-package" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="estimators-and-r-package">
+<span class="header-section-number">9.5</span> Estimators and <code>R</code> package</h2>
+<p>As before, we can develop inverse probability weighted estimators, as well as substitution estimators based on the g-computation formula and doubly robust (DR) estimators.</p>
+<p>All of these estimators get significantly more complex. For instance, an g-computation estimator may be developed by running the regressions indicated in the above sequential regression procedures.</p>
+<p>Fortunately, the doubly robust estimators are coded in a package that can be used off-the-shelf without having to code any complicated sequential regression strategies on your own. Let us look at an example from the <code>lcmmtp</code> R package. First, let’s take a look at a simulated dataset available in the package:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(lcmmtp)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">apply</span>(lcmmtp_foo, <span class="dv">2</span>, as.numeric))</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  ID L_1 A_1 Z_1 M_1 L_2 A_2 Z_2 M_2  Y c1 c2
+1  1   2   1   2   1   2   0   1   3 NA  1  0
+2  2   2   1   2   2   1   0   1   3  0  1  1
+3  3   1   0   2   2   3   1   2   3  0  1  1
+4  4   1   0   3   2   3   1   1   2  1  1  1
+5  5   1   0   1   2   2   1   1   2  1  1  1
+6  6   1   0   3   2   1   1   3   2  0  1  1</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">dim</span>(lcmmtp_foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 5000   12</code></pre>
+</div>
+</div>
+<p>Now, let us perform an analysis where we assume our intent is to estimate <span class="math inline">\(\E[Y(1), G(0)]\)</span>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(mlr3extralearners)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>vars <span class="ot">&lt;-</span> lcmmtp<span class="sc">:::</span>lcmmtp_variables<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="at">L =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"L_1"</span>), <span class="fu">c</span>(<span class="st">"L_2"</span>)),</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="at">A =</span> <span class="fu">c</span>(<span class="st">"A_1"</span>, <span class="st">"A_2"</span>),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">Z =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Z_1"</span>), <span class="fu">c</span>(<span class="st">"Z_2"</span>)),</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="at">M =</span> <span class="fu">c</span>(<span class="st">"M_1"</span>, <span class="st">"M_2"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="at">Y =</span> <span class="st">"Y"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="at">cens =</span> <span class="fu">c</span>(<span class="st">"c1"</span>, <span class="st">"c2"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>lrnrs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"earth"</span>, <span class="st">"glm"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a>d_ap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, trt) <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">length</span>(data[[trt]]))</span>
+<span id="cb5-12"><a href="#cb5-12"></a>d_as <span class="ot">&lt;-</span> <span class="cf">function</span>(data, trt) <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(data[[trt]]))</span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a>EY10 <span class="ot">&lt;-</span> <span class="fu">lcmmtp</span>(</span>
+<span id="cb5-15"><a href="#cb5-15"></a>  data, vars, d_ap, d_as,</span>
+<span id="cb5-16"><a href="#cb5-16"></a>  <span class="at">control =</span> <span class="fu">.lcmmtp_control</span>(<span class="at">folds =</span> <span class="dv">2</span>,</span>
+<span id="cb5-17"><a href="#cb5-17"></a>                            <span class="at">learners_trt =</span> lrnrs,</span>
+<span id="cb5-18"><a href="#cb5-18"></a>                            <span class="at">learners_mediator =</span> lrnrs,</span>
+<span id="cb5-19"><a href="#cb5-19"></a>                            <span class="at">learners_QL =</span> lrnrs,</span>
+<span id="cb5-20"><a href="#cb5-20"></a>                            <span class="at">learners_QZ =</span> lrnrs,</span>
+<span id="cb5-21"><a href="#cb5-21"></a>                            <span class="at">learners_QM =</span> lrnrs)</span>
+<span id="cb5-22"><a href="#cb5-22"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now, assume that we want to estimate the direct effect by contrasting <span class="math inline">\(\E[Y(1), G(0)] - \E[Y(0), G(0)]\)</span>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>EY00 <span class="ot">&lt;-</span> <span class="fu">lcmmtp</span>(</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  lcmmtp_foo, vars, d_as, d_as,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">control =</span> <span class="fu">.lcmmtp_control</span>(<span class="at">folds =</span> <span class="dv">2</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>                            <span class="at">learners_trt =</span> lrnrs,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>                            <span class="at">learners_mediator =</span> lrnrs,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>                            <span class="at">learners_QL =</span> lrnrs,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>                            <span class="at">learners_QZ =</span> lrnrs,</span>
+<span id="cb6-8"><a href="#cb6-8"></a>                            <span class="at">learners_QM =</span> lrnrs)</span>
+<span id="cb6-9"><a href="#cb6-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>And we can contrast the two using a convenient function from the <code>lmtp</code> R package:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(lmtp)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">class</span>(EY00) <span class="ot">&lt;-</span> <span class="fu">class</span>(EY10) <span class="ot">&lt;-</span> <span class="st">'lmtp'</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>EY00<span class="sc">$</span>estimator <span class="ot">&lt;-</span> EY10<span class="sc">$</span>estimator <span class="ot">&lt;-</span> <span class="st">'SDR'</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="fu">names</span>(EY00)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">names</span>(EY10)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">'eif'</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="fu">lmtp_contrast</span>(EY10, <span class="at">ref =</span> EY00)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>
+  
+   theta shift  ref std.error conf.low conf.high p.value
+1 -0.015 0.405 0.42    0.0183  -0.0509     0.021   0.414</code></pre>
+</div>
+</div>
+</section><section id="pros-and-cons-of-this-methodology" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="pros-and-cons-of-this-methodology">
+<span class="header-section-number">9.6</span> Pros and cons of this methodology</h2>
+<section id="pros" class="level4 unnumbered"><h4 class="unnumbered anchored" data-anchor-id="pros">Pros</h4>
+<ul>
+<li>Allows the non-parametric definition, identification, and estimation of mediational causal effects for general longitudinal data structures</li>
+<li>Allows for the use of machine learning to alleviate model misspecification bias, and is equipped with formulas for the computation of correct standard errors and confidence intervals</li>
+<li>Easy-to-use software</li>
+</ul></section><section id="cons" class="level4 unnumbered"><h4 class="unnumbered anchored" data-anchor-id="cons">Cons</h4>
+<ul>
+<li>Some limitations remain: mediators <span class="math inline">\(M\)</span> need to be discrete random variables</li>
+<li>As before, interventional effects do not satisfy the mediational sharp null criteria, meaning that they may be different from zero when no individual in the population experiences mediational effects
+<ul>
+<li>This is probably not a big worry in practice, but it is something we are keeping in mind as we develop novel estimators</li>
+</ul>
+</li>
+</ul>
+
+
+<!-- -->
+
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/codex\.nimahejazi\.org\/ser2024_mediation_workshop\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../chapters/stochastic_effects.html" class="pagination-link" aria-label="Stochastic direct and indirect effects">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Stochastic direct and indirect effects</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># Time-varying treatments, mediators, and covariates</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="in">```{r}</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">#| label: load-renv</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#| echo: false</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#| message: false</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>renv<span class="sc">::</span><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>())</span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="fu">library</span>(here)</span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="in">```</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a></span>
+<span id="cb9-13"><a href="#cb9-13"></a>We'll now turn to thinking about how to define and estimate effects</span>
+<span id="cb9-14"><a href="#cb9-14"></a>for cases where treatment, mediators, and covariates are time-varying.</span>
+<span id="cb9-15"><a href="#cb9-15"></a></span>
+<span id="cb9-16"><a href="#cb9-16"></a>Before we delve into the specific, here are a couple of papers on this</span>
+<span id="cb9-17"><a href="#cb9-17"></a>topic that are interesting/useful:</span>
+<span id="cb9-18"><a href="#cb9-18"></a></span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="ss">- </span>[Mediation analysis with time varying exposures and</span>
+<span id="cb9-20"><a href="#cb9-20"></a>  mediators](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12194)</span>
+<span id="cb9-21"><a href="#cb9-21"></a>  by Tyler J. VanderWeele and Eric J. Tchetgen Tchetgen</span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="ss">- </span>[Longitudinal Mediation Analysis with Time-varying Mediators and</span>
+<span id="cb9-23"><a href="#cb9-23"></a>  Exposures, with Application to Survival</span>
+<span id="cb9-24"><a href="#cb9-24"></a>  Outcomes](https://www.degruyter.com/document/doi/10.1515/jci-2016-0006/html)</span>
+<span id="cb9-25"><a href="#cb9-25"></a>  by  Wenjing Zheng and Mark J. van der Laan</span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="ss">- </span>[Efficient and flexible causal mediation with time-varying</span>
+<span id="cb9-27"><a href="#cb9-27"></a>  mediators, treatments, and</span>
+<span id="cb9-28"><a href="#cb9-28"></a>  confounders](https://www.degruyter.com/document/doi/10.1515/jci-2022-0077/html) by Iván Díaz,</span>
+<span id="cb9-29"><a href="#cb9-29"></a>  Nicholas Williams, and Kara E. Rudolph</span>
+<span id="cb9-30"><a href="#cb9-30"></a><span class="ss">- </span>[Identification and estimation of mediational effects of</span>
+<span id="cb9-31"><a href="#cb9-31"></a>  longitudinal modified treatment</span>
+<span id="cb9-32"><a href="#cb9-32"></a>  policies](https://arxiv.org/abs/2403.09928) by Brian Gilbert,</span>
+<span id="cb9-33"><a href="#cb9-33"></a>  Katherine L. Hoffman, Nicholas Williams, Kara E. Rudolph, Edward</span>
+<span id="cb9-34"><a href="#cb9-34"></a>  J. Schenck, Iván Díaz.</span>
+<span id="cb9-35"><a href="#cb9-35"></a></span>
+<span id="cb9-36"><a href="#cb9-36"></a>In this chapter, we will be using the [<span class="in">`lcm`</span> <span class="in">`R`</span></span>
+<span id="cb9-37"><a href="#cb9-37"></a>package](https://github.com/nt-williams/lcm), which supports binary</span>
+<span id="cb9-38"><a href="#cb9-38"></a>time-varying treatments and categorical mediators, and the [<span class="in">`lcmmtp`</span></span>
+<span id="cb9-39"><a href="#cb9-39"></a><span class="in">`R`</span> package](https://github.com/nt-williams/lcmmtp) package, which</span>
+<span id="cb9-40"><a href="#cb9-40"></a>supports continuous, multivariate, and binary time-varying treatments</span>
+<span id="cb9-41"><a href="#cb9-41"></a>and categorical mediators.</span>
+<span id="cb9-42"><a href="#cb9-42"></a></span>
+<span id="cb9-43"><a href="#cb9-43"></a><span class="fu">## Illustrative example</span></span>
+<span id="cb9-44"><a href="#cb9-44"></a></span>
+<span id="cb9-45"><a href="#cb9-45"></a>As an illustrative example, we will use a dataset from an</span>
+<span id="cb9-46"><a href="#cb9-46"></a>observational study looking at the effect of invasive mechanical</span>
+<span id="cb9-47"><a href="#cb9-47"></a>ventilation (IMV) on the survival of COVID-19 patients, considering</span>
+<span id="cb9-48"><a href="#cb9-48"></a>acute kidney injury (AKI) as a mediating factor.</span>
+<span id="cb9-49"><a href="#cb9-49"></a></span>
+<span id="cb9-50"><a href="#cb9-50"></a>Briefly, IMV is a treatment for acute respiratory distress syndrome</span>
+<span id="cb9-51"><a href="#cb9-51"></a>(ARDS). While IMV is a potentially life-saving therapy in patients</span>
+<span id="cb9-52"><a href="#cb9-52"></a>with ARDS, its usage has been associated with several iatrogenic</span>
+<span id="cb9-53"><a href="#cb9-53"></a>risks. Of interest to our illustrative study is acute kidney injury (AKI),</span>
+<span id="cb9-54"><a href="#cb9-54"></a>a critical condition that complicates ICU stays and is associated with</span>
+<span id="cb9-55"><a href="#cb9-55"></a>increased mortality. The causal model underlying this problem is as</span>
+<span id="cb9-56"><a href="#cb9-56"></a>follows:</span>
+<span id="cb9-57"><a href="#cb9-57"></a></span>
+<span id="cb9-58"><a href="#cb9-58"></a>The data on a single observational unit can be represented by the</span>
+<span id="cb9-59"><a href="#cb9-59"></a>vector $O=(L_1,</span>
+<span id="cb9-60"><a href="#cb9-60"></a>A_1, Z_1, M_1, L_2, \ldots, A_\tau, Z_\tau, M_\tau, Y)$, with the data</span>
+<span id="cb9-61"><a href="#cb9-61"></a>pooled across all participants denoted $O_1, \ldots, O_n$, for a of</span>
+<span id="cb9-62"><a href="#cb9-62"></a>$n$ i.i.d. observations of $O$. The associated DAG is</span>
+<span id="cb9-63"><a href="#cb9-63"></a></span>
+<span id="cb9-66"><a href="#cb9-66"></a><span class="in">```{tikz}</span></span>
+<span id="cb9-67"><a href="#cb9-67"></a><span class="in">#| fig-cap: Directed acyclic graph for time-varying treatments, mediators, and confounders</span></span>
+<span id="cb9-68"><a href="#cb9-68"></a><span class="in">#| echo: false</span></span>
+<span id="cb9-69"><a href="#cb9-69"></a><span class="in">\dimendef\prevdepth=0</span></span>
+<span id="cb9-70"><a href="#cb9-70"></a><span class="in">\pgfdeclarelayer{background}</span></span>
+<span id="cb9-71"><a href="#cb9-71"></a><span class="in">\pgfsetlayers{background,main}</span></span>
+<span id="cb9-72"><a href="#cb9-72"></a><span class="in">\usetikzlibrary{arrows,positioning}</span></span>
+<span id="cb9-73"><a href="#cb9-73"></a><span class="in">\tikzset{</span></span>
+<span id="cb9-74"><a href="#cb9-74"></a><span class="in">&gt;=stealth',</span></span>
+<span id="cb9-75"><a href="#cb9-75"></a><span class="in">punkt/.style={</span></span>
+<span id="cb9-76"><a href="#cb9-76"></a><span class="in">rectangle,</span></span>
+<span id="cb9-77"><a href="#cb9-77"></a><span class="in">rounded corners,</span></span>
+<span id="cb9-78"><a href="#cb9-78"></a><span class="in">draw=black, very thick,</span></span>
+<span id="cb9-79"><a href="#cb9-79"></a><span class="in">text width=6.5em,</span></span>
+<span id="cb9-80"><a href="#cb9-80"></a><span class="in">minimum height=2em,</span></span>
+<span id="cb9-81"><a href="#cb9-81"></a><span class="in">text centered},</span></span>
+<span id="cb9-82"><a href="#cb9-82"></a><span class="in">pil/.style={</span></span>
+<span id="cb9-83"><a href="#cb9-83"></a><span class="in">-&gt;,</span></span>
+<span id="cb9-84"><a href="#cb9-84"></a><span class="in">thick,</span></span>
+<span id="cb9-85"><a href="#cb9-85"></a><span class="in">shorten &lt;=2pt,</span></span>
+<span id="cb9-86"><a href="#cb9-86"></a><span class="in">shorten &gt;=2pt,}</span></span>
+<span id="cb9-87"><a href="#cb9-87"></a><span class="in">}</span></span>
+<span id="cb9-88"><a href="#cb9-88"></a><span class="in">\newcommand{\Vertex}[3]</span></span>
+<span id="cb9-89"><a href="#cb9-89"></a><span class="in">{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {#3};</span></span>
+<span id="cb9-90"><a href="#cb9-90"></a><span class="in">}</span></span>
+<span id="cb9-91"><a href="#cb9-91"></a><span class="in">\pgfarrowsdeclare{arcs}{arcs}{...}</span></span>
+<span id="cb9-92"><a href="#cb9-92"></a><span class="in">{</span></span>
+<span id="cb9-93"><a href="#cb9-93"></a><span class="in">  \pgfsetdash{}{0pt} % do not dash</span></span>
+<span id="cb9-94"><a href="#cb9-94"></a><span class="in">  \pgfsetroundjoin   % fix join</span></span>
+<span id="cb9-95"><a href="#cb9-95"></a><span class="in">  \pgfsetroundcap    % fix cap</span></span>
+<span id="cb9-96"><a href="#cb9-96"></a><span class="in">  \pgfpathmoveto{\pgfpoint{-5pt}{5pt}}</span></span>
+<span id="cb9-97"><a href="#cb9-97"></a><span class="in">  \pgfpatharc{180}{270}{5pt}</span></span>
+<span id="cb9-98"><a href="#cb9-98"></a><span class="in">  \pgfpatharc{90}{180}{5pt}</span></span>
+<span id="cb9-99"><a href="#cb9-99"></a><span class="in">  \pgfusepathqstroke</span></span>
+<span id="cb9-100"><a href="#cb9-100"></a><span class="in">}</span></span>
+<span id="cb9-101"><a href="#cb9-101"></a><span class="in">\newcommand{\VertexR}[2]</span></span>
+<span id="cb9-102"><a href="#cb9-102"></a><span class="in">{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};</span></span>
+<span id="cb9-103"><a href="#cb9-103"></a><span class="in">}</span></span>
+<span id="cb9-104"><a href="#cb9-104"></a><span class="in">\newcommand{\ArrowR}[3]</span></span>
+<span id="cb9-105"><a href="#cb9-105"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-106"><a href="#cb9-106"></a><span class="in">\draw[-&gt;,#3] (#1) to[bend right=30] (#2);</span></span>
+<span id="cb9-107"><a href="#cb9-107"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-108"><a href="#cb9-108"></a><span class="in">}</span></span>
+<span id="cb9-109"><a href="#cb9-109"></a><span class="in">\newcommand{\ArrowB}[3]%</span></span>
+<span id="cb9-110"><a href="#cb9-110"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-111"><a href="#cb9-111"></a><span class="in">    \draw[|-arcs,line width=0.4mm,shorten &lt;= 0.3cm,shorten &gt;= 0.3cm,#3] (#1) -- +(#2);</span></span>
+<span id="cb9-112"><a href="#cb9-112"></a><span class="in">  \end{pgfonlayer}</span></span>
+<span id="cb9-113"><a href="#cb9-113"></a><span class="in">}</span></span>
+<span id="cb9-114"><a href="#cb9-114"></a><span class="in">\newcommand{\ArrowL}[3]</span></span>
+<span id="cb9-115"><a href="#cb9-115"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-116"><a href="#cb9-116"></a><span class="in">\draw[-&gt;,#3] (#1) to[bend left=45] (#2);</span></span>
+<span id="cb9-117"><a href="#cb9-117"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-118"><a href="#cb9-118"></a><span class="in">}</span></span>
+<span id="cb9-119"><a href="#cb9-119"></a><span class="in">\newcommand{\EdgeL}[3]</span></span>
+<span id="cb9-120"><a href="#cb9-120"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-121"><a href="#cb9-121"></a><span class="in">\draw[dashed,#3] (#1) to[bend right=-45] (#2);</span></span>
+<span id="cb9-122"><a href="#cb9-122"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-123"><a href="#cb9-123"></a><span class="in">}</span></span>
+<span id="cb9-124"><a href="#cb9-124"></a><span class="in">\newcommand{\Arrow}[3]</span></span>
+<span id="cb9-125"><a href="#cb9-125"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-126"><a href="#cb9-126"></a><span class="in">\draw[-&gt;,#3] (#1) -- +(#2);</span></span>
+<span id="cb9-127"><a href="#cb9-127"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-128"><a href="#cb9-128"></a><span class="in">}</span></span>
+<span id="cb9-129"><a href="#cb9-129"></a><span class="in">\begin{tikzpicture}</span></span>
+<span id="cb9-130"><a href="#cb9-130"></a><span class="in">    \Vertex{-1, 0}{W}{$L_1$}</span></span>
+<span id="cb9-131"><a href="#cb9-131"></a><span class="in">    \Vertex{1, 0}{A1}{$A_1$}</span></span>
+<span id="cb9-132"><a href="#cb9-132"></a><span class="in">    \Vertex{2, 0}{M1}{$M_1$}</span></span>
+<span id="cb9-133"><a href="#cb9-133"></a><span class="in">    \Vertex{3, 0}{Z1}{$L_2$}</span></span>
+<span id="cb9-134"><a href="#cb9-134"></a><span class="in">    \Vertex{2, -1}{L1}{$Z_1$}</span></span>
+<span id="cb9-135"><a href="#cb9-135"></a></span>
+<span id="cb9-136"><a href="#cb9-136"></a><span class="in">    \ArrowB{W}{A1}{black}</span></span>
+<span id="cb9-137"><a href="#cb9-137"></a></span>
+<span id="cb9-138"><a href="#cb9-138"></a><span class="in">    \Arrow{A1}{M1}{black}</span></span>
+<span id="cb9-139"><a href="#cb9-139"></a><span class="in">    \Arrow{A1}{L1}{black}</span></span>
+<span id="cb9-140"><a href="#cb9-140"></a><span class="in">    \Arrow{M1}{Z1}{black}</span></span>
+<span id="cb9-141"><a href="#cb9-141"></a><span class="in">    \Arrow{L1}{M1}{black}</span></span>
+<span id="cb9-142"><a href="#cb9-142"></a><span class="in">    \Arrow{L1}{Z1}{black}</span></span>
+<span id="cb9-143"><a href="#cb9-143"></a><span class="in">    \ArrowL{A1}{Z1}{black}</span></span>
+<span id="cb9-144"><a href="#cb9-144"></a></span>
+<span id="cb9-145"><a href="#cb9-145"></a><span class="in">    \Vertex{5, 0}{A2}{$A_2$}</span></span>
+<span id="cb9-146"><a href="#cb9-146"></a><span class="in">    \Vertex{6, 0}{M2}{$M_2$}</span></span>
+<span id="cb9-147"><a href="#cb9-147"></a><span class="in">    \Vertex{7, 0}{Z2}{$L_3$}</span></span>
+<span id="cb9-148"><a href="#cb9-148"></a><span class="in">    \Vertex{6, -1}{L2}{$Z_2$}</span></span>
+<span id="cb9-149"><a href="#cb9-149"></a><span class="in">    \node (dots) at (8, 0) {$\cdots$};</span></span>
+<span id="cb9-150"><a href="#cb9-150"></a><span class="in">    \Arrow{A2}{M2}{black}</span></span>
+<span id="cb9-151"><a href="#cb9-151"></a><span class="in">    \Arrow{A2}{L2}{black}</span></span>
+<span id="cb9-152"><a href="#cb9-152"></a><span class="in">    \Arrow{M2}{Z2}{black}</span></span>
+<span id="cb9-153"><a href="#cb9-153"></a><span class="in">    \Arrow{L2}{M2}{black}</span></span>
+<span id="cb9-154"><a href="#cb9-154"></a><span class="in">    \Arrow{L2}{Z2}{black}</span></span>
+<span id="cb9-155"><a href="#cb9-155"></a><span class="in">    \ArrowL{A2}{Z2}{black}</span></span>
+<span id="cb9-156"><a href="#cb9-156"></a></span>
+<span id="cb9-157"><a href="#cb9-157"></a><span class="in">    \ArrowB{Z1}{A2}{black}</span></span>
+<span id="cb9-158"><a href="#cb9-158"></a></span>
+<span id="cb9-159"><a href="#cb9-159"></a><span class="in">    \Vertex{9, 0}{At}{$A_\tau$}</span></span>
+<span id="cb9-160"><a href="#cb9-160"></a><span class="in">    \Vertex{10, 0}{Mt}{$M_\tau$}</span></span>
+<span id="cb9-161"><a href="#cb9-161"></a><span class="in">    \Vertex{11, 0}{Zt}{$Y$}</span></span>
+<span id="cb9-162"><a href="#cb9-162"></a><span class="in">    \Vertex{10, -1}{Lt}{$Z_\tau$}</span></span>
+<span id="cb9-163"><a href="#cb9-163"></a><span class="in">    \Arrow{At}{Mt}{black}</span></span>
+<span id="cb9-164"><a href="#cb9-164"></a><span class="in">    \Arrow{At}{Lt}{black}</span></span>
+<span id="cb9-165"><a href="#cb9-165"></a><span class="in">    \Arrow{Mt}{Zt}{black}</span></span>
+<span id="cb9-166"><a href="#cb9-166"></a><span class="in">    \Arrow{Lt}{Mt}{black}</span></span>
+<span id="cb9-167"><a href="#cb9-167"></a><span class="in">    \Arrow{Lt}{Zt}{black}</span></span>
+<span id="cb9-168"><a href="#cb9-168"></a><span class="in">    \ArrowL{At}{Zt}{black}</span></span>
+<span id="cb9-169"><a href="#cb9-169"></a><span class="in">\end{tikzpicture}</span></span>
+<span id="cb9-170"><a href="#cb9-170"></a><span class="in">```</span></span>
+<span id="cb9-171"><a href="#cb9-171"></a></span>
+<span id="cb9-172"><a href="#cb9-172"></a>Where we are using the following notation:</span>
+<span id="cb9-173"><a href="#cb9-173"></a></span>
+<span id="cb9-174"><a href="#cb9-174"></a><span class="ss">- </span>$W$: baseline variables such as comorbidities, demographics, etc.</span>
+<span id="cb9-175"><a href="#cb9-175"></a><span class="ss">- </span>$L_t$ and $Z_t$: time-varying covariates such as lab results,</span>
+<span id="cb9-176"><a href="#cb9-176"></a>  vitals, treatments, etc.</span>
+<span id="cb9-177"><a href="#cb9-177"></a><span class="ss">- </span>$A_t$: type of oxygen support at time $t$ (0: no oxygen support, 1:</span>
+<span id="cb9-178"><a href="#cb9-178"></a>  oxygen support excluding IMV, 2: IMV)</span>
+<span id="cb9-179"><a href="#cb9-179"></a><span class="ss">- </span>$M_t$: indicator of AKI at time $t$</span>
+<span id="cb9-180"><a href="#cb9-180"></a><span class="ss">- </span>$Y$: mortality at end of study</span>
+<span id="cb9-181"><a href="#cb9-181"></a><span class="ss">- </span>We will use $H_t$ as a shorthand to denote all the data measured up</span>
+<span id="cb9-182"><a href="#cb9-182"></a>  until right before $A_t$ occurs</span>
+<span id="cb9-183"><a href="#cb9-183"></a></span>
+<span id="cb9-184"><a href="#cb9-184"></a><span class="fu">## Defining causal effects in this example</span></span>
+<span id="cb9-185"><a href="#cb9-185"></a></span>
+<span id="cb9-186"><a href="#cb9-186"></a>How can we define (total) causal effects in this example?</span>
+<span id="cb9-187"><a href="#cb9-187"></a></span>
+<span id="cb9-188"><a href="#cb9-188"></a><span class="ss">- </span>Main challenge: cannot consider static treatmemt regimes (e.g., do</span>
+<span id="cb9-189"><a href="#cb9-189"></a>  not intubate)</span>
+<span id="cb9-190"><a href="#cb9-190"></a><span class="ss">- </span>Such regimes would not be supported in the data (doctors would always intubate a person whose blood oxygen is too low)</span>
+<span id="cb9-191"><a href="#cb9-191"></a><span class="ss">- </span>We use *modified treatment policies* to address this</span>
+<span id="cb9-192"><a href="#cb9-192"></a><span class="ss">- </span>Main idea: consider a slight modification to the treatment a patient</span>
+<span id="cb9-193"><a href="#cb9-193"></a>  actually received</span>
+<span id="cb9-194"><a href="#cb9-194"></a><span class="ss">- </span>For example, can consider the effect of a small delay in receiving</span>
+<span id="cb9-195"><a href="#cb9-195"></a>  IMV</span>
+<span id="cb9-196"><a href="#cb9-196"></a><span class="ss">- </span>Specifically, we will consider a delay of one day in receiving IMV</span>
+<span id="cb9-197"><a href="#cb9-197"></a><span class="ss">- </span>In notation, the treatment regime would be as follows:</span>
+<span id="cb9-198"><a href="#cb9-198"></a></span>
+<span id="cb9-199"><a href="#cb9-199"></a>\begin{equation}</span>
+<span id="cb9-200"><a href="#cb9-200"></a>  d_t(a_t,h_t) =</span>
+<span id="cb9-201"><a href="#cb9-201"></a>  \begin{cases}</span>
+<span id="cb9-202"><a href="#cb9-202"></a>    1 &amp;\text{ if } a_t=2 \text{ and } a_s \leq 1 \text{ for all } s &lt; t,<span class="sc">\\</span></span>
+<span id="cb9-203"><a href="#cb9-203"></a>    a_t &amp; \text{ otherwise.}</span>
+<span id="cb9-204"><a href="#cb9-204"></a>  \end{cases}</span>
+<span id="cb9-205"><a href="#cb9-205"></a>\end{equation}</span>
+<span id="cb9-206"><a href="#cb9-206"></a><span class="ss">- </span>We could then define the total effect as $E<span class="co">[</span><span class="ot">Y(d) - Y</span><span class="co">]</span>$, where $Y(d)$</span>
+<span id="cb9-207"><a href="#cb9-207"></a>  is the counterfactual mortality if the above rule had been</span>
+<span id="cb9-208"><a href="#cb9-208"></a>  implemented every day, i.e., the intervention is $d=(d_1,d_2,\ldots,</span>
+<span id="cb9-209"><a href="#cb9-209"></a>  d_\tau)$.</span>
+<span id="cb9-210"><a href="#cb9-210"></a><span class="ss">- </span>This is a contrast of the mortality rate under a treatment rule that would</span>
+<span id="cb9-211"><a href="#cb9-211"></a>  delay intubation by one day vs the mortality rate that was actually observed.</span>
+<span id="cb9-212"><a href="#cb9-212"></a></span>
+<span id="cb9-213"><a href="#cb9-213"></a><span class="fu">## How do we define mediation causal effects with time-varying data?</span></span>
+<span id="cb9-214"><a href="#cb9-214"></a></span>
+<span id="cb9-215"><a href="#cb9-215"></a>The above causal effect could be decomposed into natural direct and</span>
+<span id="cb9-216"><a href="#cb9-216"></a>indirect effects as follows</span>
+<span id="cb9-217"><a href="#cb9-217"></a></span>
+<span id="cb9-218"><a href="#cb9-218"></a>\begin{align*}</span>
+<span id="cb9-219"><a href="#cb9-219"></a>E<span class="co">[</span><span class="ot">Y(d) - Y</span><span class="co">]</span> &amp; = E<span class="co">[</span><span class="ot">Y(d, M(d)) - Y(A, M)</span><span class="co">]</span><span class="sc">\\</span></span>
+<span id="cb9-220"><a href="#cb9-220"></a>&amp;=\underbrace{\E[Y(\color{red}{d},\color{blue}{M(d)}) -</span>
+<span id="cb9-221"><a href="#cb9-221"></a>    Y(\color{red}{d},\color{blue}{M})]}_{\text{natural indirect effect}} +</span>
+<span id="cb9-222"><a href="#cb9-222"></a>    \underbrace{\E[Y(\color{blue}{d},\color{red}{M}) -</span>
+<span id="cb9-223"><a href="#cb9-223"></a>    Y(\color{blue}{A},\color{red}{M})]}_{\text{natural direct effect}}</span>
+<span id="cb9-224"><a href="#cb9-224"></a>\end{align*}</span>
+<span id="cb9-225"><a href="#cb9-225"></a></span>
+<span id="cb9-226"><a href="#cb9-226"></a><span class="ss">- </span>However, as before, these natural mediation effects are not identified.</span>
+<span id="cb9-227"><a href="#cb9-227"></a></span>
+<span id="cb9-228"><a href="#cb9-228"></a><span class="ss">- </span>The reason is that time-varying mediators exacerbate the issue of intermediate</span>
+<span id="cb9-229"><a href="#cb9-229"></a>confounding. To see why, let us look at the DAG again:</span>
+<span id="cb9-230"><a href="#cb9-230"></a></span>
+<span id="cb9-233"><a href="#cb9-233"></a><span class="in">```{tikz}</span></span>
+<span id="cb9-234"><a href="#cb9-234"></a><span class="in">#| fig-cap: Directed acyclic graph with intermediate confounding</span></span>
+<span id="cb9-235"><a href="#cb9-235"></a><span class="in">#| echo: false</span></span>
+<span id="cb9-236"><a href="#cb9-236"></a><span class="in">\dimendef\prevdepth=0</span></span>
+<span id="cb9-237"><a href="#cb9-237"></a><span class="in">\pgfdeclarelayer{background}</span></span>
+<span id="cb9-238"><a href="#cb9-238"></a><span class="in">\pgfsetlayers{background,main}</span></span>
+<span id="cb9-239"><a href="#cb9-239"></a><span class="in">\usetikzlibrary{arrows,positioning}</span></span>
+<span id="cb9-240"><a href="#cb9-240"></a><span class="in">\tikzset{</span></span>
+<span id="cb9-241"><a href="#cb9-241"></a><span class="in">&gt;=stealth',</span></span>
+<span id="cb9-242"><a href="#cb9-242"></a><span class="in">punkt/.style={</span></span>
+<span id="cb9-243"><a href="#cb9-243"></a><span class="in">rectangle,</span></span>
+<span id="cb9-244"><a href="#cb9-244"></a><span class="in">rounded corners,</span></span>
+<span id="cb9-245"><a href="#cb9-245"></a><span class="in">draw=black, very thick,</span></span>
+<span id="cb9-246"><a href="#cb9-246"></a><span class="in">text width=6.5em,</span></span>
+<span id="cb9-247"><a href="#cb9-247"></a><span class="in">minimum height=2em,</span></span>
+<span id="cb9-248"><a href="#cb9-248"></a><span class="in">text centered},</span></span>
+<span id="cb9-249"><a href="#cb9-249"></a><span class="in">pil/.style={</span></span>
+<span id="cb9-250"><a href="#cb9-250"></a><span class="in">-&gt;,</span></span>
+<span id="cb9-251"><a href="#cb9-251"></a><span class="in">thick,</span></span>
+<span id="cb9-252"><a href="#cb9-252"></a><span class="in">shorten &lt;=2pt,</span></span>
+<span id="cb9-253"><a href="#cb9-253"></a><span class="in">shorten &gt;=2pt,}</span></span>
+<span id="cb9-254"><a href="#cb9-254"></a><span class="in">}</span></span>
+<span id="cb9-255"><a href="#cb9-255"></a><span class="in">\newcommand{\Vertex}[3]</span></span>
+<span id="cb9-256"><a href="#cb9-256"></a><span class="in">{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {#3};</span></span>
+<span id="cb9-257"><a href="#cb9-257"></a><span class="in">}</span></span>
+<span id="cb9-258"><a href="#cb9-258"></a><span class="in">\pgfarrowsdeclare{arcs}{arcs}{...}</span></span>
+<span id="cb9-259"><a href="#cb9-259"></a><span class="in">{</span></span>
+<span id="cb9-260"><a href="#cb9-260"></a><span class="in">  \pgfsetdash{}{0pt} % do not dash</span></span>
+<span id="cb9-261"><a href="#cb9-261"></a><span class="in">  \pgfsetroundjoin   % fix join</span></span>
+<span id="cb9-262"><a href="#cb9-262"></a><span class="in">  \pgfsetroundcap    % fix cap</span></span>
+<span id="cb9-263"><a href="#cb9-263"></a><span class="in">  \pgfpathmoveto{\pgfpoint{-5pt}{5pt}}</span></span>
+<span id="cb9-264"><a href="#cb9-264"></a><span class="in">  \pgfpatharc{180}{270}{5pt}</span></span>
+<span id="cb9-265"><a href="#cb9-265"></a><span class="in">  \pgfpatharc{90}{180}{5pt}</span></span>
+<span id="cb9-266"><a href="#cb9-266"></a><span class="in">  \pgfusepathqstroke</span></span>
+<span id="cb9-267"><a href="#cb9-267"></a><span class="in">}</span></span>
+<span id="cb9-268"><a href="#cb9-268"></a><span class="in">\newcommand{\VertexR}[2]</span></span>
+<span id="cb9-269"><a href="#cb9-269"></a><span class="in">{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};</span></span>
+<span id="cb9-270"><a href="#cb9-270"></a><span class="in">}</span></span>
+<span id="cb9-271"><a href="#cb9-271"></a><span class="in">\newcommand{\ArrowR}[3]</span></span>
+<span id="cb9-272"><a href="#cb9-272"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-273"><a href="#cb9-273"></a><span class="in">\draw[-&gt;,#3] (#1) to[bend right=30] (#2);</span></span>
+<span id="cb9-274"><a href="#cb9-274"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-275"><a href="#cb9-275"></a><span class="in">}</span></span>
+<span id="cb9-276"><a href="#cb9-276"></a><span class="in">\newcommand{\ArrowB}[3]%</span></span>
+<span id="cb9-277"><a href="#cb9-277"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-278"><a href="#cb9-278"></a><span class="in">    \draw[|-arcs,line width=0.4mm,shorten &lt;= 0.3cm,shorten &gt;= 0.3cm,#3] (#1) -- +(#2);</span></span>
+<span id="cb9-279"><a href="#cb9-279"></a><span class="in">  \end{pgfonlayer}</span></span>
+<span id="cb9-280"><a href="#cb9-280"></a><span class="in">}</span></span>
+<span id="cb9-281"><a href="#cb9-281"></a><span class="in">\newcommand{\ArrowL}[3]</span></span>
+<span id="cb9-282"><a href="#cb9-282"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-283"><a href="#cb9-283"></a><span class="in">\draw[-&gt;,#3] (#1) to[bend left=45] (#2);</span></span>
+<span id="cb9-284"><a href="#cb9-284"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-285"><a href="#cb9-285"></a><span class="in">}</span></span>
+<span id="cb9-286"><a href="#cb9-286"></a><span class="in">\newcommand{\EdgeL}[3]</span></span>
+<span id="cb9-287"><a href="#cb9-287"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-288"><a href="#cb9-288"></a><span class="in">\draw[dashed,#3] (#1) to[bend right=-45] (#2);</span></span>
+<span id="cb9-289"><a href="#cb9-289"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-290"><a href="#cb9-290"></a><span class="in">}</span></span>
+<span id="cb9-291"><a href="#cb9-291"></a><span class="in">\newcommand{\Arrow}[3]</span></span>
+<span id="cb9-292"><a href="#cb9-292"></a><span class="in">{ \begin{pgfonlayer}{background}</span></span>
+<span id="cb9-293"><a href="#cb9-293"></a><span class="in">\draw[-&gt;,#3] (#1) -- +(#2);</span></span>
+<span id="cb9-294"><a href="#cb9-294"></a><span class="in">\end{pgfonlayer}</span></span>
+<span id="cb9-295"><a href="#cb9-295"></a><span class="in">}</span></span>
+<span id="cb9-296"><a href="#cb9-296"></a><span class="in">\begin{tikzpicture}</span></span>
+<span id="cb9-297"><a href="#cb9-297"></a><span class="in">    \Vertex{-1, 0}{W}{$L_1$}</span></span>
+<span id="cb9-298"><a href="#cb9-298"></a><span class="in">    \Vertex{1, 0}{A1}{$A_1$}</span></span>
+<span id="cb9-299"><a href="#cb9-299"></a><span class="in">    \Vertex{2, 0}{M1}{$M_1$}</span></span>
+<span id="cb9-300"><a href="#cb9-300"></a><span class="in">    \Vertex{3, 0}{Z1}{$L_2$}</span></span>
+<span id="cb9-301"><a href="#cb9-301"></a><span class="in">    \Vertex{2, -1}{L1}{$Z_1$}</span></span>
+<span id="cb9-302"><a href="#cb9-302"></a></span>
+<span id="cb9-303"><a href="#cb9-303"></a><span class="in">    \ArrowB{W}{A1}{black}</span></span>
+<span id="cb9-304"><a href="#cb9-304"></a></span>
+<span id="cb9-305"><a href="#cb9-305"></a><span class="in">    \Arrow{A1}{M1}{black}</span></span>
+<span id="cb9-306"><a href="#cb9-306"></a><span class="in">    \Arrow{A1}{L1}{black}</span></span>
+<span id="cb9-307"><a href="#cb9-307"></a><span class="in">    \Arrow{M1}{Z1}{black}</span></span>
+<span id="cb9-308"><a href="#cb9-308"></a><span class="in">    \Arrow{L1}{M1}{black}</span></span>
+<span id="cb9-309"><a href="#cb9-309"></a><span class="in">    \Arrow{L1}{Z1}{black}</span></span>
+<span id="cb9-310"><a href="#cb9-310"></a><span class="in">    \ArrowL{A1}{Z1}{black}</span></span>
+<span id="cb9-311"><a href="#cb9-311"></a></span>
+<span id="cb9-312"><a href="#cb9-312"></a><span class="in">    \Vertex{5, 0}{A2}{\textcolor{teal}{$A_2$}}</span></span>
+<span id="cb9-313"><a href="#cb9-313"></a><span class="in">    \Vertex{6, 0}{M2}{\textcolor{orange}{$M_2$}}</span></span>
+<span id="cb9-314"><a href="#cb9-314"></a><span class="in">    \Vertex{7, 0}{Z2}{\textcolor{orange}{$L_3$}}</span></span>
+<span id="cb9-315"><a href="#cb9-315"></a><span class="in">    \Vertex{6, -1}{L2}{\textcolor{orange}{$Z_2$}}</span></span>
+<span id="cb9-316"><a href="#cb9-316"></a><span class="in">    \node (dots) at (8, 0) {$\cdots$};</span></span>
+<span id="cb9-317"><a href="#cb9-317"></a><span class="in">    \Arrow{A2}{M2}{black}</span></span>
+<span id="cb9-318"><a href="#cb9-318"></a><span class="in">    \Arrow{A2}{L2}{black}</span></span>
+<span id="cb9-319"><a href="#cb9-319"></a><span class="in">    \Arrow{M2}{Z2}{black}</span></span>
+<span id="cb9-320"><a href="#cb9-320"></a><span class="in">    \Arrow{L2}{M2}{black}</span></span>
+<span id="cb9-321"><a href="#cb9-321"></a><span class="in">    \Arrow{L2}{Z2}{black}</span></span>
+<span id="cb9-322"><a href="#cb9-322"></a><span class="in">    \ArrowL{A2}{Z2}{black}</span></span>
+<span id="cb9-323"><a href="#cb9-323"></a></span>
+<span id="cb9-324"><a href="#cb9-324"></a><span class="in">    \ArrowB{Z1}{A2}{black}</span></span>
+<span id="cb9-325"><a href="#cb9-325"></a></span>
+<span id="cb9-326"><a href="#cb9-326"></a><span class="in">    \Vertex{9, 0}{At}{\textcolor{orange}{$A_\tau$}}</span></span>
+<span id="cb9-327"><a href="#cb9-327"></a><span class="in">    \Vertex{10, 0}{Mt}{\textcolor{violet}{$M_\tau$}}</span></span>
+<span id="cb9-328"><a href="#cb9-328"></a><span class="in">    \Vertex{11, 0}{Zt}{\textcolor{violet}{$Y$}}</span></span>
+<span id="cb9-329"><a href="#cb9-329"></a><span class="in">    \Vertex{10, -1}{Lt}{\textcolor{orange}{$Z_\tau$}}</span></span>
+<span id="cb9-330"><a href="#cb9-330"></a><span class="in">    \Arrow{At}{Mt}{black}</span></span>
+<span id="cb9-331"><a href="#cb9-331"></a><span class="in">    \Arrow{At}{Lt}{black}</span></span>
+<span id="cb9-332"><a href="#cb9-332"></a><span class="in">    \Arrow{Mt}{Zt}{black}</span></span>
+<span id="cb9-333"><a href="#cb9-333"></a><span class="in">    \Arrow{Lt}{Mt}{black}</span></span>
+<span id="cb9-334"><a href="#cb9-334"></a><span class="in">    \Arrow{Lt}{Zt}{black}</span></span>
+<span id="cb9-335"><a href="#cb9-335"></a><span class="in">    \ArrowL{At}{Zt}{black}</span></span>
+<span id="cb9-336"><a href="#cb9-336"></a><span class="in">\end{tikzpicture}</span></span>
+<span id="cb9-337"><a href="#cb9-337"></a><span class="in">```</span></span>
+<span id="cb9-338"><a href="#cb9-338"></a>Note that all the variables in orange are confounders of the</span>
+<span id="cb9-339"><a href="#cb9-339"></a>  mediator $M_\tau$ and the outcome, and are</span>
+<span id="cb9-340"><a href="#cb9-340"></a>  also affected by treatment at time $t=2$.</span>
+<span id="cb9-341"><a href="#cb9-341"></a></span>
+<span id="cb9-342"><a href="#cb9-342"></a>One possible solution to the above issues involves considering</span>
+<span id="cb9-343"><a href="#cb9-343"></a>randomized versions of the above effects. Specifically:</span>
+<span id="cb9-344"><a href="#cb9-344"></a></span>
+<span id="cb9-345"><a href="#cb9-345"></a><span class="ss">- </span>Define $G(d)$ to be a random draw from the distribution of $M(d)$</span>
+<span id="cb9-346"><a href="#cb9-346"></a>  conditional on baseline variables $W$.</span>
+<span id="cb9-347"><a href="#cb9-347"></a><span class="ss">- </span>We can then obtain the decomposition</span>
+<span id="cb9-348"><a href="#cb9-348"></a>  $$</span>
+<span id="cb9-349"><a href="#cb9-349"></a>    \E<span class="co">[</span><span class="ot">Y(d, G(d)) - Y(A, G(A))</span><span class="co">]</span>=\underbrace{\E[Y(\color{red}{d},\color{blue}{G(d)}) -</span>
+<span id="cb9-350"><a href="#cb9-350"></a>    Y(\color{red}{d},\color{blue}{G(A)})]}_{\text{randomized interventional indirect effect}} +</span>
+<span id="cb9-351"><a href="#cb9-351"></a>    \underbrace{\E[Y(\color{blue}{d},\color{red}{G(A)}) -</span>
+<span id="cb9-352"><a href="#cb9-352"></a>      Y(\color{blue}{A},\color{red}{G(A)})]}_{\text{randomized interventional</span>
+<span id="cb9-353"><a href="#cb9-353"></a>        direct effect}}</span>
+<span id="cb9-354"><a href="#cb9-354"></a>  $$</span>
+<span id="cb9-355"><a href="#cb9-355"></a><span class="ss">- </span>As an example, consider the counterfactual $Y(d, G(d))$.</span>
+<span id="cb9-356"><a href="#cb9-356"></a><span class="ss">- </span>$M(d)$ is the observed AKI status of patients under a delay in intubation. If</span>
+<span id="cb9-357"><a href="#cb9-357"></a>  $W$ is age, and we are deciding how to intervene on a patient who is 45 years</span>
+<span id="cb9-358"><a href="#cb9-358"></a>  old, we take all the AKI statuses of 45 year olds and draw one of these AKI</span>
+<span id="cb9-359"><a href="#cb9-359"></a>  values at random. Call this random draw $G(d)$</span>
+<span id="cb9-360"><a href="#cb9-360"></a><span class="ss">- </span>For a 45 year old patient, $Y(d, G(d))$ is the counterfactual mortality of</span>
+<span id="cb9-361"><a href="#cb9-361"></a>  a patient if intubation had been delayed, and their AKI status would have</span>
+<span id="cb9-362"><a href="#cb9-362"></a>  been assigned to a random draw from the AKI status of 45 year patients.</span>
+<span id="cb9-363"><a href="#cb9-363"></a></span>
+<span id="cb9-364"><a href="#cb9-364"></a><span class="fu">## Identification assumptions and formula</span></span>
+<span id="cb9-365"><a href="#cb9-365"></a></span>
+<span id="cb9-366"><a href="#cb9-366"></a>The above effects are identified under the following assumptions:</span>
+<span id="cb9-367"><a href="#cb9-367"></a></span>
+<span id="cb9-368"><a href="#cb9-368"></a><span class="ss">- </span>All the common causes of $A_t$ and $(Z_s, M_s, A_{s+1}, L_{s+1})$ are</span>
+<span id="cb9-369"><a href="#cb9-369"></a>  measured for $s\geq t$</span>
+<span id="cb9-370"><a href="#cb9-370"></a><span class="ss">- </span>All the common causes of $M_t$ and $(Z_{s+1}, A_{s+1}, L_{s+1})$ are measured</span>
+<span id="cb9-371"><a href="#cb9-371"></a>  for $s\geq t$</span>
+<span id="cb9-372"><a href="#cb9-372"></a><span class="ss">- </span>The intervention $d$ is supported in the data, meaning that for every patient</span>
+<span id="cb9-373"><a href="#cb9-373"></a>  with covariates $h_t$ who had treatment status $a_t$, it is possible to find</span>
+<span id="cb9-374"><a href="#cb9-374"></a>  a patient with covariates $h_t$ who had treatment status $d(a_t, h_t)$</span>
+<span id="cb9-375"><a href="#cb9-375"></a><span class="ss">  - </span>In our example, this translates roughly as: for every patient with</span>
+<span id="cb9-376"><a href="#cb9-376"></a>    covariate history $h_t$ who was intubated at time $t$, it is possible to</span>
+<span id="cb9-377"><a href="#cb9-377"></a>    find a patient covariate history $h_t$ who was intubated at time $t+1$.</span>
+<span id="cb9-378"><a href="#cb9-378"></a><span class="ss">- </span>There is a positive probability of the mediator $M_t$ for all feasible</span>
+<span id="cb9-379"><a href="#cb9-379"></a>  covariate histories.</span>
+<span id="cb9-380"><a href="#cb9-380"></a></span>
+<span id="cb9-381"><a href="#cb9-381"></a>The identification formula is complex, but we will explain it in the case of</span>
+<span id="cb9-382"><a href="#cb9-382"></a>two time points. That is, assume the data are $O=(W, A_1, Z_1, M_1, L_1, A_2,</span>
+<span id="cb9-383"><a href="#cb9-383"></a>Z_2, M_2, Y)$.</span>
+<span id="cb9-384"><a href="#cb9-384"></a></span>
+<span id="cb9-385"><a href="#cb9-385"></a>Identification can be based on the following procedure. First, for each value</span>
+<span id="cb9-386"><a href="#cb9-386"></a>$m_1$ and $m_2$ of the mediator, compute outcome regressions as follows:</span>
+<span id="cb9-387"><a href="#cb9-387"></a></span>
+<span id="cb9-388"><a href="#cb9-388"></a><span class="ss">1. </span>Regress $Y$ on $W, A_1, Z_1, M_1, L_1, A_2, Z_2, M_2$. Use this</span>
+<span id="cb9-389"><a href="#cb9-389"></a>   regression to predict the outcome had the mediator been set to</span>
+<span id="cb9-390"><a href="#cb9-390"></a>   $M_2=m_2$. Let $\tilde Y_2(m_2)$ denote this prediction.</span>
+<span id="cb9-391"><a href="#cb9-391"></a><span class="ss">2. </span>Regress $\tilde Y_2(m_2)$ on $W, A_1, Z_1, M_1, L_1, A_2$. Use this</span>
+<span id="cb9-392"><a href="#cb9-392"></a>   regression to predict the outcome had the treatment $A_2$ been set to</span>
+<span id="cb9-393"><a href="#cb9-393"></a>   $d(A_2, H_2)$. Let $\tilde Y_2^d(m_2)$ denote this prediction.</span>
+<span id="cb9-394"><a href="#cb9-394"></a><span class="ss">3. </span>Regress $\tilde Y_2(m_2, d_2)$ on $W, A_1, Z_1, M_1$. Use this</span>
+<span id="cb9-395"><a href="#cb9-395"></a>   regression to predict the outcome had the mediator been set to</span>
+<span id="cb9-396"><a href="#cb9-396"></a>   $M_1=m_1$. Let $\tilde Y_1(m_1, m_2)$ denote this prediction.</span>
+<span id="cb9-397"><a href="#cb9-397"></a><span class="ss">4. </span>Regress $\tilde Y_1(m_1, m_2)$ on $W, A_1$. Use this</span>
+<span id="cb9-398"><a href="#cb9-398"></a>   regression to predict the outcome had the treatment $A_1$ been set to</span>
+<span id="cb9-399"><a href="#cb9-399"></a>   $d(A_1, H_1)$. Let $\tilde Y_1^d(m_1, m_2)$ denote this prediction.</span>
+<span id="cb9-400"><a href="#cb9-400"></a></span>
+<span id="cb9-401"><a href="#cb9-401"></a>Then, for each value $m_1$ and $m_2$ of the mediator, compute the mediator</span>
+<span id="cb9-402"><a href="#cb9-402"></a>distribution as follows:</span>
+<span id="cb9-403"><a href="#cb9-403"></a></span>
+<span id="cb9-404"><a href="#cb9-404"></a><span class="ss">1. </span>Regress the binary variable $I(M_2=m_2)$ on $W, A_1, Z_1, M_1, L_1, A_2$.</span>
+<span id="cb9-405"><a href="#cb9-405"></a>   Use this model to predict the probability of $M_2=m_2$ under an intervention</span>
+<span id="cb9-406"><a href="#cb9-406"></a>   that sets $A_2$ to $d(A_2, H_2)$. Let this predicted probability be denoted</span>
+<span id="cb9-407"><a href="#cb9-407"></a>   with $P(m_2)$.</span>
+<span id="cb9-408"><a href="#cb9-408"></a><span class="ss">2. </span>Regress the binary variable $I(M_1=m_1)P(m_2)$ on $W, A_1$. Use this model</span>
+<span id="cb9-409"><a href="#cb9-409"></a>   to predict under an intervention that sets $A_1$ to $d(A_1, H_1)$. Let this</span>
+<span id="cb9-410"><a href="#cb9-410"></a>   prediction be denoted with $P(m_1, m_2)$.</span>
+<span id="cb9-411"><a href="#cb9-411"></a></span>
+<span id="cb9-412"><a href="#cb9-412"></a>At the end of these two sequential regression procedures, we have</span>
+<span id="cb9-413"><a href="#cb9-413"></a>values $\tilde Y_1^d(m_1, m_2)$ and $P(m_1, m_2)$ for each value of</span>
+<span id="cb9-414"><a href="#cb9-414"></a>the mediator $(m_1, m_2)$. Then, under identification assumptions, we</span>
+<span id="cb9-415"><a href="#cb9-415"></a>have:</span>
+<span id="cb9-416"><a href="#cb9-416"></a></span>
+<span id="cb9-417"><a href="#cb9-417"></a>$$</span>
+<span id="cb9-418"><a href="#cb9-418"></a>  \E[Y(d, G(d)) = \sum_{m_1, m_2}\tilde Y_1^d(m_1, m_2)P(m_1, m_2) \ .</span>
+<span id="cb9-419"><a href="#cb9-419"></a>$$</span>
+<span id="cb9-420"><a href="#cb9-420"></a></span>
+<span id="cb9-421"><a href="#cb9-421"></a><span class="fu">## Estimators and `R` package</span></span>
+<span id="cb9-422"><a href="#cb9-422"></a></span>
+<span id="cb9-423"><a href="#cb9-423"></a>As before, we can develop inverse probability weighted estimators, as well as</span>
+<span id="cb9-424"><a href="#cb9-424"></a>substitution estimators based on the g-computation formula and doubly robust</span>
+<span id="cb9-425"><a href="#cb9-425"></a>(DR) estimators.</span>
+<span id="cb9-426"><a href="#cb9-426"></a></span>
+<span id="cb9-427"><a href="#cb9-427"></a>All of these estimators get significantly more complex. For instance, an</span>
+<span id="cb9-428"><a href="#cb9-428"></a>g-computation estimator may be developed by running the regressions indicated</span>
+<span id="cb9-429"><a href="#cb9-429"></a>in the above sequential regression procedures.</span>
+<span id="cb9-430"><a href="#cb9-430"></a></span>
+<span id="cb9-431"><a href="#cb9-431"></a>Fortunately, the doubly robust estimators are coded in a package that</span>
+<span id="cb9-432"><a href="#cb9-432"></a>can be used off-the-shelf without having to code any complicated</span>
+<span id="cb9-433"><a href="#cb9-433"></a>sequential regression strategies on your own. Let us look at an</span>
+<span id="cb9-434"><a href="#cb9-434"></a>example from the <span class="in">`lcmmtp`</span> R package. First, let's take a look at a</span>
+<span id="cb9-435"><a href="#cb9-435"></a>simulated dataset available in the package:</span>
+<span id="cb9-436"><a href="#cb9-436"></a></span>
+<span id="cb9-439"><a href="#cb9-439"></a><span class="in">```{r}</span></span>
+<span id="cb9-440"><a href="#cb9-440"></a><span class="co">#| label: longit-data</span></span>
+<span id="cb9-441"><a href="#cb9-441"></a><span class="fu">library</span>(lcmmtp)</span>
+<span id="cb9-442"><a href="#cb9-442"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">apply</span>(lcmmtp_foo, <span class="dv">2</span>, as.numeric))</span>
+<span id="cb9-443"><a href="#cb9-443"></a><span class="fu">head</span>(data)</span>
+<span id="cb9-444"><a href="#cb9-444"></a><span class="fu">dim</span>(lcmmtp_foo)</span>
+<span id="cb9-445"><a href="#cb9-445"></a><span class="in">```</span></span>
+<span id="cb9-446"><a href="#cb9-446"></a></span>
+<span id="cb9-447"><a href="#cb9-447"></a>Now, let us perform an analysis where we assume our intent is to estimate</span>
+<span id="cb9-448"><a href="#cb9-448"></a>$\E<span class="co">[</span><span class="ot">Y(1), G(0)</span><span class="co">]</span>$:</span>
+<span id="cb9-449"><a href="#cb9-449"></a></span>
+<span id="cb9-452"><a href="#cb9-452"></a><span class="in">```{r}</span></span>
+<span id="cb9-453"><a href="#cb9-453"></a><span class="co">#| label: longit-analysis1</span></span>
+<span id="cb9-454"><a href="#cb9-454"></a><span class="fu">library</span>(mlr3extralearners)</span>
+<span id="cb9-455"><a href="#cb9-455"></a>vars <span class="ot">&lt;-</span> lcmmtp<span class="sc">:::</span>lcmmtp_variables<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb9-456"><a href="#cb9-456"></a>    <span class="at">L =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"L_1"</span>), <span class="fu">c</span>(<span class="st">"L_2"</span>)),</span>
+<span id="cb9-457"><a href="#cb9-457"></a>    <span class="at">A =</span> <span class="fu">c</span>(<span class="st">"A_1"</span>, <span class="st">"A_2"</span>),</span>
+<span id="cb9-458"><a href="#cb9-458"></a>    <span class="at">Z =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Z_1"</span>), <span class="fu">c</span>(<span class="st">"Z_2"</span>)),</span>
+<span id="cb9-459"><a href="#cb9-459"></a>    <span class="at">M =</span> <span class="fu">c</span>(<span class="st">"M_1"</span>, <span class="st">"M_2"</span>),</span>
+<span id="cb9-460"><a href="#cb9-460"></a>    <span class="at">Y =</span> <span class="st">"Y"</span>,</span>
+<span id="cb9-461"><a href="#cb9-461"></a>    <span class="at">cens =</span> <span class="fu">c</span>(<span class="st">"c1"</span>, <span class="st">"c2"</span>)</span>
+<span id="cb9-462"><a href="#cb9-462"></a>)</span>
+<span id="cb9-463"><a href="#cb9-463"></a>lrnrs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"earth"</span>, <span class="st">"glm"</span>)</span>
+<span id="cb9-464"><a href="#cb9-464"></a>d_ap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, trt) <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">length</span>(data[[trt]]))</span>
+<span id="cb9-465"><a href="#cb9-465"></a>d_as <span class="ot">&lt;-</span> <span class="cf">function</span>(data, trt) <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(data[[trt]]))</span>
+<span id="cb9-466"><a href="#cb9-466"></a></span>
+<span id="cb9-467"><a href="#cb9-467"></a>EY10 <span class="ot">&lt;-</span> <span class="fu">lcmmtp</span>(</span>
+<span id="cb9-468"><a href="#cb9-468"></a>  data, vars, d_ap, d_as,</span>
+<span id="cb9-469"><a href="#cb9-469"></a>  <span class="at">control =</span> <span class="fu">.lcmmtp_control</span>(<span class="at">folds =</span> <span class="dv">2</span>,</span>
+<span id="cb9-470"><a href="#cb9-470"></a>                            <span class="at">learners_trt =</span> lrnrs,</span>
+<span id="cb9-471"><a href="#cb9-471"></a>                            <span class="at">learners_mediator =</span> lrnrs,</span>
+<span id="cb9-472"><a href="#cb9-472"></a>                            <span class="at">learners_QL =</span> lrnrs,</span>
+<span id="cb9-473"><a href="#cb9-473"></a>                            <span class="at">learners_QZ =</span> lrnrs,</span>
+<span id="cb9-474"><a href="#cb9-474"></a>                            <span class="at">learners_QM =</span> lrnrs)</span>
+<span id="cb9-475"><a href="#cb9-475"></a>)</span>
+<span id="cb9-476"><a href="#cb9-476"></a><span class="in">```</span></span>
+<span id="cb9-477"><a href="#cb9-477"></a></span>
+<span id="cb9-478"><a href="#cb9-478"></a>Now, assume that we want to estimate the direct effect by contrasting</span>
+<span id="cb9-479"><a href="#cb9-479"></a>$\E<span class="co">[</span><span class="ot">Y(1), G(0)</span><span class="co">]</span> - \E<span class="co">[</span><span class="ot">Y(0), G(0)</span><span class="co">]</span>$:</span>
+<span id="cb9-480"><a href="#cb9-480"></a></span>
+<span id="cb9-483"><a href="#cb9-483"></a><span class="in">```{r}</span></span>
+<span id="cb9-484"><a href="#cb9-484"></a><span class="co">#| label: longit-analysis2</span></span>
+<span id="cb9-485"><a href="#cb9-485"></a>EY00 <span class="ot">&lt;-</span> <span class="fu">lcmmtp</span>(</span>
+<span id="cb9-486"><a href="#cb9-486"></a>  lcmmtp_foo, vars, d_as, d_as,</span>
+<span id="cb9-487"><a href="#cb9-487"></a>  <span class="at">control =</span> <span class="fu">.lcmmtp_control</span>(<span class="at">folds =</span> <span class="dv">2</span>,</span>
+<span id="cb9-488"><a href="#cb9-488"></a>                            <span class="at">learners_trt =</span> lrnrs,</span>
+<span id="cb9-489"><a href="#cb9-489"></a>                            <span class="at">learners_mediator =</span> lrnrs,</span>
+<span id="cb9-490"><a href="#cb9-490"></a>                            <span class="at">learners_QL =</span> lrnrs,</span>
+<span id="cb9-491"><a href="#cb9-491"></a>                            <span class="at">learners_QZ =</span> lrnrs,</span>
+<span id="cb9-492"><a href="#cb9-492"></a>                            <span class="at">learners_QM =</span> lrnrs)</span>
+<span id="cb9-493"><a href="#cb9-493"></a>)</span>
+<span id="cb9-494"><a href="#cb9-494"></a><span class="in">```</span></span>
+<span id="cb9-495"><a href="#cb9-495"></a></span>
+<span id="cb9-496"><a href="#cb9-496"></a>And we can contrast the two using a convenient function from the <span class="in">`lmtp`</span></span>
+<span id="cb9-497"><a href="#cb9-497"></a>R package:</span>
+<span id="cb9-498"><a href="#cb9-498"></a></span>
+<span id="cb9-501"><a href="#cb9-501"></a><span class="in">```{r}</span></span>
+<span id="cb9-502"><a href="#cb9-502"></a><span class="co">#| label: contrast</span></span>
+<span id="cb9-503"><a href="#cb9-503"></a><span class="fu">library</span>(lmtp)</span>
+<span id="cb9-504"><a href="#cb9-504"></a><span class="fu">class</span>(EY00) <span class="ot">&lt;-</span> <span class="fu">class</span>(EY10) <span class="ot">&lt;-</span> <span class="st">'lmtp'</span></span>
+<span id="cb9-505"><a href="#cb9-505"></a>EY00<span class="sc">$</span>estimator <span class="ot">&lt;-</span> EY10<span class="sc">$</span>estimator <span class="ot">&lt;-</span> <span class="st">'SDR'</span></span>
+<span id="cb9-506"><a href="#cb9-506"></a><span class="fu">names</span>(EY00)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">names</span>(EY10)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">'eif'</span></span>
+<span id="cb9-507"><a href="#cb9-507"></a><span class="fu">lmtp_contrast</span>(EY10, <span class="at">ref =</span> EY00)</span>
+<span id="cb9-508"><a href="#cb9-508"></a><span class="in">```</span></span>
+<span id="cb9-509"><a href="#cb9-509"></a></span>
+<span id="cb9-510"><a href="#cb9-510"></a><span class="fu">## Pros and cons of this methodology</span></span>
+<span id="cb9-511"><a href="#cb9-511"></a></span>
+<span id="cb9-512"><a href="#cb9-512"></a><span class="fu">#### Pros {.unnumbered}</span></span>
+<span id="cb9-513"><a href="#cb9-513"></a></span>
+<span id="cb9-514"><a href="#cb9-514"></a><span class="ss">- </span>Allows the non-parametric definition, identification, and estimation of</span>
+<span id="cb9-515"><a href="#cb9-515"></a>  mediational causal effects for general longitudinal data structures</span>
+<span id="cb9-516"><a href="#cb9-516"></a><span class="ss">- </span>Allows for the use of machine learning to alleviate model</span>
+<span id="cb9-517"><a href="#cb9-517"></a>  misspecification bias, and is equipped with formulas for the</span>
+<span id="cb9-518"><a href="#cb9-518"></a>  computation of correct standard errors and confidence intervals</span>
+<span id="cb9-519"><a href="#cb9-519"></a><span class="ss">- </span>Easy-to-use software</span>
+<span id="cb9-520"><a href="#cb9-520"></a></span>
+<span id="cb9-521"><a href="#cb9-521"></a><span class="fu">#### Cons {.unnumbered}</span></span>
+<span id="cb9-522"><a href="#cb9-522"></a></span>
+<span id="cb9-523"><a href="#cb9-523"></a><span class="ss">- </span>Some limitations remain: mediators $M$ need to be discrete random variables</span>
+<span id="cb9-524"><a href="#cb9-524"></a><span class="ss">- </span>As before, interventional effects do not satisfy the mediational sharp null</span>
+<span id="cb9-525"><a href="#cb9-525"></a>  criteria, meaning that they may be different from zero when no individual in</span>
+<span id="cb9-526"><a href="#cb9-526"></a>  the population experiences mediational effects</span>
+<span id="cb9-527"><a href="#cb9-527"></a><span class="ss">  - </span>This is probably not a big worry in practice, but it is something</span>
+<span id="cb9-528"><a href="#cb9-528"></a>    we are keeping in mind as we develop novel estimators</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/edit/master/chapters/longitudinal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/nhejazi/ser2024_mediation_workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

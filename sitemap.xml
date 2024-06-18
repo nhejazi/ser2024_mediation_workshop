@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/index.html</loc>
-    <lastmod>2024-06-18T14:22:48.004Z</lastmod>
+    <lastmod>2024-06-18T14:41:03.557Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/preface.html</loc>
-    <lastmod>2024-06-18T14:22:48.004Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/intro.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/effects_defn.html</loc>
-    <lastmod>2024-06-18T14:22:47.996Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/effects_defn.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/how_to_choose.html</loc>
-    <lastmod>2024-06-18T14:22:48.000Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/how_to_choose.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/estimation_prelims.html</loc>
-    <lastmod>2024-06-18T14:22:47.996Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/estimation_prelims.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/estimation_natural_interv.html</loc>
-    <lastmod>2024-06-18T14:22:47.996Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/estimation_natural_interv.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/estimation_walkthrough.html</loc>
-    <lastmod>2024-06-18T14:22:47.996Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/estimation_walkthrough.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/additional_readings.html</loc>
-    <lastmod>2024-06-18T14:22:47.996Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/references.html</loc>
+    <lastmod>2024-06-18T14:41:03.557Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/stochastic_effects.html</loc>
-    <lastmod>2024-06-18T14:22:48.004Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/additional_readings.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
   <url>
-    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/longitudinal.html</loc>
-    <lastmod>2024-06-18T14:22:48.004Z</lastmod>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/stochastic_effects.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
+  </url>
+  <url>
+    <loc>https://codex.nimahejazi.org/ser2024_mediation_workshop/chapters/longitudinal.html</loc>
+    <lastmod>2024-06-18T14:41:03.553Z</lastmod>
   </url>
 </urlset>
