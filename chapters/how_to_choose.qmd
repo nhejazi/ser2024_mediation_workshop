@@ -10,12 +10,12 @@ library(here)
 
 ## Comparative effectiveness of two medications for opioid use disorder (OUD)
 
-![](img/ctndag.png)
+![](../img/ctndag.png)
 
 _Motivation_: Opposite overall treatment effects for homeless versus nonhomeless
 participants. This application was explored in detail by @rudolph2020explaining.
 
-![](img/tmleesttotal.png)
+![](../img/tmleesttotal.png)
 
 ### Getting specific about the question
 

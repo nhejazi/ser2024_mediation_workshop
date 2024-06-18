@@ -31,7 +31,7 @@ library(here)
   - Are those mediated effects different for homeless vs non-homeless
     individuals?
 
-![](/img/ctndag.png)
+![](../img/ctndag.png)
 
 ## What is causal mediation analysis?
 

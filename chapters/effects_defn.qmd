@@ -78,7 +78,7 @@ shorten >=2pt,}
 
 $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m})$$
 
-![](img/graphic4a3.png){width=40%}
+![](../img/graphic4a3.png){width=40%}
 
 - Set the mediator to a reference value $M=m$ uniformly for everyone in the
   population
@@ -159,7 +159,7 @@ Still using the same DAG as above,
   treatment was given but the mediator was held at the value it would have
   taken under no treatment_
 
-  ![](img/graphic4a.png){width=40%}
+  ![](../img/graphic4a.png){width=40%}
 
 - Recall that, because of the definition of counterfactuals
   \begin{equation*}
@@ -342,7 +342,7 @@ shorten >=2pt,}
 \end{tikzpicture}
 ```
 
-![](img/ctndag.png)
+![](../img/ctndag.png)
 
 ### Unidentifiability of the NDE and NIE in this setting
 
@@ -495,7 +495,7 @@ intervention.
   variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
   set to $M=G_0$ with probability one.
 
-![](img/graphic4b.png){width=60%}
+![](../img/graphic4b.png){width=60%}
 
 - Define $Y_{0,G_0}$ and $Y_{1,G_1}$ similarly
 - Then we can define:
@@ -660,4 +660,4 @@ More details in the original paper.
 
 ## Estimand Summary
 
-![](img/table1.png)
+![](../img/table1.png)
